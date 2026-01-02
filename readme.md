@@ -1,15 +1,25 @@
--Project name: ck_blog (가제)
+### Project name:
 
--Project overview : Personal blog
+ck_blog (가제)
 
--Project manager : CkriT (ckrit3@gmail.com)
+### Project overview:
 
--Domain : not yet
+Personal blog
 
--Specifications used :
-server os : rocky linux, 
-database : maria db, 
-host : python flask (with templates)
+### Project manager:
 
--History:
-2026-01-02: begin project
+CkriT (ckrit3@gmail.com)
+
+### Domain :
+
+not yet
+
+### Specifications used :
+
+    server os : rocky linux, 
+    database : maria db, 
+    host : python flask (with templates)
+
+### History:
+
+    2026-01-02: begin project
