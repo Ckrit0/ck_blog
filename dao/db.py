@@ -28,7 +28,7 @@ def __getCursor():
         print('Connect Error:',e)
     return con, cur
 
-def getData(sql):
+def __getData(sql):
     data = []
     con, cur = __getCursor()
     try:
@@ -43,7 +43,7 @@ def getData(sql):
         con.close()
     return data
 
-def setData(sql):
+def __setData(sql):
     result = False
     con, cur = __getCursor()
     try:
@@ -56,7 +56,7 @@ def setData(sql):
         con.close()
     return result
 
-def setDatas(sqlList):
+def __setDatas(sqlList):
     result = False
     con, cur = __getCursor()
     try:
@@ -71,6 +71,8 @@ def setDatas(sqlList):
     return result
 
 def setUser(user):
+    pass
+def setCategory(category):
     pass
 def setBoard(board):
     pass
@@ -87,6 +89,8 @@ def setImage(image):
 
 def updateUser(user):
     pass
+def updateCategory(category):
+    pass
 def updateBoard(board):
     pass
 def updateComment(comment):
@@ -98,13 +102,17 @@ def getUserByEmailAndPw(email,pw):
     pass
 def getUserByUserNo(uno):
     pass
+def getCategoryNoList():
+    pass
+def getCategoryByCategoryNo(cno):
+    pass
 def getBoardNoList():
     pass
 def getTitleListByBoardNoList(boardNoList):
     pass
 def getBoardByBoardNo(bno):
     pass
-def getLike(bno):
+def getLikeByBoardNo(bno):
     pass
 def getCommentNoListByBoardNo(bno):
     pass
@@ -115,4 +123,17 @@ def getBlackList():
 def getSessionKeyByUserNo(uno):
     pass
 def getImageByImageNo(ino):
+    pass
+
+def deleteUser(user):
+    pass
+def deleteCategory(category):
+    pass
+def deleteBoard(board):
+    pass
+def deleteComment(comment):
+    pass
+def deleteImage(image):
+    pass
+def deleteLike(user):
     pass
