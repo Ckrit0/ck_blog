@@ -1,4 +1,4 @@
-class User:
+class UserDTO:
     def __init__(self):
         self.no = None
         self.email = None

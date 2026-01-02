@@ -1,4 +1,4 @@
-class Comment:
+class CommentDTO:
     def __init__(self):
         self.no = None
         self.bno = None

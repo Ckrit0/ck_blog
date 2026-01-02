@@ -1,4 +1,4 @@
-class Category:
+class CategoryDTO:
     def __init__(self):
         self.no = None
         self.name = None

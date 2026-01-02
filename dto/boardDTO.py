@@ -1,4 +1,4 @@
-class Board:
+class BoardDTO:
     def __init__(self):
         self.no = None
         self.uno = None
