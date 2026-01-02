@@ -1,0 +1,42 @@
+< USER >
+u_no            pk, 유저 번호
+u_email         유저아이디 겸 이메일
+u_pw            비밀번호(암호화)
+u_state         0: 가입완료, 1: 인증완료, 2: 탈퇴, 3: 블랙리스트, 4: 마스터
+u_lastdate      최종 접속일
+u_joindate      가입날짜
+u_leavedate     탈퇴날짜
+
+< CATEGORY >
+c_no	        pk, 카테고리번호
+c_name      	카테고리명
+c_upper	        상위카테고리번호
+
+< BOARD >
+b_no	        pk, 글번호
+u_no	        작성자
+c_no	        카테고리
+b_date      	작성일
+b_contents  	글 내용
+
+< IMAGE >
+i_no	        이미지번호
+i_path      	이미지경로
+
+< COMMENT >
+co_no	        pk, 댓글번호
+u_no	        작성자 (비로그인시 IP)
+co_contents 	댓글내용
+co_upper	    상위댓글
+
+< BLACKLIST >
+u_no	        유저번호
+bl_ip           블랙IP
+bl_date	        블랙날짜
+bl_expire   	만료날짜
+
+< SESSIONLIST >
+u_no	        유저번호
+s_key	        세션키
+s_ip	        접근한IP
+s_expire    	만료날짜
