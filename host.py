@@ -1,7 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify
-from service.store import Store
-
-store = Store()
+from service import store
 
 app = Flask(__name__)
 
