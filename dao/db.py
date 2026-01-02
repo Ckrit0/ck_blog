@@ -70,15 +70,49 @@ def setDatas(sqlList):
         con.close()
     return result
 
-def getUserByUserNo():
+def setUser(user):
     pass
-def getUserByEmailAndPw():
+def setBoard(board):
     pass
-def getBoardByBoardNo():
+def setLike(user):
+    pass
+def setComment(comment):
+    pass
+def setBlackList(user):
+    pass
+def setSession(user):
+    pass
+def setImage(image):
+    pass
+
+def updateUser(user):
+    pass
+def updateBoard(board):
+    pass
+def updateComment(comment):
+    pass
+def updateSessionDate(user):
+    pass
+
+def getUserByEmailAndPw(email,pw):
+    pass
+def getUserByUserNo(uno):
     pass
 def getBoardNoList():
     pass
-def getCommentByCommentNo():
+def getTitleListByBoardNoList(boardNoList):
     pass
-def getCommentListByBoardNo():
+def getBoardByBoardNo(bno):
+    pass
+def getLike(bno):
+    pass
+def getCommentNoListByBoardNo(bno):
+    pass
+def getCommentByCommentNo(cono):
+    pass
+def getBlackList():
+    pass
+def getSessionKeyByUserNo(uno):
+    pass
+def getImageByImageNo(ino):
     pass

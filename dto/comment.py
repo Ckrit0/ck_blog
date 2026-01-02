@@ -6,14 +6,16 @@ class Comment:
         self.ip = None
         self.comment = None
         self.upper = None
+        self.isDelete = None
     
-    def setCommntAll(self,no,bno,uno,ip,comment,upper):
+    def setCommntAll(self,no,bno,uno,ip,comment,upper,isDelete):
         self.no = no
         self.bno = bno
         self.uno = uno
         self.ip = ip
         self.comment = comment
         self.upper = upper
+        self.isDelete = isDelete
 
     def setNo(self,no):
         self.no = no
@@ -32,6 +34,9 @@ class Comment:
     
     def setUpper(self,upper):
         self.upper = upper
+    
+    def setIsDelete(self,isDelete):
+        self.isDelete
 
     def getNo(self):
         return self.no
@@ -50,4 +55,6 @@ class Comment:
     
     def getUpper(self):
         return self.upper
-        
+    
+    def getIsDelete(self):
+        return self.isDelete

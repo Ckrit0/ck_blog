@@ -20,6 +20,7 @@ c_no	        카테고리
 b_date      	작성일
 b_title         글 제목
 b_contents  	글 내용
+b_isdelete      삭제여부
 
 < IMAGE >
 i_no	        이미지번호
@@ -38,12 +39,14 @@ u_no	        작성자
 co_ip           IP
 co_comment   	댓글내용
 co_upper	    상위댓글
+co_isdelete     삭제여부
 
 < BLACKLIST >
 u_no	        유저번호
 bl_ip           IP
 bl_date	        블랙날짜
 bl_expire   	만료날짜
+bl_cause        블랙사유
 
 < SESSIONLIST >
 u_no	        유저번호

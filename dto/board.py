@@ -7,14 +7,16 @@ class Board:
         self.title = None
         self.content = None
         self.like = None
+        self.isDelete = None
     
-    def setBoard(self,no,uno,cno,date,content,like):
+    def setBoard(self,no,uno,cno,date,content,like,isDelete):
         self.no = no
         self.uno = uno
         self.cno = cno
         self.date = date
         self.content = content
         self.like = like
+        self.isDelete = isDelete
 
     def setNo(self,no):
         self.no = no
@@ -37,6 +39,9 @@ class Board:
     def setLike(self,like):
         self.like = like
     
+    def setIsDelete(self,isDelete):
+        self.isDelete = isDelete
+    
     def getNo(self):
         return self.no
 
@@ -57,3 +62,6 @@ class Board:
     
     def getLike(self):
         return self.like
+
+    def getIsDelete(self):
+        return self.isDelete
