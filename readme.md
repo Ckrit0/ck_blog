@@ -7,8 +7,8 @@
 -Domain : not yet
 
 -Specifications used :
-server os : rocky linux
-database : maria db
+server os : rocky linux, 
+database : maria db, 
 host : python flask (with templates)
 
 -History:
