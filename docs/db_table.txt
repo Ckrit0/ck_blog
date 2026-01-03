@@ -26,11 +26,18 @@ b_isdelete      삭제여부
 i_no	        이미지번호
 i_path      	이미지경로
 
-< LIKE >
+< VIEWS >
 b_no            글번호
 u_no            유저번호
 l_ip            IP
 l_date          날짜
+
+< LIKES >
+b_no            글번호
+u_no            유저번호
+l_ip            IP
+l_date          날짜
+l_islike        좋아요
 
 < COMMENT >
 co_no	        pk, 댓글번호

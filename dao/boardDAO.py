@@ -4,6 +4,9 @@ def setBoard(board):
 def setImage(image):
     pass
 
+def setView(user):
+    pass
+
 def setLike(user):
     pass
 
@@ -17,6 +20,9 @@ def getBoardByBoardNo(bno):
     pass
 
 def getImageByImageNo(ino):
+    pass
+
+def getViewByBoardNo(bno):
     pass
 
 def getLikeByBoardNo(bno):
