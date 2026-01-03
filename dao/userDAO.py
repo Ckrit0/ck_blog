@@ -1,7 +1,10 @@
+from service import db
+from dto import userDTO
+
 def setUser(user):
     pass
 
-def setSession(user):
+def setSession(user, session):
     pass
 
 def setBlackList(user):
@@ -14,16 +17,24 @@ def updateSessionDate(user):
     pass
 
 def getUserByEmailAndPw(email,pw):
-    pass
+    user = userDTO()
+    return user
 
 def getUserByUserNo(uno):
-    pass
+    user = userDTO()
+    return user
+
+def getUserBySessionKey(sessionKey):
+    user = userDTO()
+    return user
 
 def getSessionKeyByUserNo(uno):
-    pass
+    sessionKey = None
+    return sessionKey
 
 def getBlackList():
-    pass
+    blackList = []
+    return blackList
 
 def deleteUser(user):
     pass

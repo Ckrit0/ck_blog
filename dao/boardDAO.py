@@ -1,3 +1,5 @@
+from dto import boardDTO
+
 def setBoard(board):
     pass
 
@@ -14,19 +16,24 @@ def updateBoard(board):
     pass
 
 def getBoardNoAndTitleList():
-    pass
+    boardNoAndTitleList = []
+    return boardNoAndTitleList
 
 def getBoardByBoardNo(bno):
-    pass
+    board = boardDTO()
+    return board
 
 def getImageByImageNo(ino):
-    pass
+    image = None
+    return image
 
 def getViewByBoardNo(bno):
-    pass
+    view = 0
+    return view
 
 def getLikeByBoardNo(bno):
-    pass
+    like = 0
+    return like
 
 def deleteBoard(board):
     pass

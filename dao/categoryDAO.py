@@ -5,7 +5,8 @@ def updateCategory(category):
     pass
 
 def getCategoryList():
-    pass
+    categoryList = []
+    return categoryList
 
 def deleteCategory(category):
     pass

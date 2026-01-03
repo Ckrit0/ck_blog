@@ -5,7 +5,8 @@ def updateComment(comment):
     pass
 
 def getCommentListByBoardNo(bno):
-    pass
+    commentList = []
+    return commentList
 
 def deleteComment(comment):
     pass

@@ -26,7 +26,7 @@ class UserDTO:
         return self.no
     def getEmail(self):
         return self.email
-    def getip(self):
+    def getIp(self):
         return self.ip
     def getPw(self):
         return self.pw
