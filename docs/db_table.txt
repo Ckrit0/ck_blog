@@ -3,7 +3,7 @@ u_no            pk, 유저 번호
 u_email         유저아이디 겸 이메일
 u_ip            IP
 u_pw            비밀번호(암호화)
-u_state         0: 미가입 1: 가입완료, 2: 인증완료, 3: 탈퇴, 4: 블랙리스트, 5: 마스터
+u_state         유저 상태(0: 미가입 1: 가입완료, 2: 인증완료, 3: 탈퇴, 4: 블랙리스트, 5: 마스터)
 u_lastdate      최종 접속일
 u_joindate      가입날짜
 u_leavedate     탈퇴날짜
@@ -20,7 +20,7 @@ c_no	        카테고리
 b_date      	작성일
 b_title         글 제목
 b_contents  	글 내용
-b_isdelete      삭제여부
+b_isdelete      삭제여부(0: 미삭제, 1: 삭제)
 
 < IMAGE >
 i_no	        이미지번호
@@ -46,7 +46,7 @@ u_no	        작성자
 co_ip           IP
 co_comment   	댓글내용
 co_upper	    상위댓글
-co_isdelete     삭제여부
+co_isdelete     삭제여부(0: 미삭제, 1: 삭제)
 
 < BLACKLIST >
 u_no	        유저번호
