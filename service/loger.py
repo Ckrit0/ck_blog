@@ -11,6 +11,8 @@ class Loger:
     
     def __init__(self):
         self.logPath = store.logPath
+        if self.logPath.endswith('/'):
+            self.logPath = self.logPath[:-1]
 
     def __getLogDate(self):
         dateStr = ''
@@ -52,8 +54,16 @@ class Loger:
         with open(dirPath + fileName, 'a', encoding='utf-8') as f:
             f.write(line + '\n')
 
+    '''
+    로그 등록
+    로그 위치 및 파일명: store에 등록된 경로/로그명/날짜_로그명
+    parameter: 로그명(String), 로그내용(String)
+    '''
     def setLog(self,logName,log):
+        logDate = self.__getLogDate()
+        logTime = self.__getLogTime()
         dirPath = self.logPath + '/' + logName + '/'
-        fileName = self.__getLogDate() + '_' + logName
-        logLine = self.__getLogDate() + '_' + self.__getLogTime() + ' ' + log
+        fileName = logDate + '_' + logName
+        logLine = logDate + '_' + logTime + ' ' + log
         self.__appendLine(dirPath=dirPath,fileName=fileName,line=logLine)
+        return

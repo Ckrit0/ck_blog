@@ -28,6 +28,11 @@ def __getCursor():
         print('Connect Error:',e)
     return con, cur
 
+'''
+SELECT문으로 DATA 가져오기
+parameter: SQL문(String)
+return: DATA List(List)
+'''
 def getData(sql):
     data = []
     con, cur = __getCursor()
@@ -43,27 +48,37 @@ def getData(sql):
         con.close()
     return data
 
+'''
+INSERT, UPDATE, DELETE문 적용시키기
+parameter: SQL문(String)
+return: 영향을 받은 줄 갯수(int)
+'''
 def setData(sql):
-    result = False
+    result = 0
     con, cur = __getCursor()
     try:
         cur.execute(sql)
-        result = cur.fetchall()
         con.commit()
+        result = cur.rowcount
     except Exception as e:
         print(e)
     finally:
         con.close()
     return result
 
+'''
+INSERT, UPDATE, DELETE문 여러줄 한번에 적용시키기
+parameter: SQL문 List(String List)
+return: 영향을 받은 줄 갯수(int)
+'''
 def setDatas(sqlList):
-    result = False
+    result = 0
     con, cur = __getCursor()
     try:
         for sql in sqlList:
             cur.execute(sql)
-        result = cur.fetchall()
         con.commit()
+        result = cur.rowcount
     except Exception as e:
         print(e)
     finally:
