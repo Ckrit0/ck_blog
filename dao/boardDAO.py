@@ -18,7 +18,7 @@ def setImage(board,image):
     pass
 
 '''
-조회수 설정하기.(유저번호 또는 IP가 겹치면 안올라가도록)
+조회 설정하기.(최근 본 글 목록에서 볼 수 있도록 모두 저장)
 parameter: user객체(userDTO)
 return: 
 '''
@@ -42,11 +42,29 @@ def updateBoard(board):
     pass
 
 '''
-글번호와 제목 가져오기(목록 띄우기 용)
+전체 글목록 가져오기
+parameter: 페이지(int)
+return: 해당 페이지의 [글 번호(int), 제목(String)]의 리스트
+'''
+def getTitleList_all(category, page):
+    boardNoAndTitleList = []
+    return boardNoAndTitleList
+
+'''
+카테고리별 글목록 가져오기
 parameter: 카테고리객체(categoryDTO), 페이지(int)
 return: 해당 페이지의 [글 번호(int), 제목(String)]의 리스트
 '''
-def getBoardNoAndTitleList(page):
+def getTitleList_cathgory(category, page):
+    boardNoAndTitleList = []
+    return boardNoAndTitleList
+
+'''
+글 앞뒤 글목록 가져오기
+parameter: 글객체(boardDTO), 페이지(int)
+return: 해당 페이지의 [글 번호(int), 제목(String)]의 리스트
+'''
+def getTitleList_board(board, page):
     boardNoAndTitleList = []
     return boardNoAndTitleList
 
@@ -69,7 +87,7 @@ def getImageByImageNo(ino):
     return image
 
 '''
-글번호로 조회수 가져오기
+글번호로 조회수 가져오기 (겹치는 이메일/아이피는 1회만)
 parameter: 글번호(int)
 return: 조회수(int)
 '''

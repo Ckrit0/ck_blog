@@ -78,6 +78,23 @@ def getSessionKeyByUserNo(uno):
     return sessionKey
 
 '''
+해당 user 최근에 읽은 글목록 가져오기
+parameter: user객체(userDTO)
+return: [글번호(int),글제목(String)]의 리스트
+'''
+def getLastViewList(user):
+    pass
+
+'''
+유저별 최근에 읽은 글 목록 가져오기
+parameter: 유저객체(userDTO)
+return: 해당 페이지의 [글 번호(int), 제목(String)]의 리스트
+'''
+def getTitleList_user(user):
+    boardNoAndTitleList = []
+    return boardNoAndTitleList
+
+'''
 블랙리스트 목록 받기
 return: 블랙리스트(List)
 '''
