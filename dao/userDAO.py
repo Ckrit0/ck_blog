@@ -47,7 +47,7 @@ parameter: email(String), pw(String)
 return: user객체(userDTO)
 '''
 def getUserByEmailAndPw(email,pw):
-    user = userDTO()
+    user = userDTO.UserDTO()
     return user
 
 '''
@@ -56,7 +56,7 @@ parameter: 유저번호(int)
 return: user객체(userDTO)
 '''
 def getUserByUserNo(uno):
-    user = userDTO()
+    user = userDTO.UserDTO()
     return user
 
 '''
@@ -65,7 +65,7 @@ parameter: 세션키(String)
 return: user객체(userDTO)
 '''
 def getUserBySessionKey(sessionKey):
-    user = userDTO()
+    user = userDTO.UserDTO()
     return user
 
 '''

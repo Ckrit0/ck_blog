@@ -74,7 +74,7 @@ parameter: 글번호(int)
 return: 글 객체(boardDTO)
 '''
 def getBoardByBoardNo(bno):
-    board = boardDTO()
+    board = boardDTO.BoardDTO()
     return board
 
 '''
