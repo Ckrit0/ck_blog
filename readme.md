@@ -24,3 +24,4 @@ not yet
 
     2026-01-02: begin project
     2026-01-07: initial framework established
+    2026-01-07: create database and server git clone
