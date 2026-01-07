@@ -4,9 +4,9 @@
 
 < clientPage >
 header
-    로고, 제목, 로그인, 로그아웃, 회원가입
+    제목, 로그인, 로그아웃, 회원가입, 비번찾기
 sidebar
-    client 정보, 공지, 검색, 카테고리, 최근에 본 페이지
+    로고, client 정보(비로그인시 IP정보, 클릭시 로그인 or 회원정보), 공지, 검색, 카테고리, 최근에 본 페이지
 contents
     메인페이지 - 최신 글 목록, 최신 글 보기
     카테고리 선택페이지 - 카테고리 목록
@@ -37,26 +37,26 @@ adminPage
 색상
     테마색 - #A67F78
     배경색 - #E1DCD9
-    짙은색 - #8F8681
+    짙은색 - #352C27
     폰트색 - #32435F
 
 폰트
     title 
-        - East Sea Dokdo, Birthstone
-        @import url('https://fonts.googleapis.com/css2?family=Birthstone&family=East+Sea+Dokdo&display=swap');
-        font-family: "East Sea Dokdo", "Birthstone"
+        - East Sea Dokdo
+        @import url('https://fonts.googleapis.com/css2?family=East+Sea+Dokdo&display=swap');
+        font-family: "East Sea Dokdo"
 
     category
-        - Nanum Gothic, Knewave
-        @import url('https://fonts.googleapis.com/css2?family=Knewave&family=Nanum+Gothic&display=swap');
-        font-family: "Nanum Gothic", "Knewave"
+        - Nanum Gothic
+        @import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap');
+        font-family: "Nanum Gothic"
 
     subject
-        - Orbit, Sansation
-        @import url('https://fonts.googleapis.com/css2?family=Orbit&family=Sansation:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap');
-        font-family: "Orbit", "Sansation"
-    
+        - Orbit
+        @import url('https://fonts.googleapis.com/css2?family=Orbit&display=swap');
+        font-family: "Orbit"
+
     contents
-        - Noto Sans KR, Google Sans Code
-        @import url('https://fonts.googleapis.com/css2?family=Google+Sans+Code:ital,wght@0,300..800;1,300..800&family=Noto+Sans+KR:wght@100..900&display=swap');
-        font-family: "Noto Sans KR", "Google Sans Code"
+        - Noto Sans KR
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
+        font-family: "Noto Sans KR"
