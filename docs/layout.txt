@@ -34,9 +34,29 @@ adminPage
 ## design ##
 ############
 
-테마 색상 - 
-배경색 - 
+색상
+    테마색 - #A67F78
+    배경색 - #E1DCD9
+    짙은색 - #8F8681
+    폰트색 - #32435F
 
-폰트 family - 
-폰트 색상 - 
+폰트
+    title 
+        - East Sea Dokdo, Birthstone
+        @import url('https://fonts.googleapis.com/css2?family=Birthstone&family=East+Sea+Dokdo&display=swap');
+        font-family: "East Sea Dokdo", "Birthstone"
 
+    category
+        - Nanum Gothic, Knewave
+        @import url('https://fonts.googleapis.com/css2?family=Knewave&family=Nanum+Gothic&display=swap');
+        font-family: "Nanum Gothic", "Knewave"
+
+    subject
+        - Orbit, Sansation
+        @import url('https://fonts.googleapis.com/css2?family=Orbit&family=Sansation:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap');
+        font-family: "Orbit", "Sansation"
+    
+    contents
+        - Noto Sans KR, Google Sans Code
+        @import url('https://fonts.googleapis.com/css2?family=Google+Sans+Code:ital,wght@0,300..800;1,300..800&family=Noto+Sans+KR:wght@100..900&display=swap');
+        font-family: "Noto Sans KR", "Google Sans Code"
