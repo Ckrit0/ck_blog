@@ -1,0 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Birthstone&family=East+Sea+Dokdo&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Knewave&family=Nanum+Gothic&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbit&family=Sansation:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans+Code:ital,wght@0,300..800;1,300..800&family=Noto+Sans+KR:wght@100..900&display=swap');
+
+:root{
+    --theme-color: #A67F78;
+    --bg-color : #E1DCD9;
+    --dark-color : #8F8681;
+    --font-color : #32435F;
+    --title-font : "East Sea Dokdo", "Birthstone";
+    --category-font : "Nanum Gothic", "Knewave";
+    --subject-font : "Orbit", "Sansation";
+    --contents-font : "Noto Sans KR", "Google Sans Code"
+}
