@@ -1,7 +1,6 @@
 < USER >
 u_no            pk, 유저 번호
 u_email         유저아이디 겸 이메일
-u_ip            IP
 u_pw            비밀번호(암호화)
 u_state         유저 상태(0: 미가입 1: 가입완료, 2: 인증완료, 3: 탈퇴, 4: 블랙리스트, 5: 마스터)
 u_lastdate      최종 접속일
@@ -29,8 +28,8 @@ i_path      	이미지경로
 < VIEWS >
 b_no            글번호
 u_no            유저번호
-l_ip            IP
-l_date          날짜
+v_ip            IP
+v_date          날짜
 
 < LIKES >
 b_no            글번호
