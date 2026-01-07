@@ -23,3 +23,4 @@ not yet
 ### History:
 
     2026-01-02: begin project
+    2026-01-07: initial framework established
