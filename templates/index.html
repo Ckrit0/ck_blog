@@ -5,29 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{url_for('static',filename='./css/style.css')}}">
     <script src="{{url_for('static',filename='./script/script.js')}}"></script>
-    <title>Document</title>
+    <title>널리 인간을 일 없게 하라</title>
 </head>
 <body>
-    <header id="header">
-        <div>널리 인간을 일 없게 하라</div>
-        <div>
+    <div id="titleBar">
+        <div class="horizontalLine"></div>
+        <div id="title">널리 인간을 일 없게 하라</div>
+    </div>
+    <header>
+        <div id="loginDiv">
             <input type="email" placeholder="Email address"/>
             <input type="password" placeholder="Password"/>
             <button>로그인</button>
-            <span>회원가입</span>
-             / 
-            <span>비번찾기</span>
+            <button>회원가입</button>
+            <button>비번찾기</button>
         </div>
     </header>
-    <sidebar id="sidebar">
-        로고<br>
-        한줄공지<br>
-        client 정보(비로그인시 IP정보, 클릭시 로그인 or 회원정보)<br>
-        검색<br>
-        카테고리<br>
-        최근에 본 글
-    </sidebar>
-    <contents id="contents">컨텐츠</contents>
-    <rightsidebar id="rightsidebar"></rightsidebar>
+    <div class="horizontalLine" id="titleHorizontalLine"></div>
+    <main>
+        <sidebar>
+            로고<br>
+            한줄공지<br>
+            client 정보(비로그인시 IP정보, 클릭시 로그인 or 회원정보)<br>
+            검색<br>
+            카테고리<br>
+            최근에 본 글
+        </sidebar>
+        <contents>컨텐츠</contents>
+    </main>
 </body>
 </html>
