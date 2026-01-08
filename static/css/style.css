@@ -18,7 +18,7 @@
 /* 공용 부분 */
 body{
     display: grid;
-    grid-template-columns: 1fr 300px 1080px 300px 1fr;
+    grid-template-columns: 1fr 300px 1080px 1fr;
     margin: 0;
     padding: 0;
     box-sizing: border-box;

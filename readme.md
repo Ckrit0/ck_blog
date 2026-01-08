@@ -1,6 +1,6 @@
 ### Project name:
 
-ck_blog (가제)
+널리 인간을 일 없게 하라.
 
 ### Project overview:
 
