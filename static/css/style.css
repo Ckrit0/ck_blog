@@ -14,6 +14,7 @@
     --subject-font : "Orbit", sans-serif;
     --contents-font : "Noto Sans KR", sans-serif;
     --title-size : 52px;
+    --logo-size : 150px;
 }
 
 /* 공용 부분 */
@@ -23,6 +24,37 @@ body{
     box-sizing: border-box;
     background-color: var(--bg-color);
     text-align: center;
+}
+
+input{
+    width: 100px;
+    border: 0px;
+    border-radius: 10px;
+    border: 1px solid var(--theme-color);
+    padding: 2px 10px;
+    background-color: var(--bg-color);
+    font-size: 12px;
+    font-family: var(--subject-font);
+    color: var(--font-color);
+}
+
+button{
+    width: 70px;
+    padding: 2px 10px;
+    border: 0px;
+    border-radius: 10px;
+    border: 1px solid var(--theme-color);
+    background-color: var(--bg-color);
+    font-size: 12px;
+    font-family: var(--subject-font);
+    color: var(--font-color);
+    cursor: pointer;
+}
+
+button:hover{
+    background-color: var(--theme-color);
+    color: var(--bg-color);
+    font-weight: bold;
 }
 
 .horizontalLine{
@@ -72,32 +104,6 @@ header{
     padding: 0 40px;
 }
 
-#loginDiv>input{
-    width: 100px;
-    border: 0px;
-    border-radius: 10px;
-    padding: 2px 10px;
-    background-color: var(--bg-color);
-    font-size: 12px;
-    font-family: var(--subject-font);
-    color: var(--font-color);
-}
-
-#loginDiv>button{
-    width: 70px;
-    padding: 2px 10px;
-    border: 0px;
-    border-radius: 10px;
-    background-color: var(--bg-color);
-    font-size: 12px;
-    font-family: var(--subject-font);
-    color: var(--font-color);
-}
-
-#loginDiv>button:hover{
-    background-color: var(--theme-color);
-    color: var(--bg-color);
-}
 
 /* 메인 부분 */
 main{
@@ -110,10 +116,61 @@ sidebar{
     position: sticky;
     top: var(--title-size);
     align-self: flex-start;
-    padding-top: 20px;
+    padding: 20px 10px;
     width: 300px;
     font-family: var(--category-font);
     color: var(--dark-color);
+}
+
+#logoDiv{
+    margin: 10px auto;
+    width: var(--logo-size);
+    height: var(--logo-size);
+    border: 2px solid var(--theme-color);
+}
+
+#noticeDiv{
+    margin: 10px auto;
+}
+
+#searchDiv{
+    margin: 10px auto;
+}
+
+#searchInput{
+    margin-right: -6px;
+    font-family: var(--category-font);
+    color: var(--dark-color);
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-top-width: 2px;
+    border-left-width: 2px;
+    border-bottom-width: 2px;
+}
+
+#searchBtn{
+    margin-left: 0;
+    font-family: var(--category-font);
+    color: var(--dark-color);
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-width: 2px;
+    border-right-width: 2px;
+    border-bottom-width: 2px;
+}
+
+#categoryDiv{
+    margin: 10px auto;
+    width: 200px;
+    height: 400px;
+    border: 2px solid var(--theme-color);
+}
+
+#recentDiv{
+    margin: 10px auto;
+    width: 200px;
+    height: 150px;
+    border: 2px solid var(--theme-color);
 }
 
 /* 컨텐츠 부분 */

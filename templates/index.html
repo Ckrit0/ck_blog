@@ -16,20 +16,24 @@
         <div id="loginDiv">
             <input type="email" placeholder="Email address"/>
             <input type="password" placeholder="Password"/>
-            <button>로그인</button>
-            <button>회원가입</button>
-            <button>비번찾기</button>
+            <button id="loginBtn">로그인</button>
+            <button id="joinBtn">회원가입</button>
+            <button id="findPwBtn">비번찾기</button>
         </div>
     </header>
     <div class="horizontalLine" id="titleHorizontalLine"></div>
     <main>
         <sidebar>
-            로고<br>
-            한줄공지<br>
-            client 정보(비로그인시 IP정보, 클릭시 로그인 or 회원정보)<br>
-            검색<br>
-            카테고리<br>
-            최근에 본 글
+            <div id="logoDiv"></div>
+            <div id="noticeDiv">한줄 공지/인사글</div>
+            <div id="userInfoDiv">client/IP정보</div>
+            <div id="searchDiv">
+                <input id="searchInput" />
+                <button id="searchBtn">search</button>
+            </div>
+            <div id="categoryDiv">카테고리</div>
+            <div id="recentDiv">최근에 본 글</div>
+            
         </sidebar>
         <contents>컨텐츠</contents>
     </main>
