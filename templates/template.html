@@ -35,7 +35,9 @@
             <div id="recentDiv">최근에 본 글</div>
             
         </sidebar>
-        <contents>컨텐츠</contents>
+        <contents>
+            {% block content %} {% endblock %}
+        </contents>
     </main>
 </body>
 </html>
