@@ -14,6 +14,7 @@ def validateCheck():
 
 @app.route("/")
 def main():
+    from dto import userDTO
     return render_template('main.html')
 
 @app.route("/category/<categoryNo>")

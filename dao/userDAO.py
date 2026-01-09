@@ -7,7 +7,11 @@ parameter: user객체(userDTO)
 return: 
 '''
 def setUser(user):
-    pass
+    # 동일이메일중 state가 활성화된 유저가 있으면 거부해야함
+    # 패스워드 암호화 필요,(글자수 체크도)
+    sql=f'INSERT INTO user(u_email,u_pw,u_state) VALUES("{user.getEmail()}","{user.getPw()}",{user.getState()})'
+    result = db.setData(sql=sql)
+    return result
 
 '''
 해당 유저의 세션 생성
@@ -47,7 +51,10 @@ parameter: email(String), pw(String)
 return: user객체(userDTO)
 '''
 def getUserByEmailAndPw(email,pw):
+    sql = f'SELECT * FROM user WHERE u_email="{email}" AND u_pw="{pw}" AND u_state IN (0,1,2,5)'
+    result = db.getData(sql=sql)
     user = userDTO.UserDTO()
+    user.setUser(result)
     return user
 
 '''

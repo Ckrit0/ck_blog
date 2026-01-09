@@ -8,6 +8,13 @@ class UserDTO:
         self.lastDate = None
         self.joinDate = None
     
+    def setUser(self,dbResult):
+        self.no = dbResult[0]
+        self.email = dbResult[1]
+        self.pw = dbResult[2]
+        self.state = dbResult[3]
+        self.lastDate = dbResult[4]
+        self.joinDate = dbResult[5]
     def setNo(self,no):
         self.no = no
     def setEmail(self,email):
