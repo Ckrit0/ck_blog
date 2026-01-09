@@ -14,7 +14,8 @@
     --subject-font : "Orbit", sans-serif;
     --contents-font : "Noto Sans KR", sans-serif;
     --title-size : 52px;
-    --logo-size : 150px;
+    --logo-size-width : 200px;
+    --logo-size-height : 125px;
 }
 
 /* 공용 부분 */
@@ -124,8 +125,8 @@ sidebar{
 
 #logoDiv{
     margin: 10px auto;
-    width: var(--logo-size);
-    height: var(--logo-size);
+    width: var(--logo-size-width);
+    height: var(--logo-size-height);
 }
 
 #noticeDiv{
