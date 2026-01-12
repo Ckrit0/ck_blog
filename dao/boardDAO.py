@@ -7,7 +7,13 @@ parameter: 글객체(boardDTO)
 return: 
 '''
 def setBoard(board):
-    pass
+    uNo = board.getUserNo()
+    cNo = board.getCategoryNo()
+    bTitle = board.getTitle()
+    bContents = board.getContents()
+    sql=f'INSERT INTO board(u_no,c_no,b_title,b_contents) VALUES({uNo},{cNo},"{bTitle}","{bContents}")'
+    result = db.setData(sql=sql)
+    return result
 
 '''
 이미지 저장하기
@@ -15,7 +21,7 @@ parameter: 글객체(boardDTO), 이미지객체(타입미정)
 return: 
 '''
 def setImage(board,image):
-    pass
+    sql=f''
 
 '''
 조회 설정하기.(최근 본 글 목록에서 볼 수 있도록 모두 저장)
@@ -23,7 +29,7 @@ parameter: user객체(userDTO)
 return: 
 '''
 def setView(user):
-    pass
+    sql=f''
 
 '''
 좋아요 설정하기.(유저번호 또는 IP가 겹치면 토글)
@@ -31,7 +37,7 @@ parameter: user객체(userDTO)
 return: 
 '''
 def setLike(user):
-    pass
+    sql=f''
 
 '''
 글 수정하기
@@ -39,7 +45,7 @@ parameter: 글객체(boardDTO)
 return: 
 '''
 def updateBoard(board):
-    pass
+    sql=f''
 
 '''
 전체 글목록 가져오기
@@ -48,6 +54,7 @@ return: 해당 페이지의 [글 번호(int), 제목(String)]의 리스트
 '''
 def getTitleList_all(category, page):
     boardNoAndTitleList = []
+    sql=f''
     return boardNoAndTitleList
 
 '''
@@ -57,6 +64,7 @@ return: 해당 페이지의 [글 번호(int), 제목(String)]의 리스트
 '''
 def getTitleList_cathgory(category, page):
     boardNoAndTitleList = []
+    sql=f''
     return boardNoAndTitleList
 
 '''
@@ -66,6 +74,7 @@ return: 해당 페이지의 [글 번호(int), 제목(String)]의 리스트
 '''
 def getTitleList_board(board, page):
     boardNoAndTitleList = []
+    sql=f''
     return boardNoAndTitleList
 
 '''
@@ -75,6 +84,7 @@ return: 글 객체(boardDTO)
 '''
 def getBoardByBoardNo(bno):
     board = boardDTO.BoardDTO()
+    sql=f''
     return board
 
 '''
@@ -84,6 +94,7 @@ return: 이미지객체
 '''
 def getImageByImageNo(ino):
     image = None
+    sql=f''
     return image
 
 '''
@@ -93,6 +104,7 @@ return: 조회수(int)
 '''
 def getViewByBoardNo(bno):
     view = 0
+    sql=f''
     return view
 
 '''
@@ -102,6 +114,7 @@ return: 좋아요수(int)
 '''
 def getLikeByBoardNo(bno):
     like = 0
+    sql=f''
     return like
 
 '''
@@ -110,7 +123,7 @@ parameter: 글객체(boardDTO)
 return: 
 '''
 def deleteBoard(board):
-    pass
+    sql=f''
 
 '''
 이미지번호로 이미지 삭제하기
@@ -118,4 +131,4 @@ parameter: 이미지번호(int)
 return: 
 '''
 def deleteImage(ino):
-    pass
+    sql=f''

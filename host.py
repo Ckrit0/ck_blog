@@ -1,6 +1,9 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify, abort
 from service import store
 from dao import userDAO
+from dao import categoryDAO
+from dao import boardDAO
+from dao import commentDAO
 from service import validate
 
 app = Flask(__name__)
@@ -14,7 +17,6 @@ def validateCheck():
 
 @app.route("/")
 def main():
-    from dto import userDTO
     return render_template('main.html')
 
 @app.route("/category/<categoryNo>")

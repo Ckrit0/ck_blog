@@ -10,7 +10,7 @@ class BoardDTO:
         self.like = None
         self.isDelete = None
     
-    def setBoard(self,no,uno,cno,date,content,view,like,isDelete):
+    def setBoard(self,uno,cno,content,no=None,date=None,view=None,like=None,isDelete=None):
         self.no = no
         self.uno = uno
         self.cno = cno
@@ -62,7 +62,7 @@ class BoardDTO:
     def getTitle(self):
         return self.title
     
-    def getContent(self):
+    def getContents(self):
         return self.content
     
     def getView(self):
