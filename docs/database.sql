@@ -84,6 +84,10 @@ SELECT b_title FROM board WHERE b_isdelete=0 ORDER BY b_no DESC LIMIT 5 OFFSET 0
 SELECT count(*) FROM board WHERE b_isdelete=0
 -- 마지막 게시글 가져오기
 SELECT * FROM board WHERE b_isdelete=0 ORDER BY b_no DESC LIMIT 1 OFFSET 0
+-- 게시글 조회수 가져오기
+SELECT count(DISTINCT v_ip) FROM views WHERE b_no=11
+-- 게시글 좋아요수 가져오기
+SELECT count(DISTINCT l_ip) FROM likes WHERE b_no=11
 
 ------------
 -- INSERT --
@@ -91,25 +95,18 @@ SELECT * FROM board WHERE b_isdelete=0 ORDER BY b_no DESC LIMIT 1 OFFSET 0
 
 -- 유저
 INSERT INTO user(u_email,u_pw,u_state) VALUES("email","pw","state")
-
 -- 카테고리
 INSERT INTO category(c_name,c_upper) VALUES("c_name","c_upper")
-
 -- 글
 INSERT INTO board(u_no,c_no,b_title,b_contents) VALUES("u_no","c_no","b_title","b_contents")
-
--- 조회
+-- 조회 (u_no nullable로 변경해야함.)
 INSERT INTO views(b_no,u_no,v_ip) VALUES("b_no","u_no","v_ip")
-
 -- 좋아요 (is_like 토글방식으로 해야할지, insert delete 해야할지..)
 INSERT INTO likes(b_no,u_no,l_ip,l_islike) VALUES("b_no","u_no","l_ip","l_islike")
-
 -- 댓글
 INSERT INTO comment(b_no,u_no,co_ip,co_comment,co_upper) VALUES("b_no","u_no","co_ip","co_comment","co_upper")
-
 -- 블랙리스트 (u_no nullable로 변경해야함.)
 INSERT INTO blacklist(u_no,bl_ip,bl_expire,bl_cause) VALUES("u_no","bl_ip","bl_expire","bl_cause")
-
 -- 세션리스트 (u_no nullable로 변경해야함.)
 INSERT INTO sessionlist(u_no,s_key,s_ip,s_expire) VALUES("u_no","s_key","s_ip","s_expire")
 

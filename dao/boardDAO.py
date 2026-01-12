@@ -30,8 +30,14 @@ def setImage(board,image):
 parameter: user객체(userDTO)
 return: 
 '''
-def setView(user):
-    sql=f''
+def setView(user, board):
+    sql=f'INSERT INTO views(b_no,u_no,v_ip) VALUES({board.getNo()},'
+    if user.getNo() == None:
+        sql += f'0,"{user.getIp()}")' # Nullable 변경 후 0을 Null로 변경
+    else:
+        sql += f'{user.getNo()},"{user.getIp()}")'
+    result = db.setData(sql=sql)
+    return result
 
 '''
 좋아요 설정하기.(유저번호 또는 IP가 겹치면 토글)
@@ -61,6 +67,10 @@ def getTitleList_all(page):
     result = db.getData(sql=sql)
     return result
 
+'''
+전체 페이지 리스트 가져오기
+return: 페이지 리스트(list)
+'''
 def getPageList_all():
     pageList = []
     sql='SELECT count(*) FROM board WHERE b_isdelete=0'
@@ -103,7 +113,6 @@ def getRecentlyBoard():
     board = boardDTO.BoardDTO()
     sql=f'SELECT * FROM board WHERE b_isdelete=0 ORDER BY b_no DESC LIMIT 1 OFFSET 0'
     result = db.getData(sql=sql)
-    print(result)
     board.setBoard(
         no=result[0],
         uno=result[1],
@@ -112,6 +121,10 @@ def getRecentlyBoard():
         title=result[4],
         content=result[5]
     )
+    view = getViewByBoardNo(board.getNo())
+    board.setView(view=view)
+    like = getLikeByBoardNo(board.getNo())
+    board.setLike(like=like)
     return board
 
 '''
@@ -130,8 +143,9 @@ parameter: 글번호(int)
 return: 조회수(int)
 '''
 def getViewByBoardNo(bno):
-    view = 0
-    sql=f''
+    sql=f'SELECT count(DISTINCT v_ip) FROM views WHERE b_no={bno}'
+    result = db.getData(sql=sql)
+    view = result[0]
     return view
 
 '''
@@ -140,8 +154,9 @@ parameter: 글번호(int)
 return: 좋아요수(int)
 '''
 def getLikeByBoardNo(bno):
-    like = 0
-    sql=f''
+    sql=f'SELECT count(DISTINCT l_ip) FROM likes WHERE b_no={bno}'
+    result = db.getData(sql=sql)
+    like = result[0]
     return like
 
 '''

@@ -10,8 +10,8 @@ app = Flask(__name__)
 
 @app.before_request
 def validateCheck():
-    clientUser = userDAO.getUserBySessionKey(sessionKey=request.cookies.get('sessionKey'))
     clientIp = request.remote_addr
+    clientUser = userDAO.getUserBySessionKey(sessionKey=request.cookies.get('sessionKey'),ip=clientIp)
     if validate.checkBlackList(clientUser,clientIp):
         abort(403)
 
@@ -20,6 +20,9 @@ def main():
     titleList = boardDAO.getTitleList_all(1)
     pageList = boardDAO.getPageList_all()
     recentlyboard = boardDAO.getRecentlyBoard()
+    clientIp = request.remote_addr
+    clientUser = userDAO.getUserBySessionKey(sessionKey=request.cookies.get('sessionKey'),ip=clientIp)
+    boardDAO.setView(user=clientUser,board=recentlyboard)
     return render_template('main.html',titleList=titleList, pageList=pageList, recentlyboard=recentlyboard)
 
 @app.route("/category/<categoryNo>")

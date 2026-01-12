@@ -71,8 +71,10 @@ def getUserByUserNo(uno):
 parameter: 세션키(String)
 return: user객체(userDTO)
 '''
-def getUserBySessionKey(sessionKey):
+def getUserBySessionKey(sessionKey, ip):
     user = userDTO.UserDTO()
+    # 유저객체 가져와서 세팅 필요
+    user.setIp(ip)
     return user
 
 '''
