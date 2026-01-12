@@ -10,9 +10,21 @@
             <li>{{loop.index}}, {{title}}</li>
             {% endfor %}
         </ul>
+        <ul>
+            {% for page in pageList %}
+            <li>{{page}}</li>
+            {% endfor %}
+        </ul>
     </div>
     <div id="mainRecentlyContentsDiv">
         recentlyContents
+        <div> No : {{recentlyboard.getNo()}}</div>
+        <div> title : {{recentlyboard.getTitle()}}</div>
+        <div> user : {{recentlyboard.getUserNo()}}</div>
+        <div> date : {{recentlyboard.getDate()}}</div>
+        <div> contents : {{recentlyboard.getContents()}}</div>
+        <div> view : {{recentlyboard.getView()}}</div>
+        <div> like : {{recentlyboard.getLike()}}</div>
     </div>
 </div>
 <script>

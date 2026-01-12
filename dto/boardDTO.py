@@ -8,9 +8,8 @@ class BoardDTO:
         self.content = None
         self.view = None
         self.like = None
-        self.isDelete = None
     
-    def setBoard(self,uno,cno,title,content,no=None,date=None,view=None,like=None,isDelete=None):
+    def setBoard(self,uno,cno,title,content,no=None,date=None,view=None,like=None,isDelete=0):
         self.no = no
         self.uno = uno
         self.cno = cno

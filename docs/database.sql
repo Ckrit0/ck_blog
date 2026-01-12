@@ -79,7 +79,11 @@ CREATE TABLE sessionlist(
 -- SELECT --
 ------------
 -- 전체 글 제목의 목록 가져오기(최신순, 페이지별)
-SELECT b_title FROM board ORDER BY b_no DESC LIMIT 5 OFFSET 0
+SELECT b_title FROM board WHERE b_isdelete=0 ORDER BY b_no DESC LIMIT 5 OFFSET 0
+-- 전체 글 갯수 가져오기
+SELECT count(*) FROM board WHERE b_isdelete=0
+-- 마지막 게시글 가져오기
+SELECT * FROM board WHERE b_isdelete=0 ORDER BY b_no DESC LIMIT 1 OFFSET 0
 
 ------------
 -- INSERT --

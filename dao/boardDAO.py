@@ -1,6 +1,7 @@
 from dto import boardDTO
 from service import db
 from service import store
+import math
 
 '''
 글 작성하기
@@ -56,9 +57,17 @@ return: 해당 페이지의 [글 번호(int), 제목(String)]의 리스트
 def getTitleList_all(page):
     limit = store.pageCount_all
     offset = limit * (page-1)
-    sql=f'SELECT b_title FROM board ORDER BY b_no DESC LIMIT {limit} OFFSET {offset}'
+    sql=f'SELECT b_title FROM board WHERE b_isdelete=0 ORDER BY b_no DESC LIMIT {limit} OFFSET {offset}'
     result = db.getData(sql=sql)
     return result
+
+def getPageList_all():
+    pageList = []
+    sql='SELECT count(*) FROM board WHERE b_isdelete=0'
+    result = math.ceil(db.getData(sql=sql)[0]/store.pageCount_all)
+    for i in range(result):
+        pageList.append(i+1)
+    return pageList
 
 '''
 카테고리별 글목록 가져오기
@@ -88,6 +97,21 @@ return: 글 객체(boardDTO)
 def getBoardByBoardNo(bno):
     board = boardDTO.BoardDTO()
     sql=f''
+    return board
+
+def getRecentlyBoard():
+    board = boardDTO.BoardDTO()
+    sql=f'SELECT * FROM board WHERE b_isdelete=0 ORDER BY b_no DESC LIMIT 1 OFFSET 0'
+    result = db.getData(sql=sql)
+    print(result)
+    board.setBoard(
+        no=result[0],
+        uno=result[1],
+        cno=result[2],
+        date=result[3],
+        title=result[4],
+        content=result[5]
+    )
     return board
 
 '''

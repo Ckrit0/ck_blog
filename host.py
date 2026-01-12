@@ -18,7 +18,9 @@ def validateCheck():
 @app.route("/")
 def main():
     titleList = boardDAO.getTitleList_all(1)
-    return render_template('main.html',titleList=titleList)
+    pageList = boardDAO.getPageList_all()
+    recentlyboard = boardDAO.getRecentlyBoard()
+    return render_template('main.html',titleList=titleList, pageList=pageList, recentlyboard=recentlyboard)
 
 @app.route("/category/<categoryNo>")
 def categoryPage(categoryNo):
