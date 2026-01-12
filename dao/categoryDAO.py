@@ -27,11 +27,23 @@ def updateCategory(category):
 
 '''
 카테고리 리스트 가져오기
-return: 카테고리객체 리스트(List)
+return: 카테고리객체 리스트([[상위리스트,[하위리스트...]]...])
 '''
 def getCategoryList():
     categoryList = []
-    sql = f''
+    sql = 'SELECT * from category WHERE c_upper IS NULL'
+    parentCategoryList = db.getData(sql=sql)
+    for parentCategory in parentCategoryList:
+        pc = categoryDTO.CategoryDTO()
+        pc.setCategory(parentCategory[0],parentCategory[1],parentCategory[2])
+        tempList = []
+        sql = f'SELECT * from category WHERE c_upper={pc.getNo()}'
+        childCategoryList = db.getData(sql=sql)
+        for childCategory in childCategoryList:
+            cc = categoryDTO.CategoryDTO()
+            cc.setCategory(childCategory[0],childCategory[1],childCategory[2])
+            tempList.append(cc)
+        categoryList.append([pc,tempList])
     return categoryList
 
 '''

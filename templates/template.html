@@ -31,7 +31,18 @@
                 <input id="searchInput" />
                 <button id="searchBtn">search</button>
             </div>
-            <div id="categoryDiv">카테고리</div>
+            <div id="categoryDiv">
+                <ul>
+                {% for category in categoryList %}
+                <li>{{category[0].getName()}}</li>
+                <ol>
+                    {% for childCategory in category[1] %}
+                    <li>{{childCategory.getName()}}</li>
+                    {% endfor %}
+                </ol>
+                {% endfor %}
+                </ul>
+            </div>
             <div id="recentDiv">최근에 본 글</div>
             
         </sidebar>

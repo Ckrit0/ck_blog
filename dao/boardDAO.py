@@ -63,7 +63,7 @@ return: 해당 페이지의 [글 번호(int), 제목(String)]의 리스트
 def getTitleList_all(page):
     limit = store.pageCount_all
     offset = limit * (page-1)
-    sql=f'SELECT b_title FROM board WHERE b_isdelete=0 ORDER BY b_no DESC LIMIT {limit} OFFSET {offset}'
+    sql=f'SELECT b_no,b_title FROM board WHERE b_isdelete=0 ORDER BY b_no DESC LIMIT {limit} OFFSET {offset}'
     result = db.getData(sql=sql)
     return result
 
@@ -74,7 +74,7 @@ return: 페이지 리스트(list)
 def getPageList_all():
     pageList = []
     sql='SELECT count(*) FROM board WHERE b_isdelete=0'
-    result = math.ceil(db.getData(sql=sql)[0]/store.pageCount_all)
+    result = math.ceil(db.getData(sql=sql)[0][0]/store.pageCount_all)
     for i in range(result):
         pageList.append(i+1)
     return pageList
@@ -114,12 +114,12 @@ def getRecentlyBoard():
     sql=f'SELECT * FROM board WHERE b_isdelete=0 ORDER BY b_no DESC LIMIT 1 OFFSET 0'
     result = db.getData(sql=sql)
     board.setBoard(
-        no=result[0],
-        uno=result[1],
-        cno=result[2],
-        date=result[3],
-        title=result[4],
-        content=result[5]
+        no=result[0][0],
+        uno=result[0][1],
+        cno=result[0][2],
+        date=result[0][3],
+        title=result[0][4],
+        content=result[0][5]
     )
     view = getViewByBoardNo(board.getNo())
     board.setView(view=view)
@@ -145,7 +145,7 @@ return: 조회수(int)
 def getViewByBoardNo(bno):
     sql=f'SELECT count(DISTINCT v_ip) FROM views WHERE b_no={bno}'
     result = db.getData(sql=sql)
-    view = result[0]
+    view = result[0][0]
     return view
 
 '''
@@ -156,7 +156,7 @@ return: 좋아요수(int)
 def getLikeByBoardNo(bno):
     sql=f'SELECT count(DISTINCT l_ip) FROM likes WHERE b_no={bno}'
     result = db.getData(sql=sql)
-    like = result[0]
+    like = result[0][0]
     return like
 
 '''

@@ -40,8 +40,10 @@ def getData(sql):
         cur.execute(sql)
         result = cur.fetchall()
         for row in result:
+            tempList = []
             for r in row:
-                data.append(r)
+                tempList.append(r)
+            data.append(tempList)
     except Exception as e:
         print(e)
     finally:

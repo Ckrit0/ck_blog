@@ -7,7 +7,7 @@
         recentlyContentsList
         <ul>
             {% for title in titleList %}
-            <li>{{loop.index}}, {{title}}</li>
+            <li>{{title[0]}}, {{title[1]}}</li>
             {% endfor %}
         </ul>
         <ul>

@@ -17,13 +17,14 @@ def validateCheck():
 
 @app.route("/")
 def main():
+    categoryList = categoryDAO.getCategoryList()
     titleList = boardDAO.getTitleList_all(1)
     pageList = boardDAO.getPageList_all()
     recentlyboard = boardDAO.getRecentlyBoard()
     clientIp = request.remote_addr
     clientUser = userDAO.getUserBySessionKey(sessionKey=request.cookies.get('sessionKey'),ip=clientIp)
     boardDAO.setView(user=clientUser,board=recentlyboard)
-    return render_template('main.html',titleList=titleList, pageList=pageList, recentlyboard=recentlyboard)
+    return render_template('main.html',titleList=titleList, pageList=pageList, recentlyboard=recentlyboard, categoryList=categoryList)
 
 @app.route("/category/<categoryNo>")
 def categoryPage(categoryNo):

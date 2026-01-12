@@ -78,6 +78,10 @@ CREATE TABLE sessionlist(
 ------------
 -- SELECT --
 ------------
+-- 최상위 카테고리 가져오기
+SELECT * FROM category WHERE c_upper IS NULL
+-- 하위 카테고리 가져오기
+SELECT * FROM category WHERE c_upper=1
 -- 전체 글 제목의 목록 가져오기(최신순, 페이지별)
 SELECT b_title FROM board WHERE b_isdelete=0 ORDER BY b_no DESC LIMIT 5 OFFSET 0
 -- 전체 글 갯수 가져오기
