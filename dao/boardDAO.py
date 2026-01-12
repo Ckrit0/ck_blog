@@ -1,5 +1,6 @@
 from dto import boardDTO
 from service import db
+from service import store
 
 '''
 글 작성하기
@@ -52,10 +53,12 @@ def updateBoard(board):
 parameter: 페이지(int)
 return: 해당 페이지의 [글 번호(int), 제목(String)]의 리스트
 '''
-def getTitleList_all(category, page):
-    boardNoAndTitleList = []
-    sql=f''
-    return boardNoAndTitleList
+def getTitleList_all(page):
+    limit = store.pageCount_all
+    offset = limit * (page-1)
+    sql=f'SELECT b_title FROM board ORDER BY b_no DESC LIMIT {limit} OFFSET {offset}'
+    result = db.getData(sql=sql)
+    return result
 
 '''
 카테고리별 글목록 가져오기

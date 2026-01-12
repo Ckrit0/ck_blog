@@ -5,4 +5,3 @@ logPath = './log'
 pageCount_user = 5
 pageCount_all = 5
 pageCount_category = 5
-pageCount_board = 5

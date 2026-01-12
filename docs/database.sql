@@ -78,8 +78,8 @@ CREATE TABLE sessionlist(
 ------------
 -- SELECT --
 ------------
-
-
+-- 전체 글 제목의 목록 가져오기(최신순, 페이지별)
+SELECT b_title FROM board ORDER BY b_no DESC LIMIT 5 OFFSET 0
 
 ------------
 -- INSERT --

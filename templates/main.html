@@ -5,6 +5,11 @@
     mainPage
     <div id="mainRecentlyContentsListDiv" class="contentsList">
         recentlyContentsList
+        <ul>
+            {% for title in titleList %}
+            <li>{{loop.index}}, {{title}}</li>
+            {% endfor %}
+        </ul>
     </div>
     <div id="mainRecentlyContentsDiv">
         recentlyContents

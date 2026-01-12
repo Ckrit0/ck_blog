@@ -10,11 +10,12 @@ class BoardDTO:
         self.like = None
         self.isDelete = None
     
-    def setBoard(self,uno,cno,content,no=None,date=None,view=None,like=None,isDelete=None):
+    def setBoard(self,uno,cno,title,content,no=None,date=None,view=None,like=None,isDelete=None):
         self.no = no
         self.uno = uno
         self.cno = cno
         self.date = date
+        self.title = title
         self.content = content
         self.view = view
         self.like = like
