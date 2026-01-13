@@ -1,6 +1,7 @@
 from dto import commentDTO
 from service import db
 from service import store
+import math
 
 '''
 댓글 달기
@@ -57,6 +58,18 @@ def getCommentListByBoardNo(bno):
             tempList.append(cc)
         commentList.append([pc,tempList])
     return commentList
+
+'''
+해당 글에 작성된 댓글의 페이지 리스트 가져오기
+return: 댓글 페이지 리스트(list)
+'''
+def getCommentPageListByBoardNo(bno):
+    pageList = []
+    sql = f'SELECT count(*) FROM comment WHERE b_no = {bno} AND co_upper IS NULL'
+    result = math.ceil(db.getData(sql=sql)[0][0]/store.pageCount_comment)
+    for i in range(result):
+        pageList.append(i+1)
+    return pageList
 
 '''
 댓글 삭제 (co_isdelete를 1로 update)

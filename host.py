@@ -28,17 +28,20 @@ def main():
     pageList = boardDAO.getPageList_all()
     recentlyboard = boardDAO.getRecentlyBoard()
     commentList = commentDAO.getCommentListByBoardNo(recentlyboard.getNo())
+    commentPageList = commentDAO.getCommentPageListByBoardNo(recentlyboard.getNo())
     
     # 뷰 설정하기
     boardDAO.setView(user=clientUser,board=recentlyboard)
     
     return render_template('main.html',
+        clientUser=clientUser,
+        categoryList=categoryList,
+        recentlyTitleList=recentlyTitleList,
         titleList=titleList,
         pageList=pageList,
         recentlyboard=recentlyboard,
-        categoryList=categoryList,
         commentList=commentList,
-        recentlyTitleList=recentlyTitleList
+        commentPageList=commentPageList
     )
 
 @app.route("/category/<categoryNo>")

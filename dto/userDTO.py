@@ -4,7 +4,7 @@ class UserDTO:
         self.email = None
         self.ip = None
         self.pw = None
-        self.state = None
+        self.state = 0
         self.lastDate = None
         self.joinDate = None
     

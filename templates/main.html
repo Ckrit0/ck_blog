@@ -2,21 +2,20 @@
 
 {% block content %}
 <div id="mainDiv">
-    mainPage
-    <div id="mainRecentlyContentsListDiv" class="contentsList">
+    <div id="mainRecentlyContentsListDiv" class="findBorder">
         최신글 목록
         <ul>
             {% for title in titleList %}
             <li>{{title[0]}}, {{title[1]}}</li>
             {% endfor %}
         </ul>
-        <ul>
+        <ul class="paging">
             {% for page in pageList %}
             <li>{{page}}</li>
             {% endfor %}
         </ul>
     </div>
-    <div id="mainRecentlyContentsDiv">
+    <div id="mainRecentlyContentsDiv" class="findBorder">
         최신글
         <div> 글번호 : {{recentlyboard.getNo()}}</div>
         <div>
@@ -27,7 +26,7 @@
         <div> 작성자 : {{recentlyboard.getUserEmail()}}</div>
         <div> 작성일 : {{recentlyboard.getDate()}}</div>
         <div> 내용 : {{recentlyboard.getContents()}}</div>
-        <div id="commentDiv">
+        <div id="commentDiv" class="findBorder">
             댓글
             <ul>
                 {% for comment in commentList %}
@@ -44,7 +43,12 @@
                     {% endfor %}
                 </ul>
                 {% endfor %}
-                </ul>
+            </ul>
+            <ul class="paging">
+            {% for commentPage in commentPageList %}
+            <li>{{commentPage}}</li>
+            {% endfor %}
+        </ul>
         </div>
     </div>
 </div>

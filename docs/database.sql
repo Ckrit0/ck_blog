@@ -106,6 +106,8 @@ SELECT count(DISTINCT l_ip) FROM likes WHERE b_no=11;
 SELECT * FROM comment WHERE b_no=11 AND co_upper IS NULL ORDER BY co_no DESC LIMIT 5 OFFSET 0;
 -- 게시글의 하위 댓글 가져오기(오래된 순, 페이지별)
 SELECT * FROM comment WHERE b_no=11 AND co_upper = 1 ORDER BY co_no LIMIT 5 OFFSET 0;
+-- 게시글의 댓글 페이지 가져오기(상위 댓글 기준)
+SELECT count(*) FROM comment WHERE b_no = 11 AND co_upper IS NULL;
 -- 유저 번호로 유저 정보 받기
 SELECT * FROM user WHERE u_no = 0 AND u_state != 0; -- 0 미가입
 

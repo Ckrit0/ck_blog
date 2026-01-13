@@ -25,8 +25,12 @@
     <main>
         <sidebar>
             <img src="{{url_for('static',filename='./img/logo.svg')}}" id="logoDiv"></img>
-            <div id="noticeDiv">한줄 공지/인사글</div>
-            <div id="userInfoDiv">client/IP정보</div>
+            <div id="noticeDiv">
+                오늘도 행복한 하루 되시길 바랍니다.
+            </div>
+            <div id="userInfoDiv">
+                {{clientUser.getEmail()}}({{clientUser.getMarkingIp()}})
+            </div>
             <div id="searchDiv">
                 <input id="searchInput" />
                 <button id="searchBtn">search</button>
@@ -35,10 +39,10 @@
                 카테고리
                 <ul>
                 {% for category in categoryList %}
-                <li>[{{category[0].getOrder()}}]{{category[0].getName()}}</li>
+                <li>{{category[0].getName()}}</li>
                 <ul>
                     {% for childCategory in category[1] %}
-                    <li>[{{childCategory.getOrder()}}]{{childCategory.getName()}}</li>
+                    <li>{{childCategory.getName()}}</li>
                     {% endfor %}
                 </ul>
                 {% endfor %}
