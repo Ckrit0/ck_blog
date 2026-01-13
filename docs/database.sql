@@ -17,7 +17,8 @@ CREATE TABLE user(
 CREATE TABLE category(
     c_no INT(10) PRIMARY KEY NOT NULL AUTO_INCREMENT,
     c_name VARCHAR(100) NOT NULL,
-    c_upper INT(10) NULL
+    c_upper INT(10) NULL,
+    c_order INT(10) NOT NULL
 );
 
 CREATE TABLE board(

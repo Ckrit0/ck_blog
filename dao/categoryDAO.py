@@ -9,11 +9,12 @@ return:
 def setCategory(category):
     cName = category.getName()
     cUpper = category.getUpper()
-    sql = f'INSERT INTO category(c_name,c_upper) VALUES("{cName}",'
+    cOrder = category.getOrder()
+    sql = f'INSERT INTO category(c_name,c_upper,c_order) VALUES("{cName}",'
     if cUpper == None:
-        sql += 'Null)'
+        sql += f'Null, {cOrder})'
     else:
-        sql += f'"{cUpper}")'
+        sql += f'"{cUpper}",{cOrder})'
     result = db.setData(sql=sql)
     return result
 
@@ -35,16 +36,26 @@ def getCategoryList():
     parentCategoryList = db.getData(sql=sql)
     for parentCategory in parentCategoryList:
         pc = categoryDTO.CategoryDTO()
-        pc.setCategory(parentCategory[0],parentCategory[1],parentCategory[2])
+        pc.setCategory(parentCategory[0],parentCategory[1],parentCategory[2],parentCategory[3])
         tempList = []
         sql = f'SELECT * from category WHERE c_upper={pc.getNo()}'
         childCategoryList = db.getData(sql=sql)
         for childCategory in childCategoryList:
             cc = categoryDTO.CategoryDTO()
-            cc.setCategory(childCategory[0],childCategory[1],childCategory[2])
+            cc.setCategory(childCategory[0],childCategory[1],childCategory[2],childCategory[3])
             tempList.append(cc)
-        categoryList.append([pc,tempList])
-    return categoryList
+        childList = []
+        for i in range(len(tempList)):
+            for j in range(len(tempList)):
+                if tempList[j].getOrder() == i+1:
+                    childList.append(tempList[j])
+        categoryList.append([pc,childList])
+    result = []
+    for i in range(len(categoryList)):
+        for j in range(len(categoryList)):
+            if categoryList[j][0].getOrder() == i+1:
+                result.append(categoryList[j])
+    return result
 
 '''
 카테고리 삭제하기

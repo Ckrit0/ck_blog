@@ -34,10 +34,10 @@
             <div id="categoryDiv">
                 <ul>
                 {% for category in categoryList %}
-                <li>{{category[0].getName()}}</li>
+                <li>[{{category[0].getOrder()}}]{{category[0].getName()}}</li>
                 <ul>
                     {% for childCategory in category[1] %}
-                    <li>{{childCategory.getName()}}</li>
+                    <li>[{{childCategory.getOrder()}}]{{childCategory.getName()}}</li>
                     {% endfor %}
                 </ul>
                 {% endfor %}
