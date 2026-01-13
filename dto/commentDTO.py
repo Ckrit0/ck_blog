@@ -59,7 +59,14 @@ class CommentDTO:
     def getIP(self):
         return self.ip
     
+    def getMarkingIp(self):
+        ipList = self.ip.split('.')
+        markingIp = ipList[0] + '.' + ipList[1] + '.' + '*' + '.' + '*'
+        return markingIp
+    
     def getComment(self):
+        if self.isDelete == 1:
+            return '삭제되었습니다.'
         return self.comment
     
     def getDate(self):

@@ -41,10 +41,21 @@ class UserDTO:
         return self.no
     
     def getEmail(self):
+        if self.state == 0:
+            return '비회원'
+        elif self.state == 1:
+            return self.email + "(미인증)"
+        elif self.state == 3:
+            return '탈퇴한 회원'
         return self.email
     
     def getIp(self):
         return self.ip
+    
+    def getMarkingIp(self):
+        ipList = self.ip.split('.')
+        markingIp = ipList[0] + '.' + ipList[1] + '.' + '*' + '.' + '*'
+        return markingIp
     
     def getPw(self):
         return self.pw

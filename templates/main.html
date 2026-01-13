@@ -4,7 +4,7 @@
 <div id="mainDiv">
     mainPage
     <div id="mainRecentlyContentsListDiv" class="contentsList">
-        recentlyContentsList
+        최신글 목록
         <ul>
             {% for title in titleList %}
             <li>{{title[0]}}, {{title[1]}}</li>
@@ -17,34 +17,29 @@
         </ul>
     </div>
     <div id="mainRecentlyContentsDiv">
-        recentlyContents
-        <div> No : {{recentlyboard.getNo()}}</div>
-        <div> title : {{recentlyboard.getTitle()}}</div>
-        <div> user : {{recentlyboard.getUserEmail()}}</div>
-        <div> date : {{recentlyboard.getDate()}}</div>
-        <div> contents : {{recentlyboard.getContents()}}</div>
-        <div> view : {{recentlyboard.getView()}}</div>
-        <div> like : {{recentlyboard.getLike()}}</div>
+        최신글
+        <div> 글번호 : {{recentlyboard.getNo()}}</div>
+        <div>
+            제목 : {{recentlyboard.getTitle()}}
+            (조회수 : {{recentlyboard.getView()}})
+            (좋아요수 : {{recentlyboard.getLike()}})
+        </div>
+        <div> 작성자 : {{recentlyboard.getUserEmail()}}</div>
+        <div> 작성일 : {{recentlyboard.getDate()}}</div>
+        <div> 내용 : {{recentlyboard.getContents()}}</div>
         <div id="commentDiv">
+            댓글
             <ul>
                 {% for comment in commentList %}
                 <li>
-                    {% if comment[0].getIsDelete() == 0 %}
-                    작성자:{{comment[0].getUserEmail()}}({{comment[0].getIP()}}),{{comment[0].getDate()}}<br>
-                    댓글:{{comment[0].getComment()}}<br>
-                    {% else %}
-                    삭제된 댓글임. ㅇㅇ
-                    {% endif %}
+                    작성자:{{comment[0].getUserEmail()}}({{comment[0].getMarkingIP()}}),{{comment[0].getDate()}}<br>
+                    댓글:{{comment[0].getComment()}}
                 </li>
                 <ul>
                     {% for childComment in comment[1] %}
                     <li>
-                        {% if childComment.getIsDelete() == 0 %}
-                        작성자:{{childComment.getUserEmail()}}({{childComment.getIP()}}),{{childComment.getDate()}}<br>
-                        댓글:{{childComment.getComment()}}<br>
-                        {% else %}
-                        삭제된 댓글임. ㅇㅇ
-                        {% endif %}
+                        작성자:{{childComment.getUserEmail()}}({{childComment.getMarkingIP()}}),{{childComment.getDate()}}<br>
+                        댓글:{{childComment.getComment()}}
                     </li>
                     {% endfor %}
                 </ul>

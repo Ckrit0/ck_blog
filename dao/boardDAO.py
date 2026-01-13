@@ -94,7 +94,7 @@ def getRecentlyTitleList_user(user):
             ON b.b_no = v.b_no'
     else:
         sql=f'SELECT b.b_no, b.b_title FROM board b\
-            JOIN (SELECT DISTINCT b_no FROM views WHERE v_no = {uno} ORDER BY v_date DESC LIMIT {limit}) v\
+            JOIN (SELECT DISTINCT b_no FROM views WHERE u_no = {uno} ORDER BY v_date DESC LIMIT {limit}) v\
             ON b.b_no = v.b_no'
     result = db.getData(sql=sql)
     return result
