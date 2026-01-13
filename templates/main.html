@@ -32,13 +32,13 @@
             <ul>
                 {% for comment in commentList %}
                 <li>
-                    작성자:{{comment[0].getUserEmail()}}({{comment[0].getMarkingIP()}}),{{comment[0].getDate()}}<br>
+                    작성자:{{comment[0].getUserEmail()}}({{comment[0].getMarkingIp()}}),{{comment[0].getDate()}}<br>
                     댓글:{{comment[0].getComment()}}
                 </li>
                 <ul>
                     {% for childComment in comment[1] %}
                     <li>
-                        작성자:{{childComment.getUserEmail()}}({{childComment.getMarkingIP()}}),{{childComment.getDate()}}<br>
+                        작성자:{{childComment.getUserEmail()}}({{childComment.getMarkingIp()}}),{{childComment.getDate()}}<br>
                         댓글:{{childComment.getComment()}}
                     </li>
                     {% endfor %}
