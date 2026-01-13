@@ -25,6 +25,32 @@
         <div> contents : {{recentlyboard.getContents()}}</div>
         <div> view : {{recentlyboard.getView()}}</div>
         <div> like : {{recentlyboard.getLike()}}</div>
+        <div id="commentDiv">
+            <ul>
+                {% for comment in commentList %}
+                <li>
+                    {% if comment[0].getIsDelete() == 0 %}
+                    작성자:{{comment[0].getUserNo()}}({{comment[0].getIP()}}),{{comment[0].getDate()}}<br>
+                    댓글:{{comment[0].getComment()}}<br>
+                    {% else %}
+                    삭제된 댓글임. ㅇㅇ
+                    {% endif %}
+                </li>
+                <ol>
+                    {% for childComment in comment[1] %}
+                    <li>
+                        {% if childComment.getIsDelete() == 0 %}
+                        작성자:{{childComment.getUserNo()}}({{childComment.getIP()}}),{{childComment.getDate()}}<br>
+                        댓글:{{childComment.getComment()}}<br>
+                        {% else %}
+                        삭제된 댓글임. ㅇㅇ
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                </ol>
+                {% endfor %}
+                </ul>
+        </div>
     </div>
 </div>
 <script>

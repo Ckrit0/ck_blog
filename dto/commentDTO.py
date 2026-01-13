@@ -8,12 +8,13 @@ class CommentDTO:
         self.upper = None
         self.isDelete = None
     
-    def setCommntAll(self,no,bno,uno,ip,comment,upper,isDelete):
+    def setCommentAll(self,no,bno,uno,ip,comment,date,upper,isDelete):
         self.no = no
         self.bno = bno
         self.uno = uno
         self.ip = ip
         self.comment = comment
+        self.date = date
         self.upper = upper
         self.isDelete = isDelete
 
@@ -31,6 +32,9 @@ class CommentDTO:
     
     def setComment(self,comment):
         self.comment = comment
+
+    def setDate(self,date):
+        self.date = date
     
     def setUpper(self,upper):
         self.upper = upper
@@ -52,6 +56,9 @@ class CommentDTO:
     
     def getComment(self):
         return self.comment
+    
+    def getDate(self):
+        return self.date
     
     def getUpper(self):
         return self.upper

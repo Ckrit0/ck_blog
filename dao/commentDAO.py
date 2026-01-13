@@ -1,5 +1,6 @@
 from dto import commentDTO
 from service import db
+from service import store
 
 '''
 댓글 달기
@@ -24,6 +25,37 @@ return: 댓글객체 리스트(List)
 '''
 def getCommentListByBoardNo(bno):
     commentList = []
+    sql = f'SELECT * from comment WHERE b_no={bno} AND co_upper IS NULL ORDER BY co_no DESC LIMIT {store.pageCount_comment} OFFSET 0'
+    parentCommentList = db.getData(sql=sql)
+    for parentComment in parentCommentList:
+        pc = commentDTO.CommentDTO()
+        pc.setCommentAll(
+            parentComment[0],
+            parentComment[1],
+            parentComment[2],
+            parentComment[3],
+            parentComment[4],
+            parentComment[5],
+            parentComment[6],
+            parentComment[7]
+        )
+        tempList = []
+        sql = f'SELECT * from comment WHERE b_no={bno} AND co_upper={pc.getNo()} ORDER BY co_no LIMIT {store.pageCount_comment} OFFSET 0'
+        childCommentList = db.getData(sql=sql)
+        for childComment in childCommentList:
+            cc = commentDTO.CommentDTO()
+            cc.setCommentAll(
+                childComment[0],
+                childComment[1],
+                childComment[2],
+                childComment[3],
+                childComment[4],
+                childComment[5],
+                childComment[6],
+                childComment[7]
+            )
+            tempList.append(cc)
+        commentList.append([pc,tempList])
     return commentList
 
 '''
