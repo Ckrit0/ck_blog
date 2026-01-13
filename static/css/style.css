@@ -4,6 +4,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Orbit&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
 
+/* 변수 */
 :root{
     --theme-color: #A67F78;
     --bg-color : #E1DCD9;
@@ -18,7 +19,7 @@
     --logo-size-height : 125px;
 }
 
-/* 공용 부분 */
+/* 공용 */
 body{
     margin: 0 auto;
     padding: 0;
@@ -59,8 +60,41 @@ button:hover{
 }
 
 ul{
-    list-style: none;
+    margin: 0;
     padding: 0;
+    list-style: none;
+}
+
+.subTitle{
+    display: block;
+    font-family: var(--title-font);
+    font-size: 30px;
+    font-weight: 600;
+    color: var(--theme-color);
+}
+
+.listUl{
+    display: inline-block;
+    width: 60%;
+    border-top: 1px dotted var(--theme-color);
+}
+
+.listUl>li{
+    border-bottom: 1px dotted var(--theme-color);
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
+.pagingUl{
+    display: inline-flex;
+}
+
+.pagingUl>li{
+    margin: 5px 5px;
+    font-family: var(--title-font);
+    font-size: 20px;
+    color: var(--theme-color);
+    font-weight: 600;
 }
 
 .horizontalLine{
@@ -73,7 +107,7 @@ ul{
     border: 2px solid var(--theme-color);
 }
 
-/* 타이틀 부분 */
+/* 템플릿 타이틀 */
 
 #titleBar{
     position: sticky;
@@ -98,7 +132,7 @@ ul{
     top: var(--title-size);
 }
 
-/* 헤더 부분 */
+/* 템플릿 헤더 */
 header{
     background-color: var(--dark-color);
     z-index: 998;
@@ -115,13 +149,13 @@ header{
 }
 
 
-/* 메인 부분 */
+/* 템플릿 메인 */
 main{
     display: flex;
     justify-content: center;
 }
 
-/* 사이드바 부분 */
+/* 템플릿 사이드바 */
 sidebar{
     position: sticky;
     top: var(--title-size);
@@ -184,7 +218,7 @@ sidebar{
     border-radius: 20px;
 }
 
-/* 컨텐츠 부분 */
+/* 템플릿 컨텐츠 */
 contents{
     width: 1000px;
     padding-top: 5px;
@@ -192,6 +226,50 @@ contents{
     font-family: var(--contents-font);
     border-left: 1px dotted var(--theme-color);
     border-right: 1px dotted var(--theme-color);
+}
+
+/* 메인페이지 */
+#postTitleBox{
+    display: grid;
+    grid-template-columns: 25% 25% 25% 25%;
+    margin-top: 20px;
+    background-color: var(--theme-color);
+    box-shadow: inset 0px 0px 80px 0px var(--bg-color);
+    font-weight: 600;
+    color: var(--bg-color);
+    text-shadow: 3px 3px 2px var(--dark-color);
+}
+#postTitle{
+    grid-row: 1;
+    grid-column-start: 1;
+    grid-column-end: 5;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    font-family: var(--subject-font);
+    font-size: 60px;
+}
+#postView{
+    grid-row: 2;
+    grid-column: 1;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    font-size: 20px;
+    text-shadow: 3px 3px 2px var(--dark-color);
+}
+#postInfo1{
+    grid-row: 2;
+    grid-column: 3;
+    padding: 20px;
+    font-size: 18px;
+}
+#postInfo2{
+    grid-row: 2;
+    grid-column: 4;
+    padding: 20px;
+    font-size: 18px;
+}
+#postContents{
+
 }
 
 /* 미디어쿼리 태블릿 */

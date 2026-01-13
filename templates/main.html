@@ -2,30 +2,32 @@
 
 {% block content %}
 <div id="mainDiv">
-    <div id="mainRecentlyContentsListDiv" class="findBorder">
-        최신글 목록
-        <ul>
+    <div id="mainRecentlyContentsListDiv">
+        <span class="subTitle">Lastest Post</span>
+        <ul class="listUl">
             {% for title in titleList %}
-            <li>{{title[0]}}, {{title[1]}}</li>
+            <li id="title{{title[0]}}">{{title[1]}}</li>
             {% endfor %}
-        </ul>
-        <ul class="paging">
+        </ul><br>
+        <ul class="pagingUl">
             {% for page in pageList %}
-            <li>{{page}}</li>
+            <li id="page{{page}}">{{page}}</li>
             {% endfor %}
         </ul>
     </div>
-    <div id="mainRecentlyContentsDiv" class="findBorder">
-        최신글
-        <div> 글번호 : {{recentlyboard.getNo()}}</div>
-        <div>
-            제목 : {{recentlyboard.getTitle()}}
-            (조회수 : {{recentlyboard.getView()}})
-            (좋아요수 : {{recentlyboard.getLike()}})
+    <div id="mainRecentlyContentsDiv">
+        <div id="postTitleBox">
+            <div id="postTitle">{{recentlyboard.getTitle()}}</div>
+            <div id="postView">
+                👁️‍🗨️ {{recentlyboard.getView()}}&nbsp;&nbsp;❤️ {{recentlyboard.getLike()}}
+            </div>
+            <div></div>
+            <div id="postInfo1">{{recentlyboard.getUserEmail()}}</div>
+            <div id="postInfo2">{{recentlyboard.getDate()}}</div>
         </div>
-        <div> 작성자 : {{recentlyboard.getUserEmail()}}</div>
-        <div> 작성일 : {{recentlyboard.getDate()}}</div>
-        <div> 내용 : {{recentlyboard.getContents()}}</div>
+        <div id="postContents">
+            내용 : {{recentlyboard.getContents()}}
+        </div>
         <div id="commentDiv" class="findBorder">
             댓글
             <ul>
@@ -44,11 +46,11 @@
                 </ul>
                 {% endfor %}
             </ul>
-            <ul class="paging">
-            {% for commentPage in commentPageList %}
-            <li>{{commentPage}}</li>
-            {% endfor %}
-        </ul>
+            <ul class="pagingUl">
+                {% for commentPage in commentPageList %}
+                <li id="commentPage{{commentPage}}">{{commentPage}}</li>
+                {% endfor %}
+            </ul>
         </div>
     </div>
 </div>
