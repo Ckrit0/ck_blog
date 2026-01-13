@@ -64,6 +64,10 @@ return: user객체(userDTO)
 '''
 def getUserByUserNo(uno):
     user = userDTO.UserDTO()
+    sql = f'SELECT * FROM user WHERE u_no = {uno} AND u_state != 0'
+    result = db.getData(sql=sql)
+    if len(result[0]) != 0:
+        user.setUser(result[0])
     return user
 
 '''

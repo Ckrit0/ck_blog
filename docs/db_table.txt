@@ -11,6 +11,7 @@ u_leavedate     탈퇴날짜
 c_no	        pk, 카테고리번호
 c_name      	카테고리명
 c_upper	        상위카테고리번호
+c_order         정렬순서
 
 < BOARD >
 b_no	        pk, 글번호
@@ -44,6 +45,7 @@ b_no            글번호
 u_no	        작성자
 co_ip           IP
 co_comment   	댓글내용
+co_date         작성일
 co_upper	    상위댓글
 co_isdelete     삭제여부(0: 미삭제, 1: 삭제)
 

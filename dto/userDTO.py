@@ -1,6 +1,6 @@
 class UserDTO:
     def __init__(self):
-        self.no = None
+        self.no = 0
         self.email = None
         self.ip = None
         self.pw = None
@@ -15,31 +15,45 @@ class UserDTO:
         self.state = dbResult[3]
         self.lastDate = dbResult[4]
         self.joinDate = dbResult[5]
+
     def setNo(self,no):
         self.no = no
+
     def setEmail(self,email):
         self.email = email
+
     def setIp(self,ip):
         self.ip = ip
+
     def setPw(self,pw):
         self.pw = pw
+
     def setState(self,state):
         self.state = state
+
     def setLastDate(self,lastDate):
         self.lastDate = lastDate
+
     def setJoinDate(self,joinDate):
         self.joinDate = joinDate
+
     def getNo(self):
         return self.no
+    
     def getEmail(self):
         return self.email
+    
     def getIp(self):
         return self.ip
+    
     def getPw(self):
         return self.pw
+    
     def getState(self):
         return self.state
+    
     def getLastDate(self):
         return self.lastDate
+    
     def getJoinDate(self):
         return self.joinDate

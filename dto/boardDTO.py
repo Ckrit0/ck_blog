@@ -1,3 +1,5 @@
+from dao import userDAO
+
 class BoardDTO:
     def __init__(self):
         self.no = None
@@ -52,6 +54,9 @@ class BoardDTO:
 
     def getUserNo(self):
         return self.uno
+    
+    def getUserEmail(self):
+        return userDAO.getUserByUserNo(self.uno).getEmail()
     
     def getCategoryNo(self):
         return self.cno

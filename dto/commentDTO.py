@@ -1,3 +1,5 @@
+from dao import userDAO
+
 class CommentDTO:
     def __init__(self):
         self.no = None
@@ -50,6 +52,9 @@ class CommentDTO:
     
     def getUserNo(self):
         return self.uno
+    
+    def getUserEmail(self):
+        return userDAO.getUserByUserNo(self.uno).getEmail()
     
     def getIP(self):
         return self.ip
