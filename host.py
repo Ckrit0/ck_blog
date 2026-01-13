@@ -17,16 +17,19 @@ def validateCheck():
 
 @app.route("/")
 def main():
+    # 클라이언트 정보 가져오기
+    clientIp = request.remote_addr
+    clientUser = userDAO.getUserBySessionKey(sessionKey=request.cookies.get('sessionKey'),ip=clientIp)
+
     # 데이터 가져오기
     categoryList = categoryDAO.getCategoryList()
+    recentlyTitleList = boardDAO.getRecentlyTitleList_user(clientUser)
     titleList = boardDAO.getTitleList_all(1)
     pageList = boardDAO.getPageList_all()
     recentlyboard = boardDAO.getRecentlyBoard()
     commentList = commentDAO.getCommentListByBoardNo(recentlyboard.getNo())
     
     # 뷰 설정하기
-    clientIp = request.remote_addr
-    clientUser = userDAO.getUserBySessionKey(sessionKey=request.cookies.get('sessionKey'),ip=clientIp)
     boardDAO.setView(user=clientUser,board=recentlyboard)
     
     return render_template('main.html',
@@ -34,7 +37,8 @@ def main():
         pageList=pageList,
         recentlyboard=recentlyboard,
         categoryList=categoryList,
-        commentList=commentList
+        commentList=commentList,
+        recentlyTitleList=recentlyTitleList
     )
 
 @app.route("/category/<categoryNo>")

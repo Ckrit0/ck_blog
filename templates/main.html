@@ -36,7 +36,7 @@
                     삭제된 댓글임. ㅇㅇ
                     {% endif %}
                 </li>
-                <ol>
+                <ul>
                     {% for childComment in comment[1] %}
                     <li>
                         {% if childComment.getIsDelete() == 0 %}
@@ -47,7 +47,7 @@
                         {% endif %}
                     </li>
                     {% endfor %}
-                </ol>
+                </ul>
                 {% endfor %}
                 </ul>
         </div>

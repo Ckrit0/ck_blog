@@ -35,16 +35,22 @@
                 <ul>
                 {% for category in categoryList %}
                 <li>{{category[0].getName()}}</li>
-                <ol>
+                <ul>
                     {% for childCategory in category[1] %}
                     <li>{{childCategory.getName()}}</li>
                     {% endfor %}
-                </ol>
+                </ul>
                 {% endfor %}
                 </ul>
             </div>
-            <div id="recentDiv">최근에 본 글</div>
-            
+            <div id="recentDiv">
+                최근에 본 글
+                <ul>
+                    {% for recentlyTitle in recentlyTitleList %}
+                    <li>{{recentlyTitle[0]}}, {{recentlyTitle[1]}}</li>
+                    {% endfor %}
+                </ul>
+            </div>
         </sidebar>
         <contents>
             {% block content %} {% endblock %}

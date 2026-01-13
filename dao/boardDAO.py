@@ -80,6 +80,27 @@ def getPageList_all():
     return pageList
 
 '''
+유저별 마지막 읽은 글목록 가져오기
+parameter: 유저객체(userDTO)
+return: 마지막 본 글 제목 리스트([[글번호(int),글제목(string)]...])
+'''
+def getRecentlyTitleList_user(user):
+    limit = store.pageCount_user
+    sql=''
+    uno = user.getNo()
+    if uno == None:
+        sql=f'SELECT b.b_no, b.b_title FROM board b\
+            JOIN (SELECT DISTINCT b_no FROM views WHERE v_ip = "{user.getIp()}" ORDER BY v_date DESC LIMIT {limit}) v\
+            ON b.b_no = v.b_no'
+    else:
+        sql=f'SELECT b.b_no, b.b_title FROM board b\
+            JOIN (SELECT DISTINCT b_no FROM views WHERE v_no = {uno} ORDER BY v_date DESC LIMIT {limit}) v\
+            ON b.b_no = v.b_no'
+    result = db.getData(sql=sql)
+    print(result)
+    return result
+
+'''
 카테고리별 글목록 가져오기
 parameter: 카테고리객체(categoryDTO), 페이지(int)
 return: 해당 페이지의 [글 번호(int), 제목(String)]의 리스트
@@ -90,7 +111,7 @@ def getTitleList_cathgory(category, page):
     return boardNoAndTitleList
 
 '''
-글 앞뒤 글목록 가져오기
+카테고리 내에서 해당 글의 앞뒤 글목록 가져오기
 parameter: 글객체(boardDTO), 페이지(int)
 return: 해당 페이지의 [글 번호(int), 제목(String)]의 리스트
 '''
@@ -109,6 +130,10 @@ def getBoardByBoardNo(bno):
     sql=f''
     return board
 
+'''
+마지막 게시글 가져오기
+return: 마지막 글 객체(boardDTO)
+'''
 def getRecentlyBoard():
     board = boardDTO.BoardDTO()
     sql=f'SELECT * FROM board WHERE b_isdelete=0 ORDER BY b_no DESC LIMIT 1 OFFSET 0'

@@ -24,7 +24,7 @@ CREATE TABLE board(
     b_no INT(10) PRIMARY KEY NOT NULL AUTO_INCREMENT,
     u_no INT(10) NOT NULL,
     c_no INT(10) NOT NULL,
-    b_date DATE NOT NULL DEFAULT NOW(),
+    b_date DATETIME NOT NULL DEFAULT NOW(),
     b_title VARCHAR(100) NOT NULL,
     b_contents MEDIUMTEXT NOT NULL,
     b_isdelete INT(1) NOT NULL DEFAULT 0
@@ -39,7 +39,7 @@ CREATE TABLE views(
     b_no INT(10) NOT NULL,
     u_no INT(10) NULL,
     v_ip VARCHAR(15) NOT NULL,
-    v_date DATE NOT NULL DEFAULT NOW()
+    v_date DATETIME NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE likes(
@@ -56,7 +56,7 @@ CREATE TABLE comment(
     u_no INT(10) NULL,
     co_ip VARCHAR(15) NOT NULL,
     co_comment VARCHAR(1000) NOT NULL,
-    co_date DATE NOT NULL DEFAULT NOW(),
+    co_date DATETIME NOT NULL DEFAULT NOW(),
     co_upper INT(10) NULL,
     co_isdelete INT(1) NOT NULL DEFAULT 0
 );
@@ -73,7 +73,7 @@ CREATE TABLE sessionlist(
     u_no INT(10) NOT NULL,
     s_key VARCHAR(100) NOT NULL,
     s_ip VARCHAR(15) NOT NULL,
-    s_expire DATE NOT NULL
+    s_expire DATETIME NOT NULL
 );
 
 ------------
@@ -87,6 +87,14 @@ SELECT * FROM category WHERE c_upper=1 ORDER BY c_no;
 SELECT b_title FROM board WHERE b_isdelete=0 ORDER BY b_no DESC LIMIT 5 OFFSET 0;
 -- 전체 글 갯수 가져오기
 SELECT count(*) FROM board WHERE b_isdelete=0;
+-- 유저별 마지막 읽은 글 제목의 목록 가져오기
+SELECT b.b_no, b.b_title FROM board b
+JOIN (SELECT DISTINCT b_no FROM views WHERE u_no = 0 ORDER BY v_date DESC LIMIT 5) v
+ON b.b_no = v.b_no;
+-- IP별 마지막 읽은 글 제목의 목록 가져오기
+SELECT b.b_no, b.b_title FROM board b
+JOIN (SELECT DISTINCT b_no FROM views WHERE v_ip = "0.0.0.0" ORDER BY v_date DESC LIMIT 5) v
+ON b.b_no = v.b_no;
 -- 마지막 게시글 가져오기
 SELECT * FROM board WHERE b_isdelete=0 ORDER BY b_no DESC LIMIT 1 OFFSET 0;
 -- 게시글 조회수 가져오기
