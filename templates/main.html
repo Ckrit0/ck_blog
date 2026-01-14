@@ -1,6 +1,8 @@
 {% extends 'template.html' %}
 
 {% block content %}
+<link rel="stylesheet" href="{{url_for('static',filename='./css/mainPage.css')}}">
+
 <div id="mainDiv">
     <div id="mainRecentlyContentsListDiv">
         <span class="subTitle">Lastest Post</span>
@@ -19,33 +21,45 @@
         <div id="postTitleBox">
             <div id="postTitle">{{recentlyboard.getTitle()}}</div>
             <div id="postView">
-                👁️‍🗨️ {{recentlyboard.getView()}}&nbsp;&nbsp;❤️ {{recentlyboard.getLike()}}
+                👁️&nbsp;
+                {{recentlyboard.getView()}}
+                &nbsp;&nbsp;
+                ❤️🤍
+                &nbsp;{{recentlyboard.getLike()}}
             </div>
             <div></div>
             <div id="postInfo1">{{recentlyboard.getUserEmail()}}</div>
             <div id="postInfo2">{{recentlyboard.getDate()}}</div>
         </div>
         <div id="postContents">
-            내용 : {{recentlyboard.getContents()}}
+            {{recentlyboard.getContents()}}<br>
+            <!-- 개발용 내용 부풀리기.. -->
+            {% for i in range(200): %}
+            테스트용 DB를 너무 짧게 만들어서 걍 쌩으로 채움 ㅅㄱ
+            {% endfor %}
         </div>
-        <div id="commentDiv" class="findBorder">
-            댓글
-            <ul>
+        <div id="commentDiv">
+            <span class="subTitle">comment</span>
+            <ul class="commentUl">
                 {% for comment in commentList %}
                 <li>
-                    작성자:{{comment[0].getUserEmail()}}({{comment[0].getMarkingIp()}}),{{comment[0].getDate()}}<br>
-                    댓글:{{comment[0].getComment()}}
+                    <span class="commentEmail">{{comment[0].getUserEmail()}}</span>
+                    <span class="commentIp">({{comment[0].getMarkingIp()}})</span>
+                    <span class="commentDate">{{comment[0].getDate()}}</span><br>
+                    <span class="commentContents">{{comment[0].getComment()}}</span>
                 </li>
-                <ul>
+                <ul class="subCommentUl">
                     {% for childComment in comment[1] %}
                     <li>
-                        작성자:{{childComment.getUserEmail()}}({{childComment.getMarkingIp()}}),{{childComment.getDate()}}<br>
-                        댓글:{{childComment.getComment()}}
+                        <span class="commentEmail">{{childComment.getUserEmail()}}</span>
+                        <span class="commentIp">({{childComment.getMarkingIp()}})</span>
+                        <span class="commentDate">{{childComment.getDate()}}</span><br>
+                        <span class="commentContents">{{childComment.getComment()}}</span>
                     </li>
                     {% endfor %}
                 </ul>
                 {% endfor %}
-            </ul>
+            </ul><br>
             <ul class="pagingUl">
                 {% for commentPage in commentPageList %}
                 <li id="commentPage{{commentPage}}">{{commentPage}}</li>

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{url_for('static',filename='./css/style.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='./css/templatePage.css')}}">
     <script src="{{url_for('static',filename='./script/script.js')}}"></script>
     <title>널리 인간을 일 없게 하라</title>
 </head>
@@ -36,23 +37,23 @@
                 <button id="searchBtn">search</button>
             </div>
             <div id="categoryDiv">
-                카테고리
+                <span class="subTitle">category</span>
                 <ul>
-                {% for category in categoryList %}
-                <li>{{category[0].getName()}}</li>
-                <ul>
-                    {% for childCategory in category[1] %}
-                    <li>{{childCategory.getName()}}</li>
+                    {% for category in categoryList %}
+                    <li class="mainCategory">{{category[0].getName()}}</li>
+                    <ul>
+                        {% for childCategory in category[1] %}
+                        <li class="subCategory">-{{childCategory.getName()}}</li>
+                        {% endfor %}
+                    </ul>
                     {% endfor %}
-                </ul>
-                {% endfor %}
                 </ul>
             </div>
             <div id="recentDiv">
-                최근에 본 글
+                <span class="subTitle">lastest</span>
                 <ul>
                     {% for recentlyTitle in recentlyTitleList %}
-                    <li>{{recentlyTitle[0]}}, {{recentlyTitle[1]}}</li>
+                    <li class="recentlyLi">{{recentlyTitle[0]}}, {{recentlyTitle[1]}}</li>
                     {% endfor %}
                 </ul>
             </div>

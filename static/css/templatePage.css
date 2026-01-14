@@ -1,0 +1,149 @@
+
+/* 타이틀 */
+
+#titleBar{
+    position: sticky;
+    margin-top: 5px;
+    top: 0px;
+    left: 0;
+    width: 100%;
+    height: var(--title-size);
+    background-color: var(--dark-color);
+    z-index: 999;
+}
+
+#title{
+    font-family: var(--title-font);
+    font-size: 40px;
+    color: var(--bg-color);
+    text-shadow: 3px 3px 2px var(--theme-color);
+}
+
+#titleHorizontalLine{
+    position: sticky;
+    top: var(--title-size);
+}
+
+/* 헤더 */
+header{
+    background-color: var(--dark-color);
+    z-index: 998;
+    width: 100%;
+    padding: 10px 0;
+    text-align: right;
+    font-family: var(--subject-font);
+    color: var(--bg-color);
+    font-size: 12px;
+}
+
+#loginDiv{
+    padding: 0 40px;
+}
+
+
+/* 메인 */
+main{
+    display: flex;
+    justify-content: center;
+}
+
+/* 사이드바 */
+sidebar{
+    position: sticky;
+    top: var(--title-size);
+    align-self: flex-start;
+    padding: 20px 10px;
+    width: 300px;
+    font-family: var(--category-font);
+    color: var(--dark-color);
+}
+
+#logoDiv{
+    margin: 10px auto;
+    width: var(--logo-size-width);
+    height: var(--logo-size-height);
+}
+
+#noticeDiv{
+    margin: 10px auto;
+}
+
+#searchDiv{
+    margin: 10px auto;
+}
+
+#searchInput{
+    margin-right: -6px;
+    font-family: var(--category-font);
+    color: var(--dark-color);
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-top-width: 2px;
+    border-left-width: 2px;
+    border-bottom-width: 2px;
+}
+
+#searchBtn{
+    margin-left: 0;
+    font-family: var(--category-font);
+    color: var(--dark-color);
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-width: 2px;
+    border-right-width: 2px;
+    border-bottom-width: 2px;
+}
+
+#categoryDiv{
+    margin: 10px auto;
+    padding: 10px;
+    width: 200px;
+    height: 400px;
+    border: 2px solid var(--theme-color);
+    border-radius: 20px;
+    text-align: left;
+    font-family: var(--category-font);
+}
+
+.mainCategory{
+    padding: 5px 10px;
+    font-weight: 600;
+}
+
+.subCategory{
+    padding-left: 20px;
+    cursor: pointer;
+}
+
+
+#recentDiv{
+    margin: 10px auto;
+    padding: 10px;
+    width: 200px;
+    height: 150px;
+    border: 2px solid var(--theme-color);
+    border-radius: 20px;
+    text-align: left;
+}
+
+.recentlyLi{
+    padding: 1px 10px;
+}
+
+/* 템플릿 컨텐츠 */
+contents{
+    width: 1000px;
+    padding-top: 5px;
+    color: var(--font-color);
+    font-family: var(--contents-font);
+    border-left: 1px dotted var(--theme-color);
+    border-right: 1px dotted var(--theme-color);
+}
+
+/* 미디어쿼리 태블릿 */
+@media screen and (min-width:768px) and (max-width: 1023px) {
+}
+
+/* 미디어쿼리 모바일 */
+@media screen and (max-width:767px){
+}
