@@ -1,25 +1,25 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify, abort
-from service import store
 from dao import userDAO
 from dao import categoryDAO
 from dao import boardDAO
 from dao import commentDAO
+from service import store
 from service import validate
 
 app = Flask(__name__)
 
 @app.before_request
 def validateCheck():
-    clientIp = request.remote_addr
-    clientUser = userDAO.getUserBySessionKey(sessionKey=request.cookies.get('sessionKey'),ip=clientIp)
-    if validate.checkBlackList(clientUser,clientIp):
+    clientUser = userDAO.getUserBySessionKey(sessionKey=request.cookies.get('sessionKey'),ip=request.remote_addr)
+    if validate.checkDdos(clientUser):
+        abort(403)
+    elif validate.checkBlackList(clientUser):
         abort(403)
 
 @app.route("/")
 def main():
     # 클라이언트 정보 가져오기
-    clientIp = request.remote_addr
-    clientUser = userDAO.getUserBySessionKey(sessionKey=request.cookies.get('sessionKey'),ip=clientIp)
+    clientUser = userDAO.getUserBySessionKey(sessionKey=request.cookies.get('sessionKey'),ip=request.remote_addr)
 
     # 데이터 가져오기
     categoryList = categoryDAO.getCategoryList()

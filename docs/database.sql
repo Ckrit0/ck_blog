@@ -110,6 +110,16 @@ SELECT * FROM comment WHERE b_no=11 AND co_upper = 1 ORDER BY co_no LIMIT 5 OFFS
 SELECT count(*) FROM comment WHERE b_no = 11 AND co_upper IS NULL;
 -- 유저 번호로 유저 정보 받기
 SELECT * FROM user WHERE u_no = 0 AND u_state != 0; -- 0 미가입
+-- 현재 적용중인 블랙리스트 가져오기
+SELECT u_no,bl_ip FROM blacklist WHERE bl_expire >= NOW();
+-- 1분동안 유저 view 횟수 가져오기
+SELECT count(*) FROM views WHERE u_no = 1 AND v_date >= NOW() - INTERVAL 1 MINUTE;
+-- 1분동안 IP view 횟수 가져오기
+SELECT count(*) FROM views WHERE v_ip = "0.0.0.0" AND v_date >= NOW() - INTERVAL 1 MINUTE;
+-- 1시간동안 유저 view 횟수 가져오기
+SELECT count(*) FROM views WHERE u_no = 1 AND v_date >= NOW() - INTERVAL 1 MINUTE;
+-- 1시간동간 IP view 횟수 가져오기
+SELECT count(*) FROM views WHERE v_ip = "0.0.0.0" AND v_date >= NOW() - INTERVAL 1 MINUTE;
 
 ------------
 -- INSERT --

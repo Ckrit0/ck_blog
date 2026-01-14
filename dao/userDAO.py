@@ -1,5 +1,6 @@
 from dto import userDTO
 from service import db
+from service import store
 
 '''
 신규 유저 생성
@@ -24,10 +25,15 @@ def setSession(user, session):
 '''
 해당 유저 블랙리스트에 추가
 parameter: user객체(userDTO)
-return: 
+return: 0은 실패, 1은 성공
 '''
 def setBlackList(user):
-    pass
+    sql = f'INSERT INTO blacklist(u_no,bl_ip,bl_expire,bl_cause) VALUES({user.getNo()},"{user.getIp()}",NOW() + INTERVAL {store.ddosBlockHour} HOUR,"{store.ddosBlackListCause}");'
+    result = db.setData(sql=sql)
+    if result == 0:
+        return False
+    else:
+        return True
 
 '''
 유저 정보 수정하기
@@ -91,6 +97,24 @@ def getSessionKeyByUserNo(uno):
     return sessionKey
 
 '''
+유저 및 ip가 1분, 1시간 동안 접속한 횟수 받기
+parameter: 유저객체(userDTO)
+return: 리스트([1분user접속횟수,1시간user접속횟수,1분ip접속횟수,1시간ip접속횟수])
+'''
+def getViewCount(user):
+    viewCountList = []
+    if user.getNo() != 0:
+        viewCountList.append(db.getData(f'SELECT count(*) FROM views WHERE u_no = {user.getNo()} AND v_date >= NOW() - INTERVAL 1 MINUTE')[0])
+        viewCountList.append(db.getData(f'SELECT count(*) FROM views WHERE u_no = {user.getNo()} AND v_date >= NOW() - INTERVAL 1 HOUR')[0])
+    else:
+        viewCountList.append(0)
+        viewCountList.append(0)
+    viewCountList.append(db.getData(f'SELECT count(*) FROM views WHERE v_ip = "{user.getIp()}" AND v_date >= NOW() - INTERVAL 1 MINUTE')[0])
+    viewCountList.append(db.getData(f'SELECT count(*) FROM views WHERE v_ip = "{user.getIp()}" AND v_date >= NOW() - INTERVAL 1 HOUR')[0])
+    return viewCountList
+
+
+'''
 해당 user 최근에 읽은 글목록 가져오기
 parameter: user객체(userDTO)
 return: [글번호(int),글제목(String)]의 리스트
@@ -113,6 +137,12 @@ return: 블랙리스트(List)
 '''
 def getBlackList():
     blackList = []
+    sql = 'SELECT u_no, bl_ip FROM blacklist WHERE bl_expire >= NOW()'
+    result = db.getData(sql=sql)
+    for black in result:
+        for data in black:
+            if data != None:
+                blackList.append(data)
     return blackList
 
 '''
