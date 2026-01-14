@@ -4,11 +4,6 @@ import os
 from service import store
 
 class Loger:
-    def __new__(cls): # 싱글톤 처리
-        if not hasattr(cls,'instance'):
-            cls.instance = super().__new__(cls=cls)
-        return cls.instance
-    
     def __init__(self):
         self.logPath = store.logPath
         if self.logPath.endswith('/'):
