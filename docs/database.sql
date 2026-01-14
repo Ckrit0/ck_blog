@@ -65,8 +65,8 @@ CREATE TABLE comment(
 CREATE TABLE blacklist(
     u_no INT(10) NOT NULL,
     bl_ip VARCHAR(15) NOT NULL,
-    bl_date DATE NOT NULL DEFAULT NOW(),
-    bl_expire  DATE NULL,
+    bl_date DATETIME NOT NULL DEFAULT NOW(),
+    bl_expire  DATETIME NULL,
     bl_cause VARCHAR(1000) NULL
 );
 
