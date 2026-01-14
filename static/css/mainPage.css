@@ -56,4 +56,42 @@
 
 /* 미디어쿼리 모바일 */
 @media screen and (max-width:767px){
+    
+}
+@media screen and (max-width:400px){
+    #mainDiv{
+        margin: 0 auto;
+        width: 320px;
+    }
+    #postTitleBox{
+        top: 35px;
+    }
+    #postTitle{
+        padding: 10px;
+        font-size: 30px;
+    }
+    #postView{
+        grid-column-start: 3;
+        grid-column-end: 5;
+        padding: 0;
+        font-size: 12px;
+    }
+    #postInfo1{
+        grid-row: 3;
+        grid-column-start: 1;
+        grid-column-end: 3;
+        padding: 5px 0 10px 0;
+        font-size: 12px;
+    }
+    #postInfo2{
+        grid-row: 3;
+        grid-column-start: 3;
+        grid-column-end: 5;
+        padding: 5px 0 10px 0;
+        font-size: 12px;
+    }
+    #postContents{
+        font-size: 13px;
+    }
+    
 }

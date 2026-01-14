@@ -81,12 +81,12 @@ ul{
     display: inline-block;
     width: 60%;
     border-top: 1px dotted var(--theme-color);
+    text-align: left;
 }
 
 .listUl>li{
     border-bottom: 1px dotted var(--theme-color);
-    padding-top: 3px;
-    padding-bottom: 3px;
+    padding : 3px 10px;
 }
 
 .pagingUl{
@@ -160,6 +160,56 @@ ul{
 @media screen and (min-width:768px) and (max-width: 1023px) {
 }
 
-/* 미디어쿼리 모바일 */
+/* 미디어쿼리 모바일(대) */
 @media screen and (max-width:767px){
+   
+}
+
+/* 미디어쿼리 모바일(소) */
+@media screen and (max-width:400px){
+    .subTitle{
+        font-size: 25px;
+    }
+    .listUl{
+        width: 100%;
+    }
+    .listUl>li{
+        font-size: 12px;
+    }
+    .commentUl{
+        width: 100%;
+    }
+    .commentUl>li{
+        padding: 0;
+        padding-left: 10px;
+    }
+    .subCommentUl>li{
+        padding: 0;
+        padding-left: 30px;
+    }
+    .commentEmail{
+        font-size: 12px;
+    }
+    .commentIp{
+        display: none;
+    }
+    .commentDate{
+        display: none;
+    }
+    .commentContents{
+        font-size: 12px;
+    }
+    sidebar{ /* 버튼식으로 변경 예정 */
+        display: none;
+    }
+    #logoDiv{
+        display: none;
+    }
+    #noticeDiv{
+        display: none;
+    }
+    #userInfoDiv{
+        display: none;
+    }
+
 }

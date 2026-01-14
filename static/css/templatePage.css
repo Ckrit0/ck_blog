@@ -147,3 +147,32 @@ contents{
 /* 미디어쿼리 모바일 */
 @media screen and (max-width:767px){
 }
+
+@media screen and (max-width:400px){
+    main{
+        margin: 0 auto;
+        width: 350px;
+    }
+    contents{
+        width: 350px;
+    }
+    #titleBar{
+        margin: 0 auto;
+        height: 30px;
+        width: 320px;
+        margin-top: 0px;
+        top: 0px;
+    }
+    #title{
+        font-size: 20px;
+        width: 320px;
+    }
+    header{
+        display: none;
+        margin: 0 auto;
+        width: 300px;
+    }
+    #titleHorizontalLine{
+        display: none;
+    }
+}
