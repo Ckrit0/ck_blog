@@ -1,6 +1,7 @@
 from dto import userDTO
 from service import db
 from service import store
+from service import loger
 
 '''
 신규 유저 생성
@@ -33,6 +34,8 @@ def setBlackList(user):
     if result == 0:
         return False
     else:
+        log = loger.Loger()
+        log.setLog(f"{user.getEmail()}({user.getIp()}) {store.ddosBlackListCause}사유로 {store.ddosBlockHour}시간동안 BlackList에 추가됨")
         return True
 
 '''
