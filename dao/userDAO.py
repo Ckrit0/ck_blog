@@ -104,13 +104,13 @@ return: 리스트([1분user접속횟수,1시간user접속횟수,1분ip접속횟�
 def getViewCount(user):
     viewCountList = []
     if user.getNo() != 0:
-        viewCountList.append(db.getData(f'SELECT count(*) FROM views WHERE u_no = {user.getNo()} AND v_date >= NOW() - INTERVAL 1 MINUTE')[0])
-        viewCountList.append(db.getData(f'SELECT count(*) FROM views WHERE u_no = {user.getNo()} AND v_date >= NOW() - INTERVAL 1 HOUR')[0])
+        viewCountList.append(db.getData(f'SELECT count(*) FROM views WHERE u_no = {user.getNo()} AND v_date >= NOW() - INTERVAL 1 MINUTE')[0][0])
+        viewCountList.append(db.getData(f'SELECT count(*) FROM views WHERE u_no = {user.getNo()} AND v_date >= NOW() - INTERVAL 1 HOUR')[0][0])
     else:
         viewCountList.append(0)
         viewCountList.append(0)
-    viewCountList.append(db.getData(f'SELECT count(*) FROM views WHERE v_ip = "{user.getIp()}" AND v_date >= NOW() - INTERVAL 1 MINUTE')[0])
-    viewCountList.append(db.getData(f'SELECT count(*) FROM views WHERE v_ip = "{user.getIp()}" AND v_date >= NOW() - INTERVAL 1 HOUR')[0])
+    viewCountList.append(db.getData(f'SELECT count(*) FROM views WHERE v_ip = "{user.getIp()}" AND v_date >= NOW() - INTERVAL 1 MINUTE')[0][0])
+    viewCountList.append(db.getData(f'SELECT count(*) FROM views WHERE v_ip = "{user.getIp()}" AND v_date >= NOW() - INTERVAL 1 HOUR')[0][0])
     return viewCountList
 
 

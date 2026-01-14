@@ -13,9 +13,9 @@ def checkDdos(user):
         result = userDAO.setBlackList(user=user)
     elif viewCountList[1] > store.checkDdos_hour:
         result = userDAO.setBlackList(user=user)
-    elif viewCountList[3] > store.checkDdos_min:
+    elif viewCountList[2] > store.checkDdos_min:
         result = userDAO.setBlackList(user=user)
-    elif viewCountList[4] > store.checkDdos_hour:
+    elif viewCountList[3] > store.checkDdos_hour:
         result = userDAO.setBlackList(user=user)
     return result
     
