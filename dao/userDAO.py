@@ -144,7 +144,7 @@ def getBlackList():
     result = db.getData(sql=sql)
     for black in result:
         for data in black:
-            if data != None:
+            if data != 0:
                 blackList.append(data)
     return blackList
 
