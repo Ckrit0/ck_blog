@@ -1,5 +1,6 @@
 # 로그 관련
 logPath = './log'
+logName_blackList = 'blackList'
 
 # 한 페이지에 보여줄 목록의 갯수
 pageCount_user = 5

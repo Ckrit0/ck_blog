@@ -35,7 +35,7 @@ def setBlackList(user):
         return False
     else:
         log = loger.Loger()
-        log.setLog(f"{user.getEmail()}({user.getIp()}) {store.ddosBlackListCause}사유로 {store.ddosBlockHour}시간동안 BlackList에 추가됨")
+        log.setLog(store.logName_blackList, f"{user.getEmail()}({user.getIp()}) {store.ddosBlackListCause}사유로 {store.ddosBlockHour}시간동안 BlackList에 추가됨")
         return True
 
 '''
