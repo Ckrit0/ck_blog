@@ -161,7 +161,7 @@ main{
 }
 
 /* 미디어쿼리 */
-@media screen and (max-width: 1023px) {
+@media screen and (max-width: 1200px) {
     main{
         margin: 0 auto;
     }

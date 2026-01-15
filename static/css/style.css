@@ -32,7 +32,7 @@
 
 /* 태그 */
 body{
-    margin: 0 auto;
+    margin: 0;
     padding: 0;
     box-sizing: border-box;
     background-color: var(--bg-color);
@@ -189,11 +189,11 @@ ul{
 
 
 /* 미디어쿼리 */
-@media screen and (max-width: 1023px) {
+@media screen and (max-width: 1200px) {
     :root{
         --logo-size-width : 150px;
         --logo-size-height : 90px;
-        --main-width : 800px;
+        --main-width : 98%;
         --sidebar-width : 200px;
         --title-height : 40px;
         --list-width : 100%;
@@ -218,7 +218,6 @@ ul{
 
 @media screen and (max-width:805px){
     :root{
-        --main-width : 700px;
         --comment-font-size : 12px;
     }
     .commentIp{
@@ -230,39 +229,8 @@ ul{
     
 }
 
-@media screen and (max-width:705px){
-    :root{
-        --main-width : 600px;
-    }
-    
-}
-
-@media screen and (max-width:605px){
-    :root{
-        --main-width : 500px;
-    }
-    
-}
-
-@media screen and (max-width:605px){
-    :root{
-        --main-width : 500px;
-    }
-    
-}
-
-@media screen and (max-width:505px){
-    :root{
-        --main-width : 400px;
-    }
-    
-}
-
-@media screen and (max-width:405px){
+@media screen and (max-width:300px){
     :root{
         --main-width : 300px;
-        --comment-font-size : 11px;
-        --contents-font-size : 11px;
     }
-    
 }
