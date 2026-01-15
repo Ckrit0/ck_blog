@@ -233,7 +233,6 @@ ul{
 @media screen and (max-width:705px){
     :root{
         --main-width : 600px;
-        --comment-font-size : 12px;
     }
     
 }
@@ -241,7 +240,6 @@ ul{
 @media screen and (max-width:605px){
     :root{
         --main-width : 500px;
-        --comment-font-size : 12px;
     }
     
 }
@@ -249,7 +247,6 @@ ul{
 @media screen and (max-width:605px){
     :root{
         --main-width : 500px;
-        --comment-font-size : 12px;
     }
     
 }
@@ -257,7 +254,6 @@ ul{
 @media screen and (max-width:505px){
     :root{
         --main-width : 400px;
-        --comment-font-size : 12px;
     }
     
 }

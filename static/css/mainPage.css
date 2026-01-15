@@ -62,6 +62,7 @@
 @media screen and (max-width: 1023px) {
     #postTitleBox{
         top: 41px;
+        position: relative;
     }
     #postTitle{
         padding: 10px;
@@ -88,5 +89,6 @@
 @media screen and (max-width:805px){
     #postTitleBox{
         top: 35px;
+        position: sticky;
     }
 }
