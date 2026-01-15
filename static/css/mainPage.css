@@ -1,9 +1,11 @@
 
 /* 메인페이지 */
 #mainDiv{
+    box-sizing: border-box;
     padding-bottom: 30px;
 }
 #postTitleBox{
+    box-sizing: border-box;
     display: grid;
     position: sticky;
     top: 53px;
@@ -16,82 +18,75 @@
     text-shadow: 3px 3px 2px var(--dark-color);
 }
 #postTitle{
+    box-sizing: border-box;
     grid-row: 1;
     grid-column-start: 1;
     grid-column-end: 5;
     padding-top: 20px;
     padding-bottom: 20px;
     font-family: var(--subject-font);
-    font-size: 60px;
+    font-size: var(--post-title-font-size);
 }
 #postView{
+    box-sizing: border-box;
     grid-row: 2;
     grid-column: 1;
     padding-top: 20px;
     padding-bottom: 20px;
-    font-size: 20px;
+    font-size: var(--post-info-font-size);
     text-shadow: 3px 3px 2px var(--dark-color);
 }
 #postInfo1{
+    box-sizing: border-box;
     grid-row: 2;
     grid-column: 3;
     padding: 20px;
-    font-size: 18px;
+    font-size: var(--post-info-font-size);
 }
 #postInfo2{
+    box-sizing: border-box;
     grid-row: 2;
     grid-column: 4;
     padding: 20px;
-    font-size: 18px;
+    font-size: var(--post-info-font-size);
 }
 #postContents{
+    box-sizing: border-box;
     border: 1px solid var(--theme-color);
     padding: 20px;
     text-align: left;
+    font-size: var(--contents-font-size);
 }
 
-/* 미디어쿼리 태블릿 */
-@media screen and (min-width:768px) and (max-width: 1023px) {
-}
-
-/* 미디어쿼리 모바일 */
-@media screen and (max-width:767px){
-    
-}
-@media screen and (max-width:400px){
-    #mainDiv{
-        margin: 0 auto;
-        width: 320px;
-    }
+/* 미디어쿼리 */
+@media screen and (max-width: 1023px) {
     #postTitleBox{
-        top: 35px;
+        top: 41px;
     }
     #postTitle{
         padding: 10px;
-        font-size: 30px;
     }
     #postView{
         grid-column-start: 3;
         grid-column-end: 5;
         padding: 0;
-        font-size: 12px;
     }
     #postInfo1{
         grid-row: 3;
         grid-column-start: 1;
         grid-column-end: 3;
         padding: 5px 0 10px 0;
-        font-size: 12px;
     }
     #postInfo2{
         grid-row: 3;
         grid-column-start: 3;
         grid-column-end: 5;
         padding: 5px 0 10px 0;
-        font-size: 12px;
     }
-    #postContents{
-        font-size: 13px;
+}
+
+@media screen and (max-width:805px){
+    #postTitleBox{
+        top: 35px;
     }
-    
 }

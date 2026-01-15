@@ -24,7 +24,7 @@
     </header>
     <div class="horizontalLine" id="titleHorizontalLine"></div>
     <main>
-        <sidebar>
+        <div id="sidebar">
             <img src="{{url_for('static',filename='./img/logo.svg')}}" id="logoDiv"></img>
             <div id="noticeDiv">
                 오늘도 행복한 하루 되시길 바랍니다.
@@ -57,10 +57,10 @@
                     {% endfor %}
                 </ul>
             </div>
-        </sidebar>
-        <contents>
+        </div>
+        <div id="contents">
             {% block content %} {% endblock %}
-        </contents>
+        </div>
     </main>
 </body>
 </html>

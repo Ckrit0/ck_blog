@@ -2,17 +2,19 @@
 /* 타이틀 */
 
 #titleBar{
+    box-sizing: border-box;
     position: sticky;
     margin-top: 5px;
     top: 0px;
     left: 0;
     width: 100%;
-    height: var(--title-size);
+    height: var(--title-height);
     background-color: var(--dark-color);
     z-index: 999;
 }
 
 #title{
+    box-sizing: border-box;
     font-family: var(--title-font);
     font-size: 40px;
     color: var(--bg-color);
@@ -20,12 +22,14 @@
 }
 
 #titleHorizontalLine{
+    box-sizing: border-box;
     position: sticky;
-    top: var(--title-size);
+    top: var(--title-height);
 }
 
 /* 헤더 */
 header{
+    box-sizing: border-box;
     background-color: var(--dark-color);
     z-index: 998;
     width: 100%;
@@ -37,42 +41,51 @@ header{
 }
 
 #loginDiv{
+    box-sizing: border-box;
     padding: 0 40px;
 }
 
 
 /* 메인 */
 main{
+    width: var(--main-width);
+    box-sizing: border-box;
     display: flex;
     justify-content: center;
 }
 
 /* 사이드바 */
-sidebar{
+#sidebar{
+    box-sizing: border-box;
     position: sticky;
-    top: var(--title-size);
+    top: var(--title-height);
     align-self: flex-start;
     padding: 20px 10px;
-    width: 300px;
+    width: var(--sidebar-width);
     font-family: var(--category-font);
+    font-size: var(--sidebar-font-size);
     color: var(--dark-color);
 }
 
 #logoDiv{
+    box-sizing: border-box;
     margin: 10px auto;
     width: var(--logo-size-width);
     height: var(--logo-size-height);
 }
 
 #noticeDiv{
+    box-sizing: border-box;
     margin: 10px auto;
 }
 
 #searchDiv{
+    box-sizing: border-box;
     margin: 10px auto;
 }
 
 #searchInput{
+    box-sizing: border-box;
     margin-right: -6px;
     font-family: var(--category-font);
     color: var(--dark-color);
@@ -84,6 +97,7 @@ sidebar{
 }
 
 #searchBtn{
+    box-sizing: border-box;
     margin-left: 0;
     font-family: var(--category-font);
     color: var(--dark-color);
@@ -95,6 +109,7 @@ sidebar{
 }
 
 #categoryDiv{
+    box-sizing: border-box;
     margin: 10px auto;
     padding: 10px;
     width: 200px;
@@ -106,17 +121,20 @@ sidebar{
 }
 
 .mainCategory{
+    box-sizing: border-box;
     padding: 5px 10px;
     font-weight: 600;
 }
 
 .subCategory{
+    box-sizing: border-box;
     padding-left: 20px;
     cursor: pointer;
 }
 
 
 #recentDiv{
+    box-sizing: border-box;
     margin: 10px auto;
     padding: 10px;
     width: 200px;
@@ -127,11 +145,13 @@ sidebar{
 }
 
 .recentlyLi{
+    box-sizing: border-box;
     padding: 1px 10px;
 }
 
 /* 템플릿 컨텐츠 */
-contents{
+#contents{
+    box-sizing: border-box;
     width: 1000px;
     padding-top: 5px;
     color: var(--font-color);
@@ -140,37 +160,38 @@ contents{
     border-right: 1px dotted var(--theme-color);
 }
 
-/* 미디어쿼리 태블릿 */
-@media screen and (min-width:768px) and (max-width: 1023px) {
-}
-
-/* 미디어쿼리 모바일 */
-@media screen and (max-width:767px){
-}
-
-@media screen and (max-width:400px){
+/* 미디어쿼리 */
+@media screen and (max-width: 1023px) {
     main{
         margin: 0 auto;
-        width: 350px;
     }
-    contents{
-        width: 350px;
+    #sidebar{
+        position: relative;
     }
     #titleBar{
-        margin: 0 auto;
-        height: 30px;
-        width: 320px;
-        margin-top: 0px;
+        margin: 0;
         top: 0px;
     }
     #title{
-        font-size: 20px;
-        width: 320px;
+        font-size: 30px;
+    }
+    #categoryDiv{
+        width: 180px;
+    }
+    #recentDiv{
+        width: 180px;
+    }
+    #contents{
+        width: var(--main-width);
+    }
+}
+
+@media screen and (max-width:805px){
+    #sidebar{ /* 버튼식으로 변경 예정 */
+        display: none;
     }
     header{
         display: none;
-        margin: 0 auto;
-        width: 300px;
     }
     #titleHorizontalLine{
         display: none;
