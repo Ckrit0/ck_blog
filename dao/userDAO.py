@@ -7,6 +7,40 @@ import string
 import random
 
 '''
+비밀번호 암호화 (복호화 불가. 암호화 된 비밀번호를 서로 비교해야 함.)
+parameter: pw(String)
+return: encPw(String)
+'''
+def encryptPw(pw):
+    # 임의로 버려지고 추가되는 값들이 있어서 복호화는 불가능.
+    encPw = ""
+    key = store.secret_key
+    # 비밀번호와 지정한 키를 한글자씩 꺼내고
+    for i in range(len(pw)):
+        # 비밀번호 unicode에 10을 더해주고
+        pwCharNo = ord(pw[i]) + 10
+        keyCharNo = ord(key[i % len(key)])
+        # 지정한 키 unicode와 곱한 뒤, 10으로 나누고 나머지는 버린다
+        saveCharNo = (pwCharNo * keyCharNo) // 10
+        # 그 숫자를 문자열 방식으로 더한 뒤,
+        encPw += str(saveCharNo)
+    # 만들어진 문자가 40글자 미만이면
+    while len(encPw) < 40:
+        tempPw = ""
+        # encPw로 만들어진 숫자와 조금 다르게 설정된 숫자의 문자를 합해준다.
+        for i in range(len(encPw)):
+            tempPw += encPw[i] + str((ord(pw[i]) * ord(key[i %len(key)]))//8)
+    # 만들어진 문자가 100글자(DB가 VARCHAR(100))가 넘으면
+    while len(encPw) > 100:
+        tempPw = ""
+        # 문자열의 index가 5의 배수인 문자를 버린다.
+        for i in range(len(encPw)):
+            if i % 5 != 0:
+                tempPw += encPw[i]
+        encPw = tempPw
+    return encPw
+
+'''
 신규 유저 생성
 parameter: user객체(userDTO)
 return: 
