@@ -54,7 +54,7 @@ class CommentDTO:
         return self.uno
     
     def getUserEmail(self):
-        return userDAO.getUserByUserNo(self.uno).getEmail()
+        return userDAO.getUserByUserNo(self.uno,self.ip).getEmail()
     
     def getIP(self):
         return self.ip

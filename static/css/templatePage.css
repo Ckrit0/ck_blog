@@ -45,6 +45,10 @@ header{
     padding: 0 40px;
 }
 
+#loginUserName{
+    font-size: 18px;
+}
+
 
 /* 메인 */
 main{

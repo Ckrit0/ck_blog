@@ -71,7 +71,7 @@ CREATE TABLE blacklist(
 );
 
 CREATE TABLE sessionlist(
-    u_no INT(10) NOT NULL,
+    u_no INT(10) PRIMARY KEY NOT NULL,
     s_key VARCHAR(100) NOT NULL,
     s_ip VARCHAR(15) NOT NULL,
     s_expire DATETIME NOT NULL
@@ -120,6 +120,10 @@ SELECT count(*) FROM views WHERE v_ip = "0.0.0.0" AND v_date >= NOW() - INTERVAL
 SELECT count(*) FROM views WHERE u_no = 1 AND v_date >= NOW() - INTERVAL 1 MINUTE;
 -- 1시간동간 IP view 횟수 가져오기
 SELECT count(*) FROM views WHERE v_ip = "0.0.0.0" AND v_date >= NOW() - INTERVAL 1 MINUTE;
+-- 쿠키에 저장된 세션키로 유저넘버 가져오기
+SELECT u_no FROM sessionlist WHERE s_key = "laksfhdkl";
+-- 유저번호로 세션 만료시간 가져오기
+SELECT s_expire FROM sessionlist WHERE u_no = 1;
 
 ------------
 -- INSERT --
@@ -140,7 +144,8 @@ INSERT INTO comment(b_no,u_no,co_ip,co_comment,co_upper) VALUES("b_no","u_no","c
 -- 블랙리스트
 INSERT INTO blacklist(u_no,bl_ip,bl_expire,bl_cause) VALUES("u_no","bl_ip","bl_expire","bl_cause");
 -- 세션리스트
-INSERT INTO sessionlist(u_no,s_key,s_ip,s_expire) VALUES("u_no","s_key","s_ip","s_expire");
+INSERT INTO sessionlist(u_no,s_key,s_ip,s_expire) VALUES("u_no","s_key","s_ip","s_expire") ON DUPLICATE KEY UPDATE s_key = VALUES(s_key), s_ip = VALUES(s_ip), s_expire = VALUES(s_expire);
+
 
 ------------
 -- UPDATE --

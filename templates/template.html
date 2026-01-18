@@ -9,15 +9,31 @@
     <title>널리 인간을 일 없게 하라</title>
 </head>
 <body>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <script>
+                alert("{{ messages[0] }}");
+            </script>
+        {% endif %}
+    {% endwith %}
     <div id="titleBar">
         <div class="horizontalLine"></div>
         <div id="title">널리 인간을 일 없게 하라</div>
     </div>
     <header>
         <div id="loginDiv">
-            <input type="email" placeholder="Email address"/>
-            <input type="password" placeholder="Password"/>
-            <button id="loginBtn">로그인</button>
+            {% if clientUser.getNo() != 0 %}
+            <span id="loginUserName">{{ clientUser.getEmail() }} </span>
+            <form style="display: inline-block;" action="/logout" method="post">
+                <button type="submit" id="logoutBtn">로그아웃</button>
+            </form>
+            {% else %}
+            <form style="display: inline-block;" action="/login" method="post">
+                <input name="email" type="email" autocomplete="username" placeholder="Email address"/>
+                <input name="pw" type="password" autocomplete="current-password" placeholder="Password"/>
+                <button type="submit" id="loginBtn">로그인</button>
+            </form>
+            {% endif %}
             <button id="joinBtn">회원가입</button>
             <button id="findPwBtn">비번찾기</button>
         </div>

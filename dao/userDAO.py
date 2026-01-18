@@ -1,7 +1,10 @@
+from flask import make_response
 from dto import userDTO
 from service import db
 from service import store
 from service import loger
+import string
+import random
 
 '''
 신규 유저 생성
@@ -17,11 +20,29 @@ def setUser(user):
 
 '''
 해당 유저의 세션 생성
-parameter: user객체(userDTO), sessionKey(String)
-return: 
+parameter: user객체(userDTO)
+return: 0 실패, 1 성공
 '''
-def setSession(user, session):
-    pass
+def __setSession(user):
+    def getNewSessionKey():
+        length = 50
+        pool = string.ascii_letters + string.digits
+        key = ""
+        for i in range(length):
+            key += random.choice(pool)
+        return key
+    sessionKey = getNewSessionKey()
+    sql = f'INSERT INTO sessionlist(u_no,s_key,s_ip,s_expire)\
+        VALUES({user.getNo()},"{sessionKey}","{user.getIp()}",NOW() + INTERVAL {store.sessionTime} HOUR)\
+        ON DUPLICATE KEY\
+            UPDATE s_key = VALUES(s_key),\
+                s_ip = VALUES(s_ip),\
+                s_expire = VALUES(s_expire);'
+    result = db.setData(sql=sql)
+    if result != 0:
+        return sessionKey
+    else:
+        return False
 
 '''
 해당 유저 블랙리스트에 추가
@@ -55,49 +76,58 @@ def updateSessionDate(user):
     pass
 
 '''
-이메일과 비밀번호로 유저객체 받기
+이메일과 비밀번호로 세션키 받기(세션 등록)
 parameter: email(String), pw(String)
-return: user객체(userDTO)
+return: sessionKey(string)
 '''
-def getUserByEmailAndPw(email,pw):
+def getSessionKeyByEmailAndPw(email,pw,ip):
     sql = f'SELECT * FROM user WHERE u_email="{email}" AND u_pw="{pw}" AND u_state IN (0,1,2,5)'
     result = db.getData(sql=sql)
     user = userDTO.UserDTO()
-    user.setUser(result)
-    return user
+    user.setUser(result[0])
+    user.setIp(ip=ip)
+    sessionKey = __setSession(user=user)
+    return sessionKey
 
 '''
 유저번호로 유저객체 받기
-parameter: 유저번호(int)
+parameter: 유저번호(int), IP(String)
 return: user객체(userDTO)
 '''
-def getUserByUserNo(uno):
+def getUserByUserNo(uno, ip):
     user = userDTO.UserDTO()
-    sql = f'SELECT * FROM user WHERE u_no = {uno} AND u_state != 0'
-    result = db.getData(sql=sql)
-    if len(result[0]) != 0:
-        user.setUser(result[0])
+    if uno != 0:
+        sql = f'SELECT * FROM user WHERE u_no = {uno} AND u_state != 0'
+        result = db.getData(sql=sql)
+        if len(result) != 0:
+            user.setUser(result[0])
+    user.setIp(ip=ip)
     return user
 
 '''
 세션키를 이용하여 유저객체 받기
-parameter: 세션키(String)
+parameter: 세션키(String), IP(String)
 return: user객체(userDTO)
 '''
-def getUserBySessionKey(sessionKey, ip):
-    user = userDTO.UserDTO()
-    # 유저객체 가져와서 세팅 필요
-    user.setIp(ip)
+def getUserBySessionKey(cookieKey, ip):
+    if cookieKey == "" or cookieKey == None:
+        user = userDTO.UserDTO()
+        user.setIp(ip)
+        return user
+    sql = f'SELECT u_no FROM sessionlist WHERE s_key = "{cookieKey}"'
+    uno = db.getData(sql=sql)[0][0]
+    user = getUserByUserNo(uno=uno, ip=ip)
     return user
 
 '''
-유저 번호로 세션키 받기
+유저 번호로 세션 만료시간 받기
 parameter: 유저번호(int)
-return: 세션키(String)
+return: user객체(userDTO)
 '''
-def getSessionKeyByUserNo(uno):
-    sessionKey = None
-    return sessionKey
+def getSessionTimeByUserNo(uno):
+    sql = f'SELECT s_expire FROM sessionlist WHERE u_no = {uno}'
+    s_expire = db.getData(sql=sql)[0][0]
+    return s_expire
 
 '''
 유저 및 ip가 1분, 1시간 동안 접속한 횟수 받기

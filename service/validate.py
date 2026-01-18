@@ -1,5 +1,6 @@
 from dao import userDAO
 from service import store
+from datetime import datetime
 
 '''
 client의 1분동안, 1시간동안 접속 횟수를 확인하고 설정값보다 많으면 블랙리스트 처리
@@ -19,8 +20,6 @@ def checkDdos(user):
         result = userDAO.setBlackList(user=user)
     return result
     
-
-
 '''
 client가 블랙리스트에 포함되어있는지 확인
 parameter: user객체(userDTO)
@@ -34,3 +33,15 @@ def checkBlackList(user):
     elif user.getIp() in blackList:
         result = True
     return result
+
+'''
+'''
+def checkSessionTimeOver(user):
+    result = False
+    if user.getNo() != 0:
+        sessionTime = userDAO.getSessionTimeByUserNo(user.getNo())
+        now = datetime.now()
+        if now > sessionTime:
+            result = True
+    return result
+    
