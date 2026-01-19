@@ -61,7 +61,7 @@ parameter: 페이지(int)
 return: 해당 페이지의 [글 번호(int), 제목(String)]의 리스트
 '''
 def getTitleList_all(page):
-    limit = store.pageCount_all
+    limit = store.PAGE_COUNT['메인통합']
     offset = limit * (page-1)
     sql=f'SELECT b_no,b_title FROM board WHERE b_isdelete=0 ORDER BY b_no DESC LIMIT {limit} OFFSET {offset}'
     result = db.getData(sql=sql)
@@ -74,7 +74,7 @@ return: 페이지 리스트(list)
 def getPageList_all():
     pageList = []
     sql='SELECT count(*) FROM board WHERE b_isdelete=0'
-    result = math.ceil(db.getData(sql=sql)[0][0]/store.pageCount_all)
+    result = math.ceil(db.getData(sql=sql)[0][0]/store.PAGE_COUNT['메인통합'])
     for i in range(result):
         pageList.append(i+1)
     return pageList
@@ -85,7 +85,7 @@ parameter: 유저객체(userDTO)
 return: 마지막 본 글 제목 리스트([[글번호(int),글제목(string)]...])
 '''
 def getRecentlyTitleList_user(user):
-    limit = store.pageCount_user
+    limit = store.PAGE_COUNT['유저별']
     sql=''
     uno = user.getNo()
     if uno == None:

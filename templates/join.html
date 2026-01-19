@@ -2,10 +2,28 @@
 
 {% block content %}
 <div id="joinDiv">
-    joinPage
+    <link rel="stylesheet" href="{{url_for('static',filename='./css/join.css')}}">
+    <div class="subTitle" id="joinTitle">Join Us</div>
+    <form action="/join" method="post" id="joinForm">
+        <label for="joinEmailInput" id="joinEmailLabel">email :</label>
+        <input name="joinEmail" type="email" id="joinEmailInput">
+        <button type="button" id="joinEmailBtn" disabled>check</button>
+        <label for="joinPwInput" id="joinPwLabel">password :</label>
+        <input name="joinPw" type="password" id="joinPwInput">
+        <span id="joinPwCheck"></span>
+        <label for="joinConfirmInput" id="joinConfirmLabel">confirm :</label>
+        <input name="joinConfirm" type="password" id="joinConfirmInput">
+        <span id="joinConfirmCheck"></span>
+        <label for="joinVerifyInput" id="joinVerifyLabel">verify :</label>
+        <input name="joinVerify" type="text" id="joinVerifyInput" disabled>
+        <button type="button" id="joinVerifySendBtn">send mail</button>
+        <button type="button" id="joinVerifyCheckBtn" disabled>check</button>
+        <div id="joinCommitDiv">
+            <button type="submit" id="joinCommit" disabled>join</button>
+            <button type="button" id="joinCancelCommit" onclick="history.back()">cancel</button>
+        </div>
+    </form>
     
 </div>
-<script>
-    
-</script>
+<script src="{{url_for('static',filename='./script/join.js')}}"></script>
 {% endblock %}

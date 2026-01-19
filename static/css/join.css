@@ -1,0 +1,202 @@
+#joinTitle{
+    display: block;
+    box-sizing: border-box;
+    margin: 20px auto;
+    font-size: 60px;
+}
+#joinForm{
+    display: grid;
+    grid-template-columns: 20% 40% 15% 15% 10%;
+    box-sizing: border-box;
+    margin-left: 7%;
+    row-gap: 30px;
+}
+
+#joinForm>label{
+    box-sizing: border-box;
+    text-align: right;
+    padding-right: 10px;
+}
+
+#joinForm>input{
+    box-sizing: border-box;
+    margin: 0 20px;
+    width: inherit;
+    padding: 2px 10px;
+}
+
+#joinEmailLabel{
+    box-sizing: border-box;
+    grid-row: 1;
+    grid-column: 1;
+}
+
+#joinEmailInput{
+    box-sizing: border-box;
+    grid-row: 1;
+    grid-column: 2;
+    
+}
+
+#joinEmailBtn{
+    box-sizing: border-box;
+    grid-row: 1;
+    grid-column: 3;
+    width: 100px;
+}
+
+#joinEmailBtn:disabled{
+    border-color: gray;
+    color: gray;
+    cursor: auto;
+}
+
+#joinEmailBtn:disabled:hover{
+    background-color: var(--bg-color);
+    font-weight: 400;
+    cursor: auto;
+}
+
+#joinPwLabel{
+    box-sizing: border-box;
+    grid-row: 2;
+    grid-column: 1;
+}
+
+#joinPwInput{
+    box-sizing: border-box;
+    grid-row: 2;
+    grid-column: 2;
+}
+
+#joinPwCheck{
+    box-sizing: border-box;
+    grid-row: 2;
+    grid-column-start: 3;
+    grid-column-end: 5;
+    text-align: left;
+    font-size: 12px;
+    color: red;
+}
+
+#joinConfirmLabel{
+    box-sizing: border-box;
+    grid-row: 3;
+    grid-column: 1;
+}
+
+#joinConfirmInput{
+    box-sizing: border-box;
+    grid-row: 3;
+    grid-column: 2;
+}
+
+#joinConfirmCheck{
+    box-sizing: border-box;
+    grid-row: 3;
+    grid-column-start: 3;
+    grid-column-end: 5;
+    text-align: left;
+    font-size: 12px;
+    color: red;
+}
+
+#joinVerifyLabel{
+    box-sizing: border-box;
+    grid-row: 4;
+    grid-column: 1;
+}
+
+#joinVerifyInput{
+    box-sizing: border-box;
+    grid-row: 4;
+    grid-column: 2;
+}
+
+#joinVerifyInput:disabled{
+    border-color: gray;
+    background-color: gray;
+    cursor: auto;
+    color: var(--dark-color);
+}
+
+#joinVerifySendBtn{
+    box-sizing: border-box;
+    grid-row: 4;
+    grid-column: 3;
+    width: 100px;
+}
+
+#joinVerifySendBtn:disabled{
+    border-color: gray;
+    color: gray;
+    cursor: auto;
+}
+
+#joinVerifySendBtn:disabled:hover{
+    background-color: var(--bg-color);
+    font-weight: 400;
+    cursor: auto;
+}
+
+#joinVerifyCheckBtn{
+    box-sizing: border-box;
+    grid-row: 4;
+    grid-column: 4;
+    width: 100px;
+}
+
+#joinVerifyCheckBtn:disabled{
+    border-color: gray;
+    color: gray;
+    cursor: auto;
+}
+
+#joinVerifyCheckBtn:disabled:hover{
+    background-color: var(--bg-color);
+    font-weight: 400;
+    cursor: auto;
+}
+
+#joinCommitDiv{
+    box-sizing: border-box;
+    grid-row: 5;
+    grid-column-start: 1;
+    grid-column-end: 5;
+}
+
+#joinCommit{
+    box-sizing: border-box;
+    margin: 30px;
+    width: 200px;
+    height: 50px;
+    font-size: var(--post-info-font-size);
+    font-weight: 600;
+}
+
+#joinCommit:disabled{
+    border-color: gray;
+    color: gray;
+    cursor: auto;
+}
+
+#joinCommit:disabled:hover{
+    background-color: var(--bg-color);
+    cursor: auto;
+}
+
+#joinCancelCommit{
+    box-sizing: border-box;
+    margin: 30px;
+    width: 200px;
+    height: 50px;
+    font-size: var(--post-info-font-size);
+    font-weight: 600;
+    color: var(--bg-color);
+    border-color: var(--theme-color);
+    background-color: var(--theme-color);
+}
+
+#joinCancelCommit:hover{
+    background-color: var(--dark-color);
+}
