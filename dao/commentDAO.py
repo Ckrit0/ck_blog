@@ -26,7 +26,7 @@ return: 댓글객체 리스트(List)
 '''
 def getCommentListByBoardNo(bno):
     commentList = []
-    sql = f'SELECT * from comment WHERE b_no={bno} AND co_upper IS NULL ORDER BY co_no DESC LIMIT {store.PAGE_COUNT['댓글']} OFFSET 0'
+    sql = f'''SELECT * from comment WHERE b_no={bno} AND co_upper IS NULL ORDER BY co_no DESC LIMIT {store.PAGE_COUNT['댓글']} OFFSET 0'''
     parentCommentList = db.getData(sql=sql)
     for parentComment in parentCommentList:
         pc = commentDTO.CommentDTO()
@@ -41,7 +41,7 @@ def getCommentListByBoardNo(bno):
             parentComment[7]
         )
         tempList = []
-        sql = f'SELECT * from comment WHERE b_no={bno} AND co_upper={pc.getNo()} ORDER BY co_no LIMIT {store.PAGE_COUNT['댓글']} OFFSET 0'
+        sql = f'''SELECT * from comment WHERE b_no={bno} AND co_upper={pc.getNo()} ORDER BY co_no LIMIT {store.PAGE_COUNT['댓글']} OFFSET 0'''
         childCommentList = db.getData(sql=sql)
         for childComment in childCommentList:
             cc = commentDTO.CommentDTO()
