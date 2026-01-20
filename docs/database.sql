@@ -124,6 +124,8 @@ SELECT count(*) FROM views WHERE v_ip = "0.0.0.0" AND v_date >= NOW() - INTERVAL
 SELECT u_no FROM sessionlist WHERE s_key = "laksfhdkl";
 -- 유저번호로 세션 만료시간 가져오기
 SELECT s_expire FROM sessionlist WHERE u_no = 1;
+-- 이메일과 비밀번호로 유저정보 가져오기 (탈퇴한 회원 제외)
+SELECT * FROM user WHERE u_email="u_email" AND u_pw="u_pw" AND u_state NOT IN (0, 3);
 -- 이메일 주소로 유저번호와 유저상태 가져오기 - 탈퇴한 회원 제외
 SELECT u_no, u_state, u_joindate FROM user WHERE u_email = "u_email" AND u_state NOT IN (0, 3);
 

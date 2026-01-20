@@ -5,6 +5,10 @@ from service import store, validate
 app = Flask(__name__)
 app.config["SECRET_KEY"] = store.secret_key
 
+##########################
+##### validate와 메인 #####
+##########################
+
 @app.before_request
 def validateCheck():
     # 클라이언트 정보 가져오기
@@ -59,6 +63,10 @@ def main():
         commentPageList=commentPageList
     )
 
+##########################
+######## 유저 관련 ########
+##########################
+
 @app.route("/login", methods=["POST"])
 def loginHandler():
     resp = make_response(redirect(request.referrer or url_for('main')))
@@ -92,18 +100,6 @@ def logoutHandler():
     # 메시지 생성
     flash(store.USER_MESSAGE['로그아웃'])
     return resp
-
-@app.route("/category/<categoryNo>")
-def categoryPage(categoryNo):
-    return render_template('category.html', categoryNo=categoryNo)
-
-@app.route("/contents/<contentsNo>")
-def contentsPage(contentsNo):
-    return render_template('contetns.html', contentsNo=contentsNo)
-
-@app.route("/search/<keyword>")
-def searchPage(keyword):
-    return render_template('search.html', keyword=keyword)
 
 @app.route("/join")
 def joinPage():
@@ -163,13 +159,25 @@ def matchVerifyHandler():
     result = userDAO.matchVerify(email=email, code=verify)
     return jsonify(result)
 
-@app.route("/find")
-def findPage():
-    return render_template('find.html')
-
 @app.route("/user/<userNo>")
 def userPage(userNo):
     return render_template('user.html', userNo=userNo)
+
+##########################
+######### 글 관련 #########
+##########################
+
+@app.route("/contents/<contentsNo>")
+def contentsPage(contentsNo):
+    return render_template('contetns.html', contentsNo=contentsNo)
+
+@app.route("/category/<categoryNo>")
+def categoryPage(categoryNo):
+    return render_template('category.html', categoryNo=categoryNo)
+
+@app.route("/search/<keyword>")
+def searchPage(keyword):
+    return render_template('search.html', keyword=keyword)
 
 if __name__ == '__main__':
     app.run(

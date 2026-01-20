@@ -276,7 +276,7 @@ parameter: email(String), pw(String)
 return: sessionKey(string)
 '''
 def getSessionKeyByEmailAndPw(email,pw,ip):
-    sql = f'SELECT * FROM user WHERE u_email="{email}" AND u_pw="{__encryptPw(pw=pw)}" AND u_state IN (0,1,2,5)'
+    sql = f'SELECT * FROM user WHERE u_email="{email}" AND u_pw="{__encryptPw(pw=pw)}" AND u_state NOT IN (0, 3)'
     result = db.getData(sql=sql)
     user = userDTO.UserDTO()
     user.setUser(result[0])
