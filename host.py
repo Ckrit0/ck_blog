@@ -197,7 +197,11 @@ def userPage(userNo):
         targetUserCommentCount=targetUserCommentCount,
         targetUserBoardList=targetUserBoardList,
         targetUserCommentList=targetUserCommentList
-        )
+    )
+
+@app.route("/find")
+def findPage():
+    return render_template('find.html')
 
 ##########################
 ######### 글 관련 #########
