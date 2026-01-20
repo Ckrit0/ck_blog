@@ -263,12 +263,14 @@ def updateUser(user):
     pass
 
 '''
-세션 만료일시를 갱신
+세션 만료시간 갱신
 parameter: user객체(userDTO)
-return: 
+return: 실패 0, 성공 1 (int)
 '''
-def updateSessionDate(user):
-    pass
+def updateSessionTime(user):
+    sql = f'UPDATE sessionlist SET s_expire = NOW() + INTERVAL {store.sessionTime} HOUR WHERE u_no = {user.getNo()}'
+    result = db.setData(sql=sql)
+    return result
 
 '''
 이메일과 비밀번호로 세션키 받기(세션 등록)

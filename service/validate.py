@@ -43,5 +43,7 @@ def checkSessionTimeOver(user):
         now = datetime.now()
         if now > sessionTime:
             result = True
+        else:
+            # timeover가 아니라면 세션시간 갱신
+            userDAO.updateSessionTime(user=user)
     return result
-    

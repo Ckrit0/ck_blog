@@ -24,6 +24,7 @@
         <div id="loginDiv">
             {% if clientUser.getNo() != 0 %}
             <span id="loginUserName">{{ clientUser.getEmail() }} </span>
+            <button id="userInfo">회원정보</button>
             <form style="display: inline-block;" action="/logout" method="post">
                 <button type="submit" id="logoutBtn">로그아웃</button>
             </form>

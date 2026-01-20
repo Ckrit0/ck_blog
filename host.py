@@ -86,7 +86,7 @@ def loginHandler():
                 samesite='Lax',
                 httponly=True)
     except:
-        # 메시지 생성
+        # alert 메시지 생성
         flash(store.USER_MESSAGE['로그인실패'])
     return resp
 
@@ -97,7 +97,7 @@ def logoutHandler():
     # 쿠키 삭제
     resp.delete_cookie('sessionKey')
     
-    # 메시지 생성
+    # alert 메시지 생성
     flash(store.USER_MESSAGE['로그아웃'])
     return resp
 
@@ -170,6 +170,10 @@ def userPage(userNo):
 @app.route("/contents/<contentsNo>")
 def contentsPage(contentsNo):
     return render_template('contetns.html', contentsNo=contentsNo)
+
+##########################
+######## 검색 관련 ########
+##########################
 
 @app.route("/category/<categoryNo>")
 def categoryPage(categoryNo):

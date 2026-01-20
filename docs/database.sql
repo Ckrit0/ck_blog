@@ -159,7 +159,8 @@ INSERT INTO sessionlist(u_no,s_key,s_ip,s_expire) VALUES("u_no","s_key","s_ip","
 UPDATE FROM user SET u_state = 3 WHERE u_no = 1;
 -- 유저의 탈퇴 처리(유저이메일)
 UPDATE user SET u_state = 3 WHERE u_email = "u_email";
-
+-- 세션 시간 초기화
+UPDATE sessionlist SET s_expire = NOW() + INTERVAL 1 HOUR WHERE u_no = "u_no";
 
 ------------
 -- DELETE --
