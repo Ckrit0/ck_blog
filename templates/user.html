@@ -1,9 +1,61 @@
 {% extends 'template.html' %}
 
 {% block content %}
+<link rel="stylesheet" href="{{url_for('static',filename='./css/user.css')}}">
 <div id="userDiv">
-    userPage({{userNo}})
-    
+    <div class="subTitle">회원 정보</div>
+    <div id="userInfo">
+        <div class="userInfoTitle">이메일 :</div>
+        <div class="userInfoContents">
+            {{targetUser.getEmail()}}
+            {% if clientUser.getNo() == targetUser.getNo() %}
+            <button>비번변경</button>
+            <button>인증받기</button>
+            {% endif %}
+        </div>
+
+        <div class="userInfoTitle">가입 날짜 :</div>
+        <div class="userInfoContents">
+            {{targetUser.getJoinDate()}}
+        </div>
+
+        <div class="userInfoTitle">마지막 접속 :</div>
+        <div class="userInfoContents">
+            {{targetUserLastSessionTime}}
+        </div>
+
+        <div class="userInfoTitle">작성한 글 갯수 :</div>
+        <div class="userInfoContents">
+            {{targetUserBoardCount}}
+        </div>
+
+        <div class="userInfoTitle">작성한 댓글 갯수 :</div>
+        <div class="userInfoContents">
+            {{targetUserCommentCount}}
+        </div>
+
+        <div class="userInfoTitle">최근 글 :</div>
+        <div class="userInfoContents">
+            <ul>
+                {% for board in targetUserBoardList %}
+                <li onclick="window.location.href='/board/{{board.getNo()}}'">
+                    {{board.getTitle()}}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="userInfoTitle">최근 댓글 :</div>
+        <div class="userInfoContents">
+            <ul>
+                {% for comment in targetUserCommentList %}
+                <li  onclick="window.location.href='/board/{{comment.getBoard().getNo()}}'">
+                    <span>{{comment.getBoard().getTitle()}}</span>
+                    <span>{{comment.getComment()}}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
 </div>
 <script>
     

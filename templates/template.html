@@ -18,13 +18,13 @@
     {% endwith %}
     <div id="titleBar">
         <div class="horizontalLine"></div>
-        <div id="title">널리 인간을 일 없게 하라</div>
+        <a href="/"><div id="title">널리 인간을 일 없게 하라</div></a>
     </div>
     <header>
         <div id="loginDiv">
             {% if clientUser.getNo() != 0 %}
             <span id="loginUserName">{{ clientUser.getEmail() }} </span>
-            <button id="userInfo">회원정보</button>
+            <button id="userInfoBtn" onclick="window.location.href='/user/{{clientUser.getNo()}}'">회원정보</button>
             <form style="display: inline-block;" action="/logout" method="post">
                 <button type="submit" id="logoutBtn">로그아웃</button>
             </form>

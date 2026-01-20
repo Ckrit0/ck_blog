@@ -88,13 +88,13 @@ SELECT * FROM category WHERE c_upper=1 ORDER BY c_no;
 SELECT b_title FROM board WHERE b_isdelete=0 ORDER BY b_no DESC LIMIT 5 OFFSET 0;
 -- 전체 글 갯수 가져오기
 SELECT count(*) FROM board WHERE b_isdelete=0;
--- 유저별 마지막 읽은 글 제목의 목록 가져오기
+-- 유저별 마지막 읽은 글 제목의 목록 가져오기 (b_no가 0이면 게시글이 아닌 페이지라 제외)
 SELECT b.b_no, b.b_title FROM board b
-JOIN (SELECT DISTINCT b_no FROM views WHERE u_no = 0 ORDER BY v_date DESC LIMIT 5) v
+JOIN (SELECT DISTINCT b_no FROM views WHERE u_no = 0 AND b_no != 0 ORDER BY v_date DESC LIMIT 5) v
 ON b.b_no = v.b_no;
--- IP별 마지막 읽은 글 제목의 목록 가져오기
+-- IP별 마지막 읽은 글 제목의 목록 가져오기 (b_no가 0이면 게시글이 아닌 페이지라 제외)
 SELECT b.b_no, b.b_title FROM board b
-JOIN (SELECT DISTINCT b_no FROM views WHERE v_ip = "0.0.0.0" ORDER BY v_date DESC LIMIT 5) v
+JOIN (SELECT DISTINCT b_no FROM views WHERE v_ip = "0.0.0.0" AND b_no != 0 ORDER BY v_date DESC LIMIT 5) v
 ON b.b_no = v.b_no;
 -- 마지막 게시글 가져오기
 SELECT * FROM board WHERE b_isdelete=0 ORDER BY b_no DESC LIMIT 1 OFFSET 0;
@@ -128,6 +128,14 @@ SELECT s_expire FROM sessionlist WHERE u_no = 1;
 SELECT * FROM user WHERE u_email="u_email" AND u_pw="u_pw" AND u_state NOT IN (0, 3);
 -- 이메일 주소로 유저번호와 유저상태 가져오기 - 탈퇴한 회원 제외
 SELECT u_no, u_state, u_joindate FROM user WHERE u_email = "u_email" AND u_state NOT IN (0, 3);
+-- 유저번호로 작성한 글 갯수 가져오기
+SELECT count(*) FROM board WHERE u_no = 1 AND b_isdelete = 0;
+-- 유저번호로 작성한 댓글 갯수 가져오기
+SELECT count(*) FROM comment WHERE u_no = 1 AND co_isdelete = 0;
+-- 유저번호로 작성한 최신글 목록 가져오기
+SELECT * FROM board WHERE u_no = 1 AND b_isdelete = 0 ORDER BY b_no DESC LIMIT 5 OFFSET 0;
+-- 유저번호로 작성한 최신댓글 목록 가져오기
+SELECT * FROM comment WHERE u_no = 1 AND co_isdelete = 0 ORDER BY co_no DESC LIMIT 5 OFFSET 0;
 
 
 ------------

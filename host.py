@@ -5,6 +5,13 @@ from service import store, validate
 app = Flask(__name__)
 app.config["SECRET_KEY"] = store.secret_key
 
+def getTemplateData(req):
+    # 클라이언트 정보 가져오기
+    clientUser = userDAO.getUserBySessionKey(cookieKey=req.cookies.get('sessionKey'),ip=req.remote_addr)
+    categoryList = categoryDAO.getCategoryList()
+    recentlyTitleList = boardDAO.getRecentlyTitleList_user(clientUser)
+    return clientUser, categoryList, recentlyTitleList
+
 ##########################
 ##### validate와 메인 #####
 ##########################
@@ -37,12 +44,10 @@ def validateCheck():
 
 @app.route("/")
 def main():
-    # 클라이언트 정보 가져오기
-    clientUser = userDAO.getUserBySessionKey(cookieKey=request.cookies.get('sessionKey'),ip=request.remote_addr)
+    # 템플릿 정보 가져오기
+    clientUser, categoryList, recentlyTitleList = getTemplateData(req=request)
     
-    # 데이터 가져오기
-    categoryList = categoryDAO.getCategoryList()
-    recentlyTitleList = boardDAO.getRecentlyTitleList_user(clientUser)
+    # 메인페이지 데이터 가져오기
     titleList = boardDAO.getTitleList_all(1)
     pageList = boardDAO.getPageList_all()
     recentlyboard = boardDAO.getRecentlyBoard()
@@ -103,8 +108,8 @@ def logoutHandler():
 
 @app.route("/join")
 def joinPage():
-    # 클라이언트 정보 가져오기
-    clientUser = userDAO.getUserBySessionKey(cookieKey=request.cookies.get('sessionKey'),ip=request.remote_addr)
+    # 템플릿 정보 가져오기
+    clientUser, categoryList, recentlyTitleList = getTemplateData(req=request)
     
     # 이미 로그인 되어있는 경우
     if clientUser.getNo() != 0:
@@ -116,7 +121,9 @@ def joinPage():
     userDAO.setView(clientUser)
 
     return render_template('join.html',
-        clientUser = clientUser
+        clientUser = clientUser,
+        categoryList = categoryList,
+        recentlyTitleList = recentlyTitleList
     )
 
 @app.route("/join", methods=["POST"])
@@ -161,7 +168,36 @@ def matchVerifyHandler():
 
 @app.route("/user/<userNo>")
 def userPage(userNo):
-    return render_template('user.html', userNo=userNo)
+    # 템플릿 정보
+    clientUser, categoryList, recentlyTitleList = getTemplateData(req=request)
+    # 유저정보
+    targetUser = userDAO.getUserByUserNo(uno=userNo,ip="")
+    if targetUser.getState() not in [store.USER_STATE_CODE['미인증'],store.USER_STATE_CODE['인증'],store.USER_STATE_CODE['관리자']]:
+        resp = make_response(redirect(request.referrer or url_for('main')))
+        flash("유저를 찾을 수 없습니다.")
+        return resp
+    # 마지막 세션시간
+    targetUserLastSessionTime = userDAO.getSessionTimeByUserNo(targetUser.getNo()).strftime("%Y-%m-%d")
+    # 작성한 글 갯수
+    targetUserBoardCount = boardDAO.getBoardCountByUserNo(targetUser.getNo())
+    # 작성한 댓글 갯수
+    targetUserCommentCount = commentDAO.getCommentCountByUserNo(targetUser.getNo())
+    # 작성한 최근글 목록
+    targetUserBoardList = []
+    # 작성한 최근댓글 목록
+    targetUserCommentList = []
+
+    return render_template('user.html',
+        clientUser=clientUser,
+        categoryList=categoryList,
+        recentlyTitleList=recentlyTitleList,
+        targetUser=targetUser,
+        targetUserLastSessionTime=targetUserLastSessionTime,
+        targetUserBoardCount=targetUserBoardCount,
+        targetUserCommentCount=targetUserCommentCount,
+        targetUserBoardList=targetUserBoardList,
+        targetUserCommentList=targetUserCommentList
+        )
 
 ##########################
 ######### 글 관련 #########

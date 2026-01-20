@@ -79,6 +79,10 @@ ul{
     list-style: none;
 }
 
+a{
+    text-decoration: none;
+}
+
 /* 클래스 */
 
 .subTitle{

@@ -1,4 +1,4 @@
-from dao import userDAO
+from dao import userDAO, boardDAO
 
 class CommentDTO:
     def __init__(self):
@@ -49,6 +49,10 @@ class CommentDTO:
     
     def getBoardNo(self):
         return self.bno
+    
+    def getBoard(self):
+        board = boardDAO.getBoardByBoardNo(self.bno)
+        return board
     
     def getUserNo(self):
         return self.uno

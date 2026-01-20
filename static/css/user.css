@@ -1,0 +1,21 @@
+.userInfoTitle{
+    grid-column: 1;
+    text-align: right;
+    margin: 10px;
+}
+
+.userInfoContents{
+    grid-column: 2;
+    text-align: left;
+    margin: 10px;
+}
+
+#userDiv{
+    margin-top: 30px;
+}
+
+#userInfo{
+    display: grid;
+    margin-top: 20px;
+    grid-template-columns: 45% 55%;
+}

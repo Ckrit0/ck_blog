@@ -86,11 +86,11 @@ def getRecentlyTitleList_user(user):
     uno = user.getNo()
     if uno == None:
         sql=f'SELECT b.b_no, b.b_title FROM board b\
-            JOIN (SELECT DISTINCT b_no FROM views WHERE v_ip = "{user.getIp()}" ORDER BY v_date DESC LIMIT {limit}) v\
+            JOIN (SELECT DISTINCT b_no FROM views WHERE v_ip = "{user.getIp()}" AND b_no != 0 ORDER BY v_date DESC LIMIT {limit}) v\
             ON b.b_no = v.b_no'
     else:
         sql=f'SELECT b.b_no, b.b_title FROM board b\
-            JOIN (SELECT DISTINCT b_no FROM views WHERE u_no = {uno} ORDER BY v_date DESC LIMIT {limit}) v\
+            JOIN (SELECT DISTINCT b_no FROM views WHERE u_no = {uno} AND b_no != 0 ORDER BY v_date DESC LIMIT {limit}) v\
             ON b.b_no = v.b_no'
     result = db.getData(sql=sql)
     return result
@@ -194,3 +194,36 @@ return:
 '''
 def deleteImage(ino):
     sql=f''
+
+'''
+유저별 작성한 글 갯수 가져오기
+parameter: 유저번호(int)
+return: 작성한 글 갯수(int)
+'''
+def getBoardCountByUserNo(uno):
+    sql=f'SELECT count(*) FROM board WHERE u_no = {uno} AND b_isdelete = 0'
+    result = db.getData(sql=sql)
+    return result[0][0]
+
+'''
+유저별 작성한 최신글 목록 가져오기
+parameter: 유저번호(int)
+return: 글 목록 리스트([boardDTO,....])
+'''
+def getRecentlyBoardList(uno):
+    result = []
+    sql=f'''SELECT * FROM board WHERE u_no = {uno} AND b_isdelete = 0 ORDER BY b_no DESC LIMIT {store.PAGE_COUNT['유저별']} OFFSET 0'''
+    boardList = db.getData(sql=sql)
+    for board in boardList:
+        b = boardDTO.BoardDTO()
+        b.setBoard(
+            no=board[0],
+            uno=board[1],
+            cno=board[2],
+            date=board[3],
+            title=board[4],
+            content=board[5],
+            isDelete=board[6]
+        )
+        result.append(b)
+    return result
