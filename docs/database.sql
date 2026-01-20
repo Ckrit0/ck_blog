@@ -125,7 +125,8 @@ SELECT u_no FROM sessionlist WHERE s_key = "laksfhdkl";
 -- 유저번호로 세션 만료시간 가져오기
 SELECT s_expire FROM sessionlist WHERE u_no = 1;
 -- 이메일 주소로 유저번호와 유저상태 가져오기 - 탈퇴한 회원 제외
-SELECT u_no, u_state FROM user WHERE u_email = "u_email" u_state NOT IN (0, 3);
+SELECT u_no, u_state, u_joindate FROM user WHERE u_email = "u_email" AND u_state NOT IN (0, 3);
+
 
 ------------
 -- INSERT --
@@ -152,7 +153,10 @@ INSERT INTO sessionlist(u_no,s_key,s_ip,s_expire) VALUES("u_no","s_key","s_ip","
 ------------
 -- UPDATE --
 ------------
-
+-- 유저의 탈퇴 처리(유저번호)
+UPDATE FROM user SET u_state = 3 WHERE u_no = 1;
+-- 유저의 탈퇴 처리(유저이메일)
+UPDATE user SET u_state = 3 WHERE u_email = "u_email";
 
 
 ------------

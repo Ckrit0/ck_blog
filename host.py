@@ -115,6 +115,10 @@ def joinPage():
         resp = make_response(redirect(url_for('main')))
         flash(store.USER_MESSAGE['기로그인'])
         return resp
+    
+    # 뷰 설정
+    userDAO.setView(clientUser)
+
     return render_template('join.html',
         clientUser = clientUser
     )
@@ -137,24 +141,27 @@ def joinHandler():
     verify = request.form["joinVerify"]
 
     result = userDAO.setUser(email=email, pw=pw, confirm=confirm, verify=verify)
-    if result != 0:
-        flash(store.USER_MESSAGE['회원가입성공'])
-    else:
-        flash()
+    flash(store.getJoinResult(result))
     return resp
+
+@app.route("/checkMail", methods=["POST"])
+def checkMailHandler():
+    email = request.json["joinEmail"]
+    sameEmailUsers = userDAO.getUserDataByEmailAddress(email)
+    return jsonify(sameEmailUsers)
 
 @app.route("/sendMail", methods=["POST"])
 def sendMailHandler():
-    email = request.form["joinEmail"]
+    email = request.json["joinEmail"]
     result = userDAO.sendMail(email=email)
-    return result
+    return jsonify(result)
 
 @app.route("/matchVerify", methods=["POST"])
 def matchVerifyHandler():
-    email = request.form["joinEmail"]
-    verify = request.form["joinVerify"]
+    email = request.json["joinEmail"]
+    verify = request.json["joinVerify"]
     result = userDAO.matchVerify(email=email, code=verify)
-    return result
+    return jsonify(result)
 
 @app.route("/find")
 def findPage():

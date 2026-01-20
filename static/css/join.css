@@ -1,3 +1,14 @@
+.joinChecked{
+    text-align: left;
+    font-size: 20px;
+    
+}
+
+.joinWarning{
+    font-size: 12px;
+    color: red;
+}
+
 #joinTitle{
     display: block;
     box-sizing: border-box;
@@ -38,6 +49,13 @@
     
 }
 
+#joinEmailInput:disabled{
+    border-color: gray;
+    background-color: gray;
+    cursor: auto;
+    color: var(--dark-color);
+}
+
 #joinEmailBtn{
     box-sizing: border-box;
     grid-row: 1;
@@ -75,8 +93,6 @@
     grid-column-start: 3;
     grid-column-end: 5;
     text-align: left;
-    font-size: 12px;
-    color: red;
 }
 
 #joinConfirmLabel{
@@ -97,8 +113,6 @@
     grid-column-start: 3;
     grid-column-end: 5;
     text-align: left;
-    font-size: 12px;
-    color: red;
 }
 
 #joinVerifyLabel{
@@ -123,7 +137,7 @@
 #joinVerifySendBtn{
     box-sizing: border-box;
     grid-row: 4;
-    grid-column: 3;
+    grid-column: 4;
     width: 100px;
 }
 
@@ -142,7 +156,7 @@
 #joinVerifyCheckBtn{
     box-sizing: border-box;
     grid-row: 4;
-    grid-column: 4;
+    grid-column: 3;
     width: 100px;
 }
 
@@ -158,9 +172,16 @@
     cursor: auto;
 }
 
-#joinCommitDiv{
+#joinInfoDiv{
     box-sizing: border-box;
     grid-row: 5;
+    grid-column-start: 1;
+    grid-column-end: 5;
+}
+
+#joinCommitDiv{
+    box-sizing: border-box;
+    grid-row: 6;
     grid-column-start: 1;
     grid-column-end: 5;
 }

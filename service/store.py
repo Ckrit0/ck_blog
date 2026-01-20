@@ -21,15 +21,19 @@ USER_STATE_CODE = {
 }
 
 JOIN_RESULT_CODE = {
-    '정상 가입':0,
+    '정상 가입 되었습니다.':0,
     'Email 형식 오류':1,
     'PW 형식 오류':2,
     'Confirm 오류':3,
     '가입된 인증 Email':4,
     '가입된 미인증 Email':5,
     '블랙리스트':6,
-    '가입실패-사유모름':999
+    '가입실패-사유불분명':999
 }
+def getJoinResult(joinResultCode):
+    for key, value in JOIN_RESULT_CODE.items():
+        if value == joinResultCode:
+            return key
 
 USER_MESSAGE = {
     '로그인성공': "정상적으로 로그인되었습니다.",
@@ -88,6 +92,6 @@ BLACK_REASON_CODE = {
 }
 
 def getBlackReason(blackReasonCode):
-    for key, value in BLACK_REASON_CODE:
+    for key, value in BLACK_REASON_CODE.items():
         if value == blackReasonCode:
             return key

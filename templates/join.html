@@ -10,16 +10,19 @@
         <button type="button" id="joinEmailBtn" disabled>check</button>
         <label for="joinPwInput" id="joinPwLabel">password :</label>
         <input name="joinPw" type="password" id="joinPwInput">
-        <span id="joinPwCheck"></span>
+        <span id="joinPwCheck" class="joinWarning"></span>
         <label for="joinConfirmInput" id="joinConfirmLabel">confirm :</label>
         <input name="joinConfirm" type="password" id="joinConfirmInput">
-        <span id="joinConfirmCheck"></span>
+        <span id="joinConfirmCheck" class="joinWarning"></span>
         <label for="joinVerifyInput" id="joinVerifyLabel">verify :</label>
         <input name="joinVerify" type="text" id="joinVerifyInput" disabled>
-        <button type="button" id="joinVerifySendBtn">send mail</button>
         <button type="button" id="joinVerifyCheckBtn" disabled>check</button>
+        <button type="button" id="joinVerifySendBtn" disabled>send mail</button>
+        <div id="joinInfoDiv" class="joinWarning">
+            verify(이메일 인증)은 필수는 아니며, 추후 회원정보에서도 진행이 가능합니다.
+        </div>
         <div id="joinCommitDiv">
-            <button type="submit" id="joinCommit" disabled>join</button>
+            <button type="button" id="joinCommit" disabled>join</button>
             <button type="button" id="joinCancelCommit" onclick="history.back()">cancel</button>
         </div>
     </form>

@@ -40,6 +40,9 @@ class UserDTO:
     def getNo(self):
         return self.no
     
+    def getPlaneEmail(self):
+        return self.email
+
     def getEmail(self):
         if self.state == 0:
             return '비회원'

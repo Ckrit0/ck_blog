@@ -29,7 +29,8 @@ def __encryptPw(pw):
         tempPw = ""
         # encPw로 만들어진 숫자와 조금 다르게 설정된 숫자의 문자를 합해준다.
         for i in range(len(encPw)):
-            tempPw += encPw[i] + str((ord(pw[i]) * ord(key[i %len(key)]))//8)
+            tempPw += encPw[i] + str((ord(pw[i%len(pw)]) * ord(key[i%len(key)]))//8)
+        encPw = tempPw
     # 만들어진 문자가 100글자(DB가 VARCHAR(100))가 넘으면
     while len(encPw) > 100:
         tempPw = ""
@@ -72,20 +73,30 @@ def __setSession(user):
 def __updateVerifyList():
     expireIndexList = []
     for i in range(len(store.verifyList)):
-        if store.verifyList[i]['expire'] > datetime.now() + timedelta(minutes=30):
+        if store.verifyList[i]['expire']  + timedelta(minutes=30) < datetime.now():
             expireIndexList.append(i)
     for i in range(len(expireIndexList)):
         store.verifyList.pop(expireIndexList[i]-i)
-    
+
+'''
+조회 설정하기.(글이 아닌 모든 부분은 b_no를 0으로 설정)
+parameter: user객체(userDTO)
+return: 실패 0, 성공 1 (int)
+'''
+def setView(user):
+    sql=f'INSERT INTO views(b_no,u_no,v_ip) VALUES(0,{user.getNo()},"{user.getIp()}")'
+    result = db.setData(sql=sql)
+    return result
+
 '''
 메일주소로 가입된 이메일 여부와 인증여부 확인
 parameter: email(String)
-return: dataList([['유저번호'(int),'유저상태'(int)]....])
+return: dataList([['유저번호'(int),'유저상태'(int),'가입일'(datetime)]....])
 '''
-def getUserNoAndStateByEmailAddress(email):
-    sql = f'SELECT u_no, u_state FROM user WHERE u_email = "{email}" u_state NOT IN (0, 3)'
-    result = db.getData(sql=sql)
-    return result
+def getUserDataByEmailAddress(email):
+    sql = f'SELECT u_no, u_state, u_joindate FROM user WHERE u_email = "{email}" AND u_state NOT IN (0, 3)'
+    userData = db.getData(sql=sql)
+    return userData
 
 '''
 인증코드 확인
@@ -169,6 +180,16 @@ def setUser(email, pw, confirm, verify):
             result[1] = True
         return result
     
+    def __alreadyUserCode(userState):
+        if userState == store.USER_STATE_CODE['미인증']:
+            return store.JOIN_RESULT_CODE['가입된 미인증 Email']
+        elif userState == store.USER_STATE_CODE['인증']:
+            return store.JOIN_RESULT_CODE['가입된 인증 Email']
+        elif userState == store.USER_STATE_CODE['블랙리스트']:
+            return store.JOIN_RESULT_CODE['블랙리스트']
+        elif userState == store.USER_STATE_CODE['관리자']:
+            return store.JOIN_RESULT_CODE['가입된 인증 Email']
+    
     # password와 컨펌이 서로 맞지 않는 경우
     if pw != confirm:
         return store.JOIN_RESULT_CODE['Confirm 오류']
@@ -180,41 +201,43 @@ def setUser(email, pw, confirm, verify):
     elif checkRegex[1] == False:
         return store.JOIN_RESULT_CODE['PW 형식 오류']
     
-    # 이미 사용중인 이메일일 경우
-    userData = getUserNoAndStateByEmailAddress(email=email)
-    if len(userData) != 0:
-        if userData[1] == store.USER_STATE_CODE['미인증']:
-            return store.JOIN_RESULT_CODE['가입된 미인증 Email']
-        elif userData[1] == store.USER_STATE_CODE['인증']:
-            return store.JOIN_RESULT_CODE['가입된 인증 Email']
-        elif userData[1] == store.USER_STATE_CODE['블랙리스트']:
-            return store.JOIN_RESULT_CODE['블랙리스트']
-        elif userData[1] == store.USER_STATE_CODE['관리자']:
-            return store.JOIN_RESULT_CODE['가입된 인증 Email']
+    # 이메일을 이미 사용중인 유저의 데이터
+    userData = getUserDataByEmailAddress(email=email)
     
     user = userDTO.UserDTO()
     user.setEmail(email=email)
     user.setPw(pw=__encryptPw(pw=pw))
+    sqlList = []
     
     # verify 미진행
     if verify == "" or verify == None:
         user.setState(state=store.USER_STATE_CODE['미인증'])
+        # 미인증시 기존 생성된 이메일 주소의 강제 진행 불가
+        if len(userData) != 0:
+            return __alreadyUserCode(userData[0][1])
+            
     # verify 진행
     else:
         verifyResult = matchVerify(email=email, code=verify)
-        # verify 성공
         if verifyResult == 0:
             user.setState(state=store.USER_STATE_CODE['인증'])
-        # verify 실패(실패 코드에 따른 결과를 유저에게 띄워줄까 말까 고민중)
+            # 인증완료시 기존 생성된 이메일 주소의 탈퇴처리
+            sql = f'UPDATE user SET u_state = 3 WHERE u_email = "{email}";'
+            # 회원가입 처리가 정상적으로 처리되지 않을 때를 위해서 List방식으로 한번에 commit
+            sqlList.append(sql)
         else:
             user.setState(state=store.USER_STATE_CODE['미인증'])
+            # 미인증시 기존 생성된 이메일 주소의 강제 진행 불가
+            if len(userData) != 0:
+                return __alreadyUserCode(userData[0][1])
 
-    sql=f'INSERT INTO user(u_email,u_pw,u_state) VALUES("{user.getEmail()}","{user.getPw()}",{user.getState()})'
-    result = db.setData(sql=sql)
+    sql=f'INSERT INTO user(u_email,u_pw,u_state) VALUES("{user.getPlaneEmail()}","{user.getPw()}",{user.getState()})'
+    sqlList.append(sql)
+    result = db.setDatas(sqlList=sqlList)
     if result != 0:
-        return store.JOIN_RESULT_CODE['정상 가입']
+        return store.JOIN_RESULT_CODE['정상 가입 되었습니다.']
     else :
-        return store.JOIN_RESULT_CODE['가입실패-사유모름']
+        return store.JOIN_RESULT_CODE['가입실패-사유불분명']
 
 '''
 해당 유저 블랙리스트에 추가
@@ -222,7 +245,7 @@ parameter: user객체(userDTO)
 return: 0은 실패, 1은 성공
 '''
 def setBlackList(user):
-    sql = f'INSERT INTO blacklist(u_no,bl_ip,bl_expire,bl_cause) VALUES({user.getNo()},"{user.getIp()}",NOW() + INTERVAL {store.ddosBlockHour} HOUR,"{store.BLACK_REASON_CODE['Ddos 주의']}");'
+    sql = f'''INSERT INTO blacklist(u_no,bl_ip,bl_expire,bl_cause) VALUES({user.getNo()},"{user.getIp()}",NOW() + INTERVAL {store.ddosBlockHour} HOUR,"{store.BLACK_REASON_CODE['Ddos 주의']}");'''
     result = db.setData(sql=sql)
     if result == 0:
         return False
@@ -342,12 +365,15 @@ return: 블랙리스트(List)
 '''
 def getBlackList():
     blackList = []
-    sql = 'SELECT u_no, bl_ip FROM blacklist WHERE bl_expire >= NOW()'
+    sql = 'SELECT u_no FROM blacklist WHERE bl_expire >= NOW()'
     result = db.getData(sql=sql)
-    for black in result:
-        for data in black:
-            if data != 0:
-                blackList.append(data)
+    for uno in result:
+        if uno != 0:
+            blackList.append(uno)
+    sql = 'SELECT bl_ip FROM blacklist WHERE bl_expire >= NOW()'
+    result = db.getData(sql=sql)
+    for bip in result:
+        blackList.append(bip)
     return blackList
 
 '''

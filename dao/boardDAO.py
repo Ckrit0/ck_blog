@@ -27,15 +27,11 @@ def setImage(board,image):
 
 '''
 조회 설정하기.(최근 본 글 목록에서 볼 수 있도록 모두 저장)
-parameter: user객체(userDTO)
-return: 
+parameter: user객체(userDTO), 글객체(boardDTO)
+return: 실패 0, 성공 1 (int)
 '''
 def setView(user, board):
-    sql=f'INSERT INTO views(b_no,u_no,v_ip) VALUES({board.getNo()},'
-    if user.getNo() == None:
-        sql += f'0,"{user.getIp()}")' # Nullable 변경 후 0을 Null로 변경
-    else:
-        sql += f'{user.getNo()},"{user.getIp()}")'
+    sql=f'INSERT INTO views(b_no,u_no,v_ip) VALUES({board.getNo()},{user.getNo()},"{user.getIp()}")'
     result = db.setData(sql=sql)
     return result
 
