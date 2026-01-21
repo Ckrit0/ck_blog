@@ -37,7 +37,7 @@
             <ul>
                 {% for board in targetUserBoardList %}
                 <li onclick="window.location.href='/board/{{board.getNo()}}'">
-                    {{board.getTitle()}}
+                    <span class="pointer bolder">{{board.getTitle()}}</span>
                 </li>
                 {% endfor %}
             </ul>
@@ -46,9 +46,9 @@
         <div class="userInfoContents">
             <ul>
                 {% for comment in targetUserCommentList %}
-                <li  onclick="window.location.href='/board/{{comment.getBoard().getNo()}}'">
-                    <span>{{comment.getBoard().getTitle()}}</span>
-                    <span>{{comment.getComment()}}</span>
+                <li  onclick="window.location.href='/board/{{comment.getBoardNo()}}'">
+                    <span class="pointer bolder">{{comment.getBoardTitle()}}</span><br>
+                    <span class="pointer indentation"> ㄴ{{comment.getComment()}}</span>
                 </li>
                 {% endfor %}
             </ul>

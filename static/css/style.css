@@ -198,6 +198,18 @@ a{
     }
 }
 
+.pointer{
+    cursor: pointer;
+}
+
+.bolder{
+    font-weight: 600;
+}
+
+.indentation{
+    padding-left: 20px;
+}
+
 /* 개발용도 */
 .findBorder{
     border: 2px solid var(--theme-color);

@@ -178,15 +178,15 @@ def userPage(userNo):
         flash("유저를 찾을 수 없습니다.")
         return resp
     # 마지막 세션시간
-    targetUserLastSessionTime = userDAO.getSessionTimeByUserNo(targetUser.getNo()).strftime("%Y-%m-%d")
+    targetUserLastSessionTime = userDAO.getSessionTimeByUserNo(uno=targetUser.getNo()).strftime("%Y-%m-%d")
     # 작성한 글 갯수
-    targetUserBoardCount = boardDAO.getBoardCountByUserNo(targetUser.getNo())
+    targetUserBoardCount = boardDAO.getBoardCountByUserNo(uno=targetUser.getNo())
     # 작성한 댓글 갯수
-    targetUserCommentCount = commentDAO.getCommentCountByUserNo(targetUser.getNo())
+    targetUserCommentCount = commentDAO.getCommentCountByUserNo(uno=targetUser.getNo())
     # 작성한 최근글 목록
-    targetUserBoardList = []
+    targetUserBoardList = boardDAO.getRecentlyBoardList(uno=targetUser.getNo())
     # 작성한 최근댓글 목록
-    targetUserCommentList = []
+    targetUserCommentList = commentDAO.getRecentlyCommentList(uno=targetUser.getNo())
 
     return render_template('user.html',
         clientUser=clientUser,

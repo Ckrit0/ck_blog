@@ -136,7 +136,8 @@ SELECT count(*) FROM comment WHERE u_no = 1 AND co_isdelete = 0;
 SELECT * FROM board WHERE u_no = 1 AND b_isdelete = 0 ORDER BY b_no DESC LIMIT 5 OFFSET 0;
 -- 유저번호로 작성한 최신댓글 목록 가져오기
 SELECT * FROM comment WHERE u_no = 1 AND co_isdelete = 0 ORDER BY co_no DESC LIMIT 5 OFFSET 0;
-
+-- 글번호로 글 가져오기
+SELECT * FROM board WHERE b_no = 11;
 
 ------------
 -- INSERT --

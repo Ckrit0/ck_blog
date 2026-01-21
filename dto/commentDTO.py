@@ -54,6 +54,10 @@ class CommentDTO:
         board = boardDAO.getBoardByBoardNo(self.bno)
         return board
     
+    def getBoardTitle(self):
+        boardTitle = boardDAO.getBoardByBoardNo(self.bno).getTitle()
+        return boardTitle
+    
     def getUserNo(self):
         return self.uno
     

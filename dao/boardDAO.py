@@ -9,11 +9,11 @@ parameter: 글객체(boardDTO)
 return: 
 '''
 def setBoard(board):
-    uNo = board.getUserNo()
-    cNo = board.getCategoryNo()
+    uno = board.getUserNo()
+    cno = board.getCategoryNo()
     bTitle = board.getTitle()
     bContents = board.getContents()
-    sql=f'INSERT INTO board(u_no,c_no,b_title,b_contents) VALUES({uNo},{cNo},"{bTitle}","{bContents}")'
+    sql=f'INSERT INTO board(u_no,c_no,b_title,b_contents) VALUES({uno},{cno},"{bTitle}","{bContents}")'
     result = db.setData(sql=sql)
     return result
 
@@ -122,7 +122,17 @@ return: 글 객체(boardDTO)
 '''
 def getBoardByBoardNo(bno):
     board = boardDTO.BoardDTO()
-    sql=f''
+    sql = f'SELECT * FROM board WHERE b_no = 11'
+    result = db.getData(sql=sql)[0]
+    board.setBoard(
+        no=result[0],
+        uno=result[1],
+        cno=result[2],
+        date=result[3],
+        title=result[4],
+        content=result[5],
+        isDelete=result[6]
+    )
     return board
 
 '''
