@@ -314,7 +314,7 @@ def leaveUser(uno, pw):
     user = getUserByUserNo(uno=uno)
     if user.getPw() != __encryptPw(pw=pw):
         return store.JOIN_RESULT_CODE['비밀번호 틀림']
-    sql = f'UPDATE user SET u_state = {store.USER_STATE_CODE['탈퇴']} WHERE u_no = {uno}'
+    sql = f'''UPDATE user SET u_state = {store.USER_STATE_CODE['탈퇴']} WHERE u_no = {uno}'''
     result = db.setData(sql=sql)
     if result == 0:
         return store.JOIN_RESULT_CODE['회원 탈퇴 실패']
