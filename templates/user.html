@@ -9,36 +9,29 @@
         <div class="userInfoContents">
             <span id="userEmail">{{targetUser.getEmail()}}</span>
             {% if clientUser.getNo() == targetUser.getNo() %}
-            <button id="changePwOpenBtn">비번변경</button>
-            {% endif %}
-            {% if clientUser.getNo() == targetUser.getNo() and clientUser.getState() == 1 %}
+            {% if clientUser.getState() == 1 %}
             <button id="userVerifyOpenBtn">인증받기</button>
             {% endif %}
-            {% if clientUser.getNo() == targetUser.getNo() %}
-            <button id="userLeaveBtn">회원탈퇴</button>
+            <button id="changePwOpenBtn">비번변경</button>
+            <button id="userLeaveOpenBtn">회원탈퇴</button>
             {% endif %}
         </div>
-
         <div class="userInfoTitle">가입 날짜 :</div>
         <div class="userInfoContents">
             {{targetUser.getJoinDate()}}
         </div>
-
         <div class="userInfoTitle">마지막 접속 :</div>
         <div class="userInfoContents">
             {{targetUserLastSessionTime}}
         </div>
-
         <div class="userInfoTitle">작성한 글 갯수 :</div>
         <div class="userInfoContents">
             {{targetUserBoardCount}}
         </div>
-
         <div class="userInfoTitle">작성한 댓글 갯수 :</div>
         <div class="userInfoContents">
             {{targetUserCommentCount}}
         </div>
-
         <div class="userInfoTitle">최근 글 :</div>
         <div class="userInfoContents">
             <ul>
@@ -76,8 +69,15 @@
         <button id="changePwCancelBtn" type="button">취소하기</button>
     </form>
 </div>
-{% endif %}
-{% if clientUser.getNo() == targetUser.getNo() and clientUser.getState() == 1 %}
+<div id="userLeaveModal" style="display: none;">
+    <form action="/leave" method="post">
+        <label for="userLeavePw">password:</label>
+        <input id="userLeavePw" name="userLeavePw" type="password">
+        <button id="userLeaveSubmitBtn" type="button">탈퇴하기</button>
+        <button id="userLeaveCancelBtn" type="button">취소하기</button>
+    </form>
+</div>
+{% if clientUser.getState() == 1 %}
 <div id="userVerifyModal" style="display: none;">
     <form action="/getVerify" method="post">
         <input id="userVerifyInput" name="userVerifyInput" placeholder="인증코드">
@@ -86,6 +86,7 @@
         <button id="userVerifyCancelBtn" type="button">취소하기</button>
     </form>
 </div>
+{% endif %}
 {% endif %}
 <script src="{{url_for('static',filename='./script/user.js')}}"></script>
 {% endblock %}

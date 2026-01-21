@@ -20,13 +20,13 @@
     grid-template-columns: 45% 55%;
 }
 
-#userLeaveBtn{
+#userLeaveOpenBtn{
     color: var(--bg-color);
     border-color: var(--theme-color);
     background-color: var(--theme-color);
 }
 
-#userLeaveBtn:hover{
+#userLeaveOpenBtn:hover{
     background-color: var(--dark-color);
 }
 
@@ -167,4 +167,45 @@
 
 #userVerifyCancelBtn:hover{
     background-color: var(--dark-color);
+}
+
+/* userLeaveModal */
+
+#userLeaveModal{
+    position: absolute;
+    top: 240px;
+    left: auto;
+    padding: 10px;
+    box-sizing: border-box;
+    display: inline-block;
+    width: 300px;
+    border: 3px solid var(--theme-color);
+    border-radius: 20px;
+    background: var(--bg-color);
+}
+
+#userLeavePw{
+    box-sizing: border-box;
+    margin: 3px auto;
+    width: 150px;
+    height: 30px;
+}
+
+#userLeaveSubmitBtn{
+    box-sizing: border-box;
+    margin: 3px auto;
+    width: 100px;
+    height: 30px;
+    font-weight: 600;
+}
+
+#userLeaveCancelBtn{
+    box-sizing: border-box;
+    margin: 3px auto;
+    width: 100px;
+    height: 30px;
+    font-weight: 600;
+    color: var(--bg-color);
+    border-color: var(--theme-color);
+    background-color: var(--theme-color);
 }

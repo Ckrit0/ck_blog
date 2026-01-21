@@ -1,37 +1,4 @@
-let userLeaveBtn = document.getElementById('userLeaveBtn')
 
-userLeaveBtn.addEventListener('click',()=>{
-    if(!confirm('정말 탈퇴하시겠습니까?')){
-        return
-    }
-    let userPw = prompt('탈퇴하시려면 비밀번호를 입력해주세요.')
-    if(userPw == ''){
-        return
-    }
-    let userEmail = document.getElementById('userEmail').innerText.split('(')[0]
-    fetch("/leave", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            userEmail : userEmail,
-            userPw : userPw
-        }),
-        })
-        .then((response) => response.json())
-        .then((result) => {
-            if(result == 10){
-                window.location.href='/'
-                alert('회원 탈퇴에 성공하였습니다.')
-            }else if(result == 7){
-                alert('비밀번호가 틀렸습니다.')
-            }else{
-                alert('회원 탈퇴에 실패하였습니다.')
-            }
-            return
-        });
-})
 
 
 function userModalInit(){
@@ -56,6 +23,7 @@ function userModalInit(){
     changePwOpenBtn.addEventListener('click',()=>{
         changePwModal.style['display'] = 'inline-grid'
         resetVerifyModal()
+        resetLeaveModal()
     })
 
     userNowPwInput.addEventListener('keydown',(e)=>{
@@ -147,15 +115,18 @@ function userModalInit(){
     let userVerifyCancelBtn = document.getElementById('userVerifyCancelBtn')
 
     function resetVerifyModal(){
-        turnDisabled(userVerifyConfirmBtn)
-        userVerifyInput.value = ''
-        userVerifyModal.style['display'] = 'none'
+        if(userVerifyConfirmBtn !== null){
+            turnDisabled(userVerifyConfirmBtn)
+            userVerifyInput.value = ''
+            userVerifyModal.style['display'] = 'none'
+        }
     }
 
     if(userVerifyOpenBtn !== null){
         userVerifyOpenBtn.addEventListener('click',()=>{
             userVerifyModal.style['display'] = 'inline-grid'
             resetPwModal()
+            resetLeaveModal()
         })
     }
 
@@ -242,6 +213,54 @@ function userModalInit(){
             resetVerifyModal()
         })
     }
+
+    /* userLeaveModal */
+    let userLeaveOpenBtn = document.getElementById('userLeaveOpenBtn')
+    let userLeaveModal = document.getElementById('userLeaveModal')
+    let userLeavePw = document.getElementById('userLeavePw')
+    let userLeaveSubmitBtn = document.getElementById('userLeaveSubmitBtn')
+    let userLeaveCancelBtn = document.getElementById('userLeaveCancelBtn')
+
+    function resetLeaveModal(){
+        userLeavePw.value = ''
+        userLeaveModal.style['display'] = 'none'
+    }
+
+    userLeaveOpenBtn.addEventListener('click',()=>{
+        userLeaveModal.style['display'] = 'inline-block'
+        resetPwModal()
+        resetVerifyModal()
+    })
+    
+    userLeaveSubmitBtn.addEventListener('click',()=>{
+        let userEmail = document.getElementById('userEmail').innerText.split('(')[0]
+        fetch("/leave", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                userEmail : userEmail,
+                userPw : userLeavePw.value
+            }),
+            })
+            .then((response) => response.json())
+            .then((result) => {
+                if(result == 10){
+                    window.location.href='/'
+                    alert('회원 탈퇴에 성공하였습니다.')
+                }else if(result == 7){
+                    alert('비밀번호가 틀렸습니다.')
+                }else{
+                    alert('회원 탈퇴에 실패하였습니다.')
+                }
+                return
+            });
+    })
+
+    userLeaveCancelBtn.addEventListener('click',()=>{
+        resetLeaveModal()
+    })
 }
 
 if(document.getElementById('changePwOpenBtn') !== null){
