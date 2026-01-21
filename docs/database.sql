@@ -173,6 +173,8 @@ UPDATE sessionlist SET s_expire = NOW() + INTERVAL 1 HOUR WHERE u_no = "u_no";
 UPDATE user SET u_pw = "u_pw" WHERE u_no = "u_no";
 -- 유저 상태 변경
 UPDATE user SET u_state = 2 WHERE u_no = "u_no";
+-- 유저 탈퇴
+UPDATE user SET u_state = 3 WHERE u_no = "u_no";
 
 
 ------------

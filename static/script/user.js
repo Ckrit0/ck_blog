@@ -1,5 +1,37 @@
+let userLeaveBtn = document.getElementById('userLeaveBtn')
 
-
+userLeaveBtn.addEventListener('click',()=>{
+    if(!confirm('정말 탈퇴하시겠습니까?')){
+        return
+    }
+    let userPw = prompt('탈퇴하시려면 비밀번호를 입력해주세요.')
+    if(userPw == ''){
+        return
+    }
+    let userEmail = document.getElementById('userEmail').innerText.split('(')[0]
+    fetch("/leave", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            userEmail : userEmail,
+            userPw : userPw
+        }),
+        })
+        .then((response) => response.json())
+        .then((result) => {
+            if(result == 10){
+                window.location.href='/'
+                alert('회원 탈퇴에 성공하였습니다.')
+            }else if(result == 7){
+                alert('비밀번호가 틀렸습니다.')
+            }else{
+                alert('회원 탈퇴에 실패하였습니다.')
+            }
+            return
+        });
+})
 
 
 function userModalInit(){
@@ -138,7 +170,7 @@ function userModalInit(){
     if(userVerifyConfirmBtn !== null){
         userVerifyConfirmBtn.addEventListener('click',()=>{
             userVerifyConfirmBtn.innerHTML = '<span class="spiner">🌀</span>'
-            let userEmail = document.getElementById('userEmail').innerText.replace('(미인증)','')
+            let userEmail = document.getElementById('userEmail').innerText.split('(')[0]
             let userVerify = userVerifyInput.value
             console.log(userEmail)
             console.log(userVerify)
@@ -180,7 +212,7 @@ function userModalInit(){
     if(userVerifyMailBtn !== null){
         userVerifyMailBtn.addEventListener('click',()=>{
             userVerifyMailBtn.innerHTML = '<span class="spiner">🌀</span>'
-            let userEmail = document.getElementById('userEmail').innerText.replace('(미인증)','')
+            let userEmail = document.getElementById('userEmail').innerText.split('(')[0]
             fetch("/sendMail", {
                 method: "POST",
                 headers: {

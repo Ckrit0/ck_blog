@@ -49,7 +49,11 @@ class UserDTO:
         elif self.state == 1:
             return self.email + "(미인증)"
         elif self.state == 3:
-            return '탈퇴한 회원'
+            return '(탈퇴한 회원)'
+        elif self.state == 4:
+            return '(차단중인 회원)'
+        elif self.state == 5:
+            return self.email + '(관리자)'
         return self.email
     
     def getIp(self):

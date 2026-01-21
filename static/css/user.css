@@ -20,6 +20,16 @@
     grid-template-columns: 45% 55%;
 }
 
+#userLeaveBtn{
+    color: var(--bg-color);
+    border-color: var(--theme-color);
+    background-color: var(--theme-color);
+}
+
+#userLeaveBtn:hover{
+    background-color: var(--dark-color);
+}
+
 /* changePwModal */
 
 #changePwModal{

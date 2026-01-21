@@ -172,8 +172,8 @@ def userPage(userNo):
     # 템플릿 정보
     clientUser, categoryList, recentlyTitleList = getTemplateData(req=request)
     # 유저정보
-    targetUser = userDAO.getUserByUserNo(uno=userNo,ip="")
-    if targetUser.getState() not in [store.USER_STATE_CODE['미인증'],store.USER_STATE_CODE['인증'],store.USER_STATE_CODE['관리자']]:
+    targetUser = userDAO.getUserByUserNo(uno=userNo)
+    if targetUser.getState() == 0:
         resp = make_response(redirect(request.referrer or url_for('main')))
         flash("유저를 찾을 수 없습니다.")
         return resp
@@ -217,7 +217,6 @@ def changePwHandler():
 def getVerifyHandler():
     email = request.json["userEmail"]
     verify = request.json["userVerify"]
-    print(email, verify)
     result = userDAO.matchVerify(email=email, code=verify)
     userNo = userDAO.getUserDataByEmailAddress(email=email)[0][0]
     if result == 0:
@@ -225,6 +224,18 @@ def getVerifyHandler():
         if dbResult == 0:
             return jsonify(store.VERIFY_RESULT_CODE['실패-사유모름'])
     return jsonify(result)
+
+@app.route("/leave", methods=["POST"])
+def leaveHandler():
+    email = request.json["userEmail"]
+    pw = request.json["userPw"]
+    userNo = userDAO.getUserDataByEmailAddress(email=email)[0][0]
+    result = userDAO.leaveUser(uno=userNo, pw=pw)
+    resp = jsonify(result)
+    if result == store.JOIN_RESULT_CODE['회원 탈퇴 성공']:
+        # 쿠키 삭제
+        resp.delete_cookie('sessionKey')
+    return resp
 
 @app.route("/find")
 def findPage():

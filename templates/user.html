@@ -14,6 +14,9 @@
             {% if clientUser.getNo() == targetUser.getNo() and clientUser.getState() == 1 %}
             <button id="userVerifyOpenBtn">인증받기</button>
             {% endif %}
+            {% if clientUser.getNo() == targetUser.getNo() %}
+            <button id="userLeaveBtn">회원탈퇴</button>
+            {% endif %}
         </div>
 
         <div class="userInfoTitle">가입 날짜 :</div>

@@ -263,7 +263,7 @@ def updateUser(user):
     pass
 
 '''
-유저 상태 변경
+상태 변경
 parameter: userNo(int), u_state(int)
 return: 실패 0, 성공 1
 '''
@@ -273,7 +273,7 @@ def updateUserState(uno, u_state):
     return result
 
 '''
-유저 비밀번호 수정하기
+비밀번호 수정하기
 parameter: user객체(userDTO), 현재비번(String), 새비번(String), 비번확인(String)
 return: store.joinResultCode (int)
 '''
@@ -306,6 +306,21 @@ def updateUserPassword(user, nowPw, newPw, newConfirm):
             return store.JOIN_RESULT_CODE['비밀번호 변경 성공']
 
 '''
+유저 탈퇴
+parameter: 회원번호(int), 비밀번호(String)
+return: store.joinResultCode(int)
+'''
+def leaveUser(uno, pw):
+    user = getUserByUserNo(uno=uno)
+    if user.getPw() != __encryptPw(pw=pw):
+        return store.JOIN_RESULT_CODE['비밀번호 틀림']
+    sql = f'UPDATE user SET u_state = {store.USER_STATE_CODE['탈퇴']} WHERE u_no = {uno}'
+    result = db.setData(sql=sql)
+    if result == 0:
+        return store.JOIN_RESULT_CODE['회원 탈퇴 실패']
+    return store.JOIN_RESULT_CODE['회원 탈퇴 성공']
+
+'''
 세션 만료시간 갱신
 parameter: user객체(userDTO)
 return: 실패 0, 성공 1 (int)
@@ -334,7 +349,7 @@ def getSessionKeyByEmailAndPw(email,pw,ip):
 parameter: 유저번호(int), IP(String)
 return: user객체(userDTO)
 '''
-def getUserByUserNo(uno, ip):
+def getUserByUserNo(uno, ip=''):
     user = userDTO.UserDTO()
     if uno != 0:
         sql = f'SELECT * FROM user WHERE u_no = {uno} AND u_state != 0'
