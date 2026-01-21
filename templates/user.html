@@ -9,7 +9,7 @@
         <div class="userInfoContents">
             {{targetUser.getEmail()}}
             {% if clientUser.getNo() == targetUser.getNo() %}
-            <button>비번변경</button>
+            <button id="changePwOpenBtn">비번변경</button>
             <button>인증받기</button>
             {% endif %}
         </div>
@@ -57,7 +57,20 @@
         </div>
     </div>
 </div>
-<script>
-    
-</script>
+{% if clientUser.getNo() == targetUser.getNo() %}
+<div id="changePwModal" style="display: none;">
+    <form action="/changePw" method="post">
+        <label for="userNowPw">now password:</label>
+        <input id="userNowPw" name="userNowPw" type="password">
+        <label for="userNewPw">new password:</label>
+        <input id="userNewPw" name="userNewPw" type="password">
+        <label for="userNewConfirm">confirm:</label>
+        <input id="userNewConfirm" name="userNewConfirm" type="password">
+        <span id="userChangePwInfo">영어,숫자,특수문자 포함된 8~16자리로 설정</span>
+        <button id="changePwSubmitBtn" type="button">변경하기</button>
+        <button id="changePwCancelBtn" type="button">취소하기</button>
+    </form>
+</div>
+{% endif %}
+<script src="{{url_for('static',filename='./script/user.js')}}"></script>
 {% endblock %}

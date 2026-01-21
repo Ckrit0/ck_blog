@@ -130,6 +130,7 @@ def joinPage():
 def joinHandler():
     # 클라이언트 정보 가져오기
     clientUser = userDAO.getUserBySessionKey(cookieKey=request.cookies.get('sessionKey'),ip=request.remote_addr)
+    
     resp = make_response(redirect(url_for('main')))
     
     # 이미 로그인 되어있는 경우
@@ -198,6 +199,19 @@ def userPage(userNo):
         targetUserBoardList=targetUserBoardList,
         targetUserCommentList=targetUserCommentList
     )
+    
+@app.route("/changePw", methods=["POST"])
+def changePwHandler():
+    # 클라이언트 정보 가져오기
+    clientUser = userDAO.getUserBySessionKey(cookieKey=request.cookies.get('sessionKey'),ip=request.remote_addr)
+    
+    # form data 가져오기
+    userNowPw = request.json["userNowPw"]
+    userNewPw = request.json["userNewPw"]
+    userNewConfirm = request.json["userNewConfirm"]
+
+    result = userDAO.updateUserPassword(user=clientUser, nowPw=userNowPw, newPw=userNewPw, newConfirm=userNewConfirm)
+    return jsonify(result)
 
 @app.route("/find")
 def findPage():

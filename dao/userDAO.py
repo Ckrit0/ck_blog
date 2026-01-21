@@ -263,6 +263,40 @@ def updateUser(user):
     pass
 
 '''
+유저 비밀번호 수정하기
+parameter: user객체(userDTO), 현재비번(String), 새비번(String), 비번확인(String)
+return: store.joinResultCode (int)
+'''
+def updateUserPassword(user, nowPw, newPw, newConfirm):
+    def __checkPwRegex(pw):
+        result = False
+        # 비밀번호 패턴: 영문자, 숫자, 특수문자가 모두 들어간 8~16자리
+        pwPtn = r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,16}$'
+        if re.match(pwPtn, pw):
+            result = True
+        return result
+    # 변경할 비밀번호와 확인이 다를 때
+    if newPw != newConfirm:
+        return store.JOIN_RESULT_CODE['Confirm 오류']
+    # 사용중인 비밀번호와 변경하고자 하는 비밀번호가 같을 때
+    if nowPw == newPw:
+        return store.JOIN_RESULT_CODE['사용중인 비밀번호와 같음']
+    # 비밀번호의 형식이 틀렸을 때
+    elif not __checkPwRegex(newPw):
+        return store.JOIN_RESULT_CODE['PW 형식 오류']
+    # 현재 비밀번호가 틀렸을 때
+    elif user.getPw() != __encryptPw(nowPw):
+        return store.JOIN_RESULT_CODE['비밀번호 틀림']
+    else:
+        sql = f'UPDATE user SET u_pw = "{__encryptPw(newPw)}" WHERE u_no = {user.getNo()}'
+        print(sql)
+        result = db.setData(sql=sql)
+        if result == 0:
+            return store.JOIN_RESULT_CODE['비밀번호 변경 실패']
+        else:
+            return store.JOIN_RESULT_CODE['비밀번호 변경 성공']
+
+'''
 세션 만료시간 갱신
 parameter: user객체(userDTO)
 return: 실패 0, 성공 1 (int)

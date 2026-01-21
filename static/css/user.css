@@ -19,3 +19,73 @@
     margin-top: 20px;
     grid-template-columns: 45% 55%;
 }
+
+/* changePwModal */
+
+#changePwModal{
+    position: absolute;
+    top: 240px;
+    left: auto;
+    padding: 10px;
+    box-sizing: border-box;
+    display: inline-block;
+    width: 300px;
+    border: 3px solid var(--theme-color);
+    border-radius: 20px;
+    background: var(--bg-color);
+}
+
+#changePwModal>form{
+    box-sizing: border-box;
+    display: inline-grid;
+}
+
+#changePwModal>form>label{
+    box-sizing: border-box;
+    grid-column: 1;
+    margin: 3px;
+}
+#changePwModal>form>input{
+    box-sizing: border-box;
+    grid-column: 2;
+    margin: 3px;
+}
+#userChangePwInfo{
+    box-sizing: border-box;
+    grid-row: 4;
+    grid-column-start: 1;
+    grid-column-end: 3;
+    font-size: 12px;
+    color: red;
+}
+#changePwSubmitBtn{
+    box-sizing: border-box;
+    grid-column: 1;
+    margin: 3px;
+    width: 100px;
+    height: 30px;
+    font-weight: 600;
+}
+#changePwSubmitBtn:disabled{
+    border-color: gray;
+    color: gray;
+    cursor: auto;
+}
+#changePwSubmitBtn:disabled:hover{
+    background-color: var(--bg-color);
+    cursor: auto;
+}
+#changePwCancelBtn{
+    box-sizing: border-box;
+    grid-column: 2;
+    margin: 3px;
+    width: 100px;
+    height: 30px;
+    font-weight: 600;
+    color: var(--bg-color);
+    border-color: var(--theme-color);
+    background-color: var(--theme-color);
+}
+#changePwCancelBtn:hover{
+    background-color: var(--dark-color);
+}
