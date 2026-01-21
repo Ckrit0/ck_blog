@@ -213,6 +213,19 @@ def changePwHandler():
     result = userDAO.updateUserPassword(user=clientUser, nowPw=userNowPw, newPw=userNewPw, newConfirm=userNewConfirm)
     return jsonify(result)
 
+@app.route("/getVerify", methods=["POST"])
+def getVerifyHandler():
+    email = request.json["userEmail"]
+    verify = request.json["userVerify"]
+    print(email, verify)
+    result = userDAO.matchVerify(email=email, code=verify)
+    userNo = userDAO.getUserDataByEmailAddress(email=email)[0][0]
+    if result == 0:
+        dbResult = userDAO.updateUserState(uno=userNo,u_state=store.USER_STATE_CODE['인증'])
+        if dbResult == 0:
+            return jsonify(store.VERIFY_RESULT_CODE['실패-사유모름'])
+    return jsonify(result)
+
 @app.route("/find")
 def findPage():
     return render_template('find.html')

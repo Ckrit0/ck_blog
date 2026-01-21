@@ -61,24 +61,15 @@
 #changePwSubmitBtn{
     box-sizing: border-box;
     grid-column: 1;
-    margin: 3px;
+    margin: 3px auto;
     width: 100px;
     height: 30px;
     font-weight: 600;
 }
-#changePwSubmitBtn:disabled{
-    border-color: gray;
-    color: gray;
-    cursor: auto;
-}
-#changePwSubmitBtn:disabled:hover{
-    background-color: var(--bg-color);
-    cursor: auto;
-}
 #changePwCancelBtn{
     box-sizing: border-box;
     grid-column: 2;
-    margin: 3px;
+    margin: 3px auto;
     width: 100px;
     height: 30px;
     font-weight: 600;
@@ -87,5 +78,83 @@
     background-color: var(--theme-color);
 }
 #changePwCancelBtn:hover{
+    background-color: var(--dark-color);
+}
+
+/* userVerifyModal */
+
+#userVerifyModal{
+    position: absolute;
+    top: 240px;
+    left: auto;
+    padding: 10px;
+    box-sizing: border-box;
+    display: inline-block;
+    width: 300px;
+    border: 3px solid var(--theme-color);
+    border-radius: 20px;
+    background: var(--bg-color);
+}
+#userVerifyModal>form{
+    box-sizing: border-box;
+    display: inline-grid;
+    text-align: center;
+}
+
+#userVerifyInput{
+    box-sizing: border-box;
+    grid-row: 1;
+    grid-column-start: 1;
+    grid-column-end: 3;
+    margin: 3px auto;
+    width: 220px;
+    height: 30px;
+}
+
+#userVerifyConfirmBtn{
+    box-sizing: border-box;
+    grid-row: 2;
+    grid-column: 1;
+    margin: 3px 10px 3px auto;
+    width: 100px;
+    height: 30px;
+    font-weight: 600;
+}
+
+#userVerifyConfirmBtn:disabled{
+    border-color: gray;
+    color: gray;
+    cursor: auto;
+}
+#userVerifyConfirmBtn:disabled:hover{
+    background-color: var(--bg-color);
+    cursor: auto;
+}
+
+#userVerifyMailBtn{
+    box-sizing: border-box;
+    grid-row: 2;
+    grid-column: 2;
+    margin: 3px auto 3px 10px;
+    width: 100px;
+    height: 30px;
+    font-weight: 600;
+}
+
+#userVerifyCancelBtn{
+    box-sizing: border-box;
+    grid-row: 3;
+    grid-column-start: 1;
+    grid-column-end: 3;
+    margin: 3px auto;
+    width: 100px;
+    height: 30px;
+    font-weight: 600;
+    color: var(--bg-color);
+    border-color: var(--theme-color);
+    background-color: var(--theme-color);
+}
+
+#userVerifyCancelBtn:hover{
     background-color: var(--dark-color);
 }

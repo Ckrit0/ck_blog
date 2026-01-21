@@ -263,6 +263,16 @@ def updateUser(user):
     pass
 
 '''
+유저 상태 변경
+parameter: userNo(int), u_state(int)
+return: 실패 0, 성공 1
+'''
+def updateUserState(uno, u_state):
+    sql = f'UPDATE user SET u_state = {u_state} WHERE u_no = {uno}'
+    result = db.setData(sql=sql)
+    return result
+
+'''
 유저 비밀번호 수정하기
 parameter: user객체(userDTO), 현재비번(String), 새비번(String), 비번확인(String)
 return: store.joinResultCode (int)
@@ -289,7 +299,6 @@ def updateUserPassword(user, nowPw, newPw, newConfirm):
         return store.JOIN_RESULT_CODE['비밀번호 틀림']
     else:
         sql = f'UPDATE user SET u_pw = "{__encryptPw(newPw)}" WHERE u_no = {user.getNo()}'
-        print(sql)
         result = db.setData(sql=sql)
         if result == 0:
             return store.JOIN_RESULT_CODE['비밀번호 변경 실패']
