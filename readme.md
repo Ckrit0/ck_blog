@@ -12,7 +12,7 @@ CkriT (ckrit3@gmail.com)
 
 ### Domain :
 
-not yet
+not yet (118.218.103.120)
 
 ### Specifications used :
 
