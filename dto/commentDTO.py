@@ -9,16 +9,22 @@ class CommentDTO:
         self.comment = None
         self.upper = None
         self.isDelete = None
-    
-    def setCommentAll(self,no,bno,uno,ip,comment,date,upper,isDelete):
-        self.no = no
-        self.bno = bno
-        self.uno = uno
-        self.ip = ip
-        self.comment = comment
-        self.date = date
-        self.upper = upper
-        self.isDelete = isDelete
+        self.userEmail = None
+        self.userState = None
+        self.boardTitle = None
+        
+    def setCommentByDbResult(self,dbResult):
+        self.no = dbResult[0]
+        self.bno = dbResult[1]
+        self.uno = dbResult[2]
+        self.ip = dbResult[3]
+        self.comment = dbResult[4]
+        self.date = dbResult[5]
+        self.upper = dbResult[6]
+        self.isDelete = dbResult[7]
+        self.userEmail = dbResult[8]
+        self.userState = dbResult[9]
+        self.boardTitle = dbResult[10]
 
     def setNo(self,no):
         self.no = no
@@ -49,20 +55,9 @@ class CommentDTO:
     
     def getBoardNo(self):
         return self.bno
-    
-    def getBoard(self):
-        board = boardDAO.getBoardByBoardNo(self.bno)
-        return board
-    
-    def getBoardTitle(self):
-        boardTitle = boardDAO.getBoardByBoardNo(self.bno).getTitle()
-        return boardTitle
-    
+        
     def getUserNo(self):
         return self.uno
-    
-    def getUserEmail(self):
-        return userDAO.getUserByUserNo(uno=self.uno,ip=self.ip).getEmail()
     
     def getIP(self):
         return self.ip
@@ -85,3 +80,20 @@ class CommentDTO:
     
     def getIsDelete(self):
         return self.isDelete
+    
+    def getEmail(self):
+        return self.userEmail
+    
+    def getMarkingEmail(self):
+        emailParts = self.userEmail.split('@')
+        markingEmail = emailParts[0][0:3] + '*' * (len(emailParts[0]) -3) + '@' + emailParts[1]
+        return markingEmail
+    
+    def getBoardTitle(self):
+        return self.boardTitle
+
+    def getShortBoardTitle(self):
+        boardTitle = self.boardTitle
+        if len(boardTitle) > 15:
+            boardTitle = boardTitle[0:15] + '...'
+        return boardTitle

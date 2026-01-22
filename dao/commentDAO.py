@@ -1,23 +1,23 @@
 from dto import commentDTO
-from service import db
-from service import store
-import math
+from service import db, store
 
 '''
 댓글 달기
 parameter: 댓글객체(commentDTO)
-return: 
+return: 실패 0, 성공 1(int)
 '''
 def setComment(comment):
-    pass
-
-'''
-댓글 수정
-parameter: 댓글객체(commentDTO)
-return: 
-'''
-def updateComment(comment):
-    pass
+    sql = f'''\
+        INSERT INTO comment(b_no,u_no,co_ip,co_comment,co_upper) \
+        VALUES(\
+            {comment.getBoardNo()},\
+            {comment.getUserNo()},\
+            "{comment.getIp()}",\
+            "{comment.getComment()}",\
+            {comment.getUpper()}
+        )'''
+    result = db.setData(sql=sql)
+    return result
 
 '''
 글번호로 댓글객체 리스트 가져오기
@@ -26,58 +26,40 @@ return: 댓글객체 리스트(List)
 '''
 def getCommentListByBoardNo(bno):
     commentList = []
-    sql = f'''SELECT * from comment WHERE b_no={bno} AND co_upper IS NULL ORDER BY co_no DESC LIMIT {store.PAGE_COUNT['댓글']} OFFSET 0'''
+    sql = f'''\
+        SELECT c.*, u.u_email, u.u_state, b.b_title FROM comment c \
+        JOIN user u ON c.u_no = u.u_no \
+        JOIN board b ON c.b_no = b.b_no \
+        WHERE c.b_no={bno} AND c.co_upper IS NULL \
+        ORDER BY c.co_no'''
     parentCommentList = db.getData(sql=sql)
     for parentComment in parentCommentList:
         pc = commentDTO.CommentDTO()
-        pc.setCommentAll(
-            parentComment[0],
-            parentComment[1],
-            parentComment[2],
-            parentComment[3],
-            parentComment[4],
-            parentComment[5],
-            parentComment[6],
-            parentComment[7]
-        )
+        pc.setCommentByDbResult(dbResult=parentComment)
         tempList = []
-        sql = f'''SELECT * from comment WHERE b_no={bno} AND co_upper={pc.getNo()} ORDER BY co_no LIMIT {store.PAGE_COUNT['댓글']} OFFSET 0'''
+        sql = f'''\
+            SELECT c.*, u.u_email, u.u_state, b.b_title FROM comment c \
+            JOIN user u ON c.u_no = u.u_no \
+            JOIN board b ON c.b_no = b.b_no \
+            WHERE c.b_no={bno} AND c.co_upper = {pc.getNo()} \
+            ORDER BY c.co_no'''
         childCommentList = db.getData(sql=sql)
         for childComment in childCommentList:
             cc = commentDTO.CommentDTO()
-            cc.setCommentAll(
-                childComment[0],
-                childComment[1],
-                childComment[2],
-                childComment[3],
-                childComment[4],
-                childComment[5],
-                childComment[6],
-                childComment[7]
-            )
+            cc.setCommentByDbResult(dbResult=childComment)
             tempList.append(cc)
         commentList.append([pc,tempList])
     return commentList
 
 '''
-해당 글에 작성된 댓글의 페이지 리스트 가져오기
-return: 댓글 페이지 리스트(list)
-'''
-def getCommentPageListByBoardNo(bno):
-    pageList = []
-    sql = f'''SELECT count(*) FROM comment WHERE b_no = {bno} AND co_upper IS NULL'''
-    result = math.ceil(db.getData(sql=sql)[0][0]/store.PAGE_COUNT['댓글'])
-    for i in range(result):
-        pageList.append(i+1)
-    return pageList
-
-'''
 댓글 삭제 (co_isdelete를 1로 update)
-parameter: 댓글객체(commentDTO)
-return: 
+parameter: 댓글번호(int)
+return: 실패 0, 성공 1(int)
 '''
-def deleteComment(comment):
-    pass
+def deleteComment(cono):
+    sql = f'''UPDATE comment SET co_isdelete = 1 WHERE co_no = {cono}'''
+    result = db.setData(sql=sql)
+    return result
 
 '''
 유저별 작성한 댓글 갯수 가져오기
@@ -86,8 +68,8 @@ return: 작성한 댓글 갯수(int)
 '''
 def getCommentCountByUserNo(uno):
     sql = f'''SELECT count(*) FROM comment WHERE u_no = {uno} AND co_isdelete = 0'''
-    result = db.getData(sql=sql)
-    return result[0][0]
+    result = db.getData(sql=sql)[0][0]
+    return result
 
 '''
 유저별 작성한 최신댓글 목록 가져오기
@@ -96,19 +78,15 @@ return: 댓글 목록 리스트([commentDTO,....])
 '''
 def getRecentlyCommentList(uno):
     result = []
-    sql = f'''SELECT * FROM comment WHERE u_no = {uno} AND co_isdelete = 0 ORDER BY co_no DESC LIMIT {store.PAGE_COUNT['유저별']} OFFSET 0'''
+    sql = f'''\
+        SELECT c.*, u.u_email, u.u_state, b.b_title FROM comment c \
+        JOIN user u ON c.u_no = u.u_no \
+        JOIN board b ON c.b_no = b.b_no \
+        WHERE c.u_no = {uno} \
+        ORDER BY c.co_no DESC LIMIT {store.PAGE_COUNT['유저별']} OFFSET 0'''
     commentList = db.getData(sql=sql)
     for comment in commentList:
         c = commentDTO.CommentDTO()
-        c.setCommentAll(
-            no=comment[0],
-            bno=comment[1],
-            uno=comment[2],
-            ip=comment[3],
-            comment=comment[4],
-            date=comment[5],
-            upper=comment[6],
-            isDelete=comment[7]
-        )
+        c.setCommentByDbResult(comment)
         result.append(c)
     return result
