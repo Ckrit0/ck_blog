@@ -111,12 +111,12 @@ def matchVerify(email,code):
                 if verifyDict['expire'] > datetime.now():
                     # 확인 성공시점에서 1시간 유지
                     verifyDict['expire'] = datetime.now() + timedelta(hours=store.sessionTime)
-                    return store.VERIFY_RESULT_CODE['성공']
+                    return store.USER_RESULT_CODE['인증 성공']
                 else:
-                    return store.VERIFY_RESULT_CODE['시간 종료']
+                    return store.USER_RESULT_CODE['시간 종료']
             else:
-                return store.VERIFY_RESULT_CODE['코드 불일치']
-    return store.VERIFY_RESULT_CODE['발급된 코드 없음']
+                return store.USER_RESULT_CODE['코드 불일치']
+    return store.USER_RESULT_CODE['발급된 코드 없음']
 
 '''
 인증코드 메일 발송
@@ -154,10 +154,10 @@ def sendMail(email):
         server.login(user=store.send_email_addr, password=store.send_email_key)
         server.sendmail(store.send_email_addr, email, message.as_string())
         __setVerify(email=email,code=code)
-        return store.VERIFY_RESULT_CODE['메일 발송 완료']
+        return store.USER_RESULT_CODE['메일 발송 완료']
     except Exception as e:
         print(f"이메일 전송 실패: {e}")
-        return store.VERIFY_RESULT_CODE['메일 발송 실패']
+        return store.USER_RESULT_CODE['실패-unknown']
     finally:
         server.quit() # 서버 연결 종료
     
@@ -182,24 +182,24 @@ def setUser(email, pw, confirm, verify):
     
     def __alreadyUserCode(userState):
         if userState == store.USER_STATE_CODE['미인증']:
-            return store.JOIN_RESULT_CODE['가입된 미인증 Email']
+            return store.USER_RESULT_CODE['가입된 Email']
         elif userState == store.USER_STATE_CODE['인증']:
-            return store.JOIN_RESULT_CODE['가입된 인증 Email']
+            return store.USER_RESULT_CODE['가입된 Email']
         elif userState == store.USER_STATE_CODE['블랙리스트']:
-            return store.JOIN_RESULT_CODE['블랙리스트']
+            return store.USER_RESULT_CODE['블랙리스트']
         elif userState == store.USER_STATE_CODE['관리자']:
-            return store.JOIN_RESULT_CODE['가입된 인증 Email']
+            return store.USER_RESULT_CODE['가입된 Email']
     
     # password와 컨펌이 서로 맞지 않는 경우
     if pw != confirm:
-        return store.JOIN_RESULT_CODE['Confirm 오류']
+        return store.USER_RESULT_CODE['Confirm 오류']
     
     # email 주소나 PW 형식이 틀린 경우
     checkRegex = __checkEmailAndPwRegex(email=email, pw=pw)
     if checkRegex[0] == False:
-        return store.JOIN_RESULT_CODE['Email 형식 오류']
+        return store.USER_RESULT_CODE['Email 형식 오류']
     elif checkRegex[1] == False:
-        return store.JOIN_RESULT_CODE['PW 형식 오류']
+        return store.USER_RESULT_CODE['Pw 형식 오류']
     
     # 이메일을 이미 사용중인 유저의 데이터
     userData = getUserDataByEmailAddress(email=email)
@@ -235,9 +235,9 @@ def setUser(email, pw, confirm, verify):
     sqlList.append(sql)
     result = db.setDatas(sqlList=sqlList)
     if result != 0:
-        return store.JOIN_RESULT_CODE['정상 가입 되었습니다.']
+        return store.USER_RESULT_CODE['정상 가입']
     else :
-        return store.JOIN_RESULT_CODE['가입실패-사유불분명']
+        return store.USER_RESULT_CODE['실패-unknown']
 
 '''
 해당 유저 블랙리스트에 추가
@@ -287,23 +287,23 @@ def updateUserPassword(user, nowPw, newPw, newConfirm):
         return result
     # 변경할 비밀번호와 확인이 다를 때
     if newPw != newConfirm:
-        return store.JOIN_RESULT_CODE['Confirm 오류']
+        return store.USER_RESULT_CODE['Confirm 오류']
     # 사용중인 비밀번호와 변경하고자 하는 비밀번호가 같을 때
     if nowPw == newPw:
-        return store.JOIN_RESULT_CODE['사용중인 비밀번호와 같음']
+        return store.USER_RESULT_CODE['nowPw=newPw']
     # 비밀번호의 형식이 틀렸을 때
     elif not __checkPwRegex(newPw):
-        return store.JOIN_RESULT_CODE['PW 형식 오류']
+        return store.USER_RESULT_CODE['Pw 형식 오류']
     # 현재 비밀번호가 틀렸을 때
     elif user.getPw() != __encryptPw(nowPw):
-        return store.JOIN_RESULT_CODE['비밀번호 틀림']
+        return store.USER_RESULT_CODE['비밀번호 틀림']
     else:
         sql = f'UPDATE user SET u_pw = "{__encryptPw(newPw)}" WHERE u_no = {user.getNo()}'
         result = db.setData(sql=sql)
         if result == 0:
-            return store.JOIN_RESULT_CODE['비밀번호 변경 실패']
+            return store.USER_RESULT_CODE['실패-unknown']
         else:
-            return store.JOIN_RESULT_CODE['비밀번호 변경 성공']
+            return store.USER_RESULT_CODE['비밀번호 변경 성공']
 
 '''
 유저 탈퇴
@@ -313,12 +313,12 @@ return: store.joinResultCode(int)
 def leaveUser(uno, pw):
     user = getUserByUserNo(uno=uno)
     if user.getPw() != __encryptPw(pw=pw):
-        return store.JOIN_RESULT_CODE['비밀번호 틀림']
+        return store.USER_RESULT_CODE['비밀번호 틀림']
     sql = f'''UPDATE user SET u_state = {store.USER_STATE_CODE['탈퇴']} WHERE u_no = {uno}'''
     result = db.setData(sql=sql)
     if result == 0:
-        return store.JOIN_RESULT_CODE['회원 탈퇴 실패']
-    return store.JOIN_RESULT_CODE['회원 탈퇴 성공']
+        return store.USER_RESULT_CODE['실패-unknown']
+    return store.USER_RESULT_CODE['회원 탈퇴 성공']
 
 '''
 세션 만료시간 갱신

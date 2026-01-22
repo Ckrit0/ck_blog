@@ -1,16 +1,40 @@
 from dotenv import load_dotenv
 import os
 
-load_dotenv()
+load_dotenv() # .env 파일 로드
 
-# 기본 설정 관련
-secret_key = os.environ.get("secretKey")
-send_email_addr = 'ckrit3@gmail.com'
-send_email_key = os.environ.get("emailKey")
-send_eamil_smtp = "smtp.gmail.com"
-send_email_port = 587
+####################
+## 기본 설정 관련 ##
+####################
 
-# 유저 관련
+secret_key = os.environ.get("secretKey") # 플라스크 시크릿 키
+sessionTime = 1 # 세션 유지 시간(hour)
+verifyExpireTime = 10 # 인증코드 유효시간(minute)
+verifyList = [] # 인증코드 저장 리스트
+send_email_addr = 'ckrit3@gmail.com' # Gmail 발신자 주소
+send_email_key = os.environ.get("emailKey") # Gmail 앱 비밀번호
+send_eamil_smtp = "smtp.gmail.com" # Gmail SMTP 서버 주소
+send_email_port = 587 # Gmail SMTP 서버 포트
+send_email_title = '인증 확인 메일입니다.' # 인증 메일 제목
+send_email_message = '''
+안녕하세요. CkriT 블로그입니다.
+위 인증 코드를 인증 코드 입력란에 입력해주세요.
+인증 코드는 10분간 유효하며, 대소문자를 구분합니다.
+본인이 요청한 것이 아닌 경우, 답장 주시면 조치하겠습니다.
+    from. CkriT 블로그 - 널리 인간을 일 없게 하라
+'''
+PAGE_COUNT = { # 한 페이지에 보여줄 목록의 갯수
+    '유저별':5,
+    '카테고리별':5,
+    '메인통합': 5,
+    '검색결과': 5,
+    '댓글':5
+}
+
+###############
+## 유저 관련 ##
+###############
+
 USER_STATE_CODE = {
     '비회원':0,
     '미인증':1,
@@ -20,74 +44,77 @@ USER_STATE_CODE = {
     '관리자':5
 }
 
-JOIN_RESULT_CODE = {
-    '정상 가입 되었습니다.':0,
+USER_RESULT_CODE = {
+    '정상 가입':0,
     'Email 형식 오류':1,
-    'PW 형식 오류':2,
+    'Pw 형식 오류':2,
     'Confirm 오류':3,
-    '가입된 인증 Email':4,
-    '가입된 미인증 Email':5,
+    '가입된 Email':4,
+    '세션 만료': 5,
     '블랙리스트':6,
     '비밀번호 틀림':7,
     '비밀번호 변경 성공': 8,
-    '사용중인 비밀번호와 같음':9,
+    'nowPw=newPw':9,
     '회원 탈퇴 성공': 10,
-    '회원 탈퇴 실패': 997,
-    '비밀번호 변경 실패':998,
-    '가입실패-사유불분명':999
+    '인증 성공': 11,
+    '발급된 코드 없음':12,
+    '코드 불일치':13,
+    '시간 종료':14,
+    '메일 발송 완료':15,
+
+    '실패-unknown':999
 }
+
+USER_MESSAGE = { # userResultCode에 따라 사용자에게 보여줄 메시지
+    0 : "회원 가입에 성공하였습니다.",
+    1 : "Email 형식이 올바르지 않습니다.",
+    2 : "비밀번호 형식이 올바르지 않습니다.",
+    3 : "비밀번호 확인이 일치하지 않습니다.",
+    4 : "이미 가입된 Email 주소입니다.",
+    5 : "세션이 만료되었습니다. 다시 로그인 해주세요.",
+    6 : "블랙리스트에 등록된 사용자입니다. 관리자에게 문의하세요.",
+    7 : "비밀번호가 일치하지 않습니다.",
+    8 : "비밀번호가 성공적으로 변경되었습니다.",
+    9 : "새 비밀번호는 현재 비밀번호와 같을 수 없습니다.",
+    10 : "회원 탈퇴가 성공적으로 처리되었습니다.",
+    11 : "이메일 인증이 성공적으로 완료되었습니다.",
+    12 : "발급된 인증 코드가 없습니다. 인증 코드를 다시 요청해주세요.",
+    13 : "인증 코드가 일치하지 않습니다. 다시 확인해주세요.",
+    14 : "인증 코드의 유효 기간이 만료되었습니다. 새로운 코드를 요청해주세요.",
+    15 : "인증 메일이 성공적으로 발송되었습니다. 메일함을 확인해주세요.",
+
+    999 : "알 수 없는 이유로 작업에 실패하였습니다. 잠시 후 다시 시도해주세요."
+}
+
+def getUserState(userStateCode):
+    for key, value in USER_STATE_CODE.items():
+        if value == userStateCode:
+            return key
+        
 def getJoinResult(joinResultCode):
-    for key, value in JOIN_RESULT_CODE.items():
+    for key, value in USER_RESULT_CODE.items():
         if value == joinResultCode:
             return key
+        
+def getUserMessage(userResultCode):
+    return USER_MESSAGE[userResultCode]
 
-USER_MESSAGE = {
-    '로그인성공': "정상적으로 로그인되었습니다.",
-    '로그인실패': "로그인에 실패하였습니다.",
-    '로그아웃': "로그아웃 되었습니다.",
-    '기로그인': "이미 로그인 되어있습니다.",
-    '세션만료' : "세션이 만료되었습니다.",
-    '가입성공' : "회원 가입에 성공하였습니다.",
-    '가입실패-사유모름' : "알 수 없는 이유로 회원 가입에 실패하였습니다."
-}
 
-VERIFY_RESULT_CODE = {
-    '성공':0,
-    '발급된 코드 없음':1,
-    '코드 불일치':2,
-    '시간 종료':3,
-    '메일 발송 완료':4,
-    '메일 발송 실패':5,
-    '실패-사유모름':99
-}
 
-sessionTime = 1 # 세션 유지 시간(hour)
-verifyExpireTime = 10 # 인증코드 유효시간(minute)
-verifyList = []
-send_email_title = '인증 확인 메일입니다.'
-send_email_message = '''
-위 코드를 입력란에 입력해주세요.
-인증코드는 대소문자를 구분합니다.
-본인이 요청한 것이 아닌 경우, 답장 주시면 조치하겠습니다.
-    from. CkriT 블로그 - 널리 인간을 일 없게 하라
-'''
+###############
+## 로그 관련 ##
+###############
 
-# 로그 관련
-logPath = './log'
-LOG_NAME = {
+logPath = './log' # 로그 저장 경로
+LOG_NAME = { # 로그 파일 이름
     '블랙리스트': 'blackList'
 }
 
-# 한 페이지에 보여줄 목록의 갯수
-PAGE_COUNT = {
-    '유저별':5,
-    '카테고리별':5,
-    '메인통합': 5,
-    '검색결과': 5,
-    '댓글':5
-}
 
-# 블랙리스트 관련
+#####################
+## 블랙리스트 관련 ##
+#####################
+
 checkDdos_min = 10                  # (Ddos) 분당 접속 허용 횟수
 checkDdos_hour = 60                 # (Ddos) 시간당 접속 허용 횟수
 ddosBlockHour = 1                   # (Ddos) 블랙리스트 처리 될 시간

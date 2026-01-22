@@ -222,7 +222,7 @@ def getVerifyHandler():
     if result == 0:
         dbResult = userDAO.updateUserState(uno=userNo,u_state=store.USER_STATE_CODE['인증'])
         if dbResult == 0:
-            return jsonify(store.VERIFY_RESULT_CODE['실패-사유모름'])
+            return jsonify(store.USER_RESULT_CODE['실패-unknown'])
     return jsonify(result)
 
 @app.route("/leave", methods=["POST"])
@@ -232,7 +232,7 @@ def leaveHandler():
     userNo = userDAO.getUserDataByEmailAddress(email=email)[0][0]
     result = userDAO.leaveUser(uno=userNo, pw=pw)
     resp = jsonify(result)
-    if result == store.JOIN_RESULT_CODE['회원 탈퇴 성공']:
+    if result == store.USER_RESULT_CODE['회원 탈퇴 성공']:
         # 쿠키 삭제
         resp.delete_cookie('sessionKey')
     return resp
