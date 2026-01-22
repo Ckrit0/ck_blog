@@ -75,25 +75,6 @@ def getPageList_all():
         pageList.append(i+1)
     return pageList
 
-'''
-유저별 마지막 읽은 글목록 가져오기
-parameter: 유저객체(userDTO)
-return: 마지막 본 글 제목 리스트([[글번호(int),글제목(string)]...])
-'''
-def getRecentlyTitleList_user(user):
-    limit = store.PAGE_COUNT['유저별']
-    sql = f''''''
-    uno = user.getNo()
-    if uno == None:
-        sql = f'''SELECT b.b_no, b.b_title FROM board b\
-            JOIN (SELECT DISTINCT b_no FROM views WHERE v_ip = "{user.getIp()}" AND b_no != 0 ORDER BY v_date DESC LIMIT {limit}) v\
-            ON b.b_no = v.b_no'''
-    else:
-        sql = f'''SELECT b.b_no, b.b_title FROM board b\
-            JOIN (SELECT DISTINCT b_no FROM views WHERE u_no = {uno} AND b_no != 0 ORDER BY v_date DESC LIMIT {limit}) v\
-            ON b.b_no = v.b_no'''
-    result = db.getData(sql=sql)
-    return result
 
 '''
 카테고리별 글목록 가져오기

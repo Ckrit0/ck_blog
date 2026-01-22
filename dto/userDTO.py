@@ -1,3 +1,5 @@
+from service import store
+
 class UserDTO:
     def __init__(self):
         self.no = 0
@@ -7,14 +9,16 @@ class UserDTO:
         self.state = 0
         self.lastDate = None
         self.joinDate = None
+        self.leaveDate = None
     
-    def setUser(self,dbResult):
+    def setUserByDbResult(self,dbResult):
         self.no = dbResult[0]
         self.email = dbResult[1]
         self.pw = dbResult[2]
         self.state = dbResult[3]
         self.lastDate = dbResult[4]
         self.joinDate = dbResult[5]
+        self.leaveDate = dbResult[6]
 
     def setNo(self,no):
         self.no = no
@@ -36,25 +40,29 @@ class UserDTO:
 
     def setJoinDate(self,joinDate):
         self.joinDate = joinDate
+    
+    def setLeaveDate(self,leaveDate):
+        self.leaveDate = leaveDate
 
     def getNo(self):
         return self.no
     
-    def getPlaneEmail(self):
+    def getEmail(self):
         return self.email
 
-    def getEmail(self):
-        if self.state == 0:
+    def getMarkingEmail(self):
+        emailParts = self.email.split('@')
+        markingEmail = emailParts[0][0:3] + '*' * (len(emailParts[0]) -3) + '@' + emailParts[1]
+        if self.state == store.USER_STATE_CODE['비회원']:
             return '비회원'
-        elif self.state == 1:
-            return self.email + "(미인증)"
-        elif self.state == 3:
+        elif self.state == store.USER_STATE_CODE['미인증']:
+            return markingEmail + "(미인증)"
+        elif self.state == store.USER_STATE_CODE['탈퇴']:
             return '(탈퇴한 회원)'
-        elif self.state == 4:
+        elif self.state == store.USER_STATE_CODE['차단']:
             return '(차단중인 회원)'
-        elif self.state == 5:
-            return self.email + '(관리자)'
-        return self.email
+        elif self.state == store.USER_STATE_CODE['관리자']:
+            return markingEmail + '(관리자)'
     
     def getIp(self):
         return self.ip
@@ -75,3 +83,6 @@ class UserDTO:
     
     def getJoinDate(self):
         return self.joinDate
+    
+    def getLeaveDate(self):
+        return self.leaveDate

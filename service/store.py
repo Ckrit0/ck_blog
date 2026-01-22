@@ -61,6 +61,8 @@ USER_RESULT_CODE = {
     '코드 불일치':13,
     '시간 종료':14,
     '메일 발송 완료':15,
+    '블랙리스트 등록':16,
+    '유저 상태 변경':17,
 
     '실패-unknown':999
 }
@@ -82,6 +84,8 @@ USER_MESSAGE = { # userResultCode에 따라 사용자에게 보여줄 메시지
     13 : "인증 코드가 일치하지 않습니다. 다시 확인해주세요.",
     14 : "인증 코드의 유효 기간이 만료되었습니다. 새로운 코드를 요청해주세요.",
     15 : "인증 메일이 성공적으로 발송되었습니다. 메일함을 확인해주세요.",
+    16 : "블랙리스트에 추가되었습니다. 일정 시간이 지나면 해제됩니다.",
+    17 : "유저 상태가 성공적으로 변경되었습니다.",
 
     999 : "알 수 없는 이유로 작업에 실패하였습니다. 잠시 후 다시 시도해주세요."
 }
@@ -107,7 +111,7 @@ def getUserMessage(userResultCode):
 
 logPath = './log' # 로그 저장 경로
 LOG_NAME = { # 로그 파일 이름
-    '블랙리스트': 'blackList'
+    '유저' : 'user'
 }
 
 
@@ -123,7 +127,6 @@ BLACK_REASON_CODE = {
     'Ddos 주의' : 0,
     '기타' : 999
 }
-
 def getBlackReason(blackReasonCode):
     for key, value in BLACK_REASON_CODE.items():
         if value == blackReasonCode:

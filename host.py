@@ -151,7 +151,7 @@ def joinHandler():
 @app.route("/checkMail", methods=["POST"])
 def checkMailHandler():
     email = request.json["joinEmail"]
-    sameEmailUsers = userDAO.getUserDataByEmailAddress(email)
+    sameEmailUsers = userDAO.getUserByEmailAddress(email)
     return jsonify(sameEmailUsers)
 
 @app.route("/sendMail", methods=["POST"])
@@ -218,7 +218,7 @@ def getVerifyHandler():
     email = request.json["userEmail"]
     verify = request.json["userVerify"]
     result = userDAO.matchVerify(email=email, code=verify)
-    userNo = userDAO.getUserDataByEmailAddress(email=email)[0][0]
+    userNo = userDAO.getUserByEmailAddress(email=email)[0][0]
     if result == 0:
         dbResult = userDAO.updateUserState(uno=userNo,u_state=store.USER_STATE_CODE['인증'])
         if dbResult == 0:
@@ -229,7 +229,7 @@ def getVerifyHandler():
 def leaveHandler():
     email = request.json["userEmail"]
     pw = request.json["userPw"]
-    userNo = userDAO.getUserDataByEmailAddress(email=email)[0][0]
+    userNo = userDAO.getUserByEmailAddress(email=email)[0][0]
     result = userDAO.leaveUser(uno=userNo, pw=pw)
     resp = jsonify(result)
     if result == store.USER_RESULT_CODE['회원 탈퇴 성공']:

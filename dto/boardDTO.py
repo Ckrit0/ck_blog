@@ -56,7 +56,7 @@ class BoardDTO:
         return self.uno
     
     def getUserEmail(self):
-        return userDAO.getUserByUserNo(uno=self.uno).getEmail()
+        return userDAO.getUserByUserNo(uno=self.uno).getMarkingEmail()
     
     def getCategoryNo(self):
         return self.cno
