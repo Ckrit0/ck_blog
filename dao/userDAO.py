@@ -1,4 +1,3 @@
-from flask import make_response
 from dto import userDTO
 from service import db, store, loger
 import string, random, re, smtplib
@@ -55,12 +54,12 @@ def __setSession(user):
             key += random.choice(pool)
         return key
     sessionKey = getNewSessionKey()
-    sql = f'INSERT INTO sessionlist(u_no,s_key,s_ip,s_expire)\
+    sql = f'''INSERT INTO sessionlist(u_no,s_key,s_ip,s_expire)\
         VALUES({user.getNo()},"{sessionKey}","{user.getIp()}",NOW() + INTERVAL {store.sessionTime} HOUR)\
         ON DUPLICATE KEY\
             UPDATE s_key = VALUES(s_key),\
                 s_ip = VALUES(s_ip),\
-                s_expire = VALUES(s_expire);'
+                s_expire = VALUES(s_expire);'''
     result = db.setData(sql=sql)
     if result != 0:
         return sessionKey
@@ -84,7 +83,7 @@ parameter: user객체(userDTO)
 return: 실패 0, 성공 1 (int)
 '''
 def setView(user):
-    sql=f'INSERT INTO views(b_no,u_no,v_ip) VALUES(0,{user.getNo()},"{user.getIp()}")'
+    sql = f'''INSERT INTO views(b_no,u_no,v_ip) VALUES(0,{user.getNo()},"{user.getIp()}")'''
     result = db.setData(sql=sql)
     return result
 
@@ -94,7 +93,7 @@ parameter: email(String)
 return: dataList([['유저번호'(int),'유저상태'(int),'가입일'(datetime)]....])
 '''
 def getUserDataByEmailAddress(email):
-    sql = f'SELECT u_no, u_state, u_joindate FROM user WHERE u_email = "{email}" AND u_state NOT IN (0, 3)'
+    sql = f'''SELECT u_no, u_state, u_joindate FROM user WHERE u_email = "{email}" AND u_state NOT IN (0, 3)'''
     userData = db.getData(sql=sql)
     return userData
 
@@ -222,7 +221,7 @@ def setUser(email, pw, confirm, verify):
         if verifyResult == 0:
             user.setState(state=store.USER_STATE_CODE['인증'])
             # 인증완료시 기존 생성된 이메일 주소의 탈퇴처리
-            sql = f'UPDATE user SET u_state = 3 WHERE u_email = "{email}";'
+            sql = f'''UPDATE user SET u_state = 3 WHERE u_email = "{email}"'''
             # 회원가입 처리가 정상적으로 처리되지 않을 때를 위해서 List방식으로 한번에 commit
             sqlList.append(sql)
         else:
@@ -231,7 +230,7 @@ def setUser(email, pw, confirm, verify):
             if len(userData) != 0:
                 return __alreadyUserCode(userData[0][1])
 
-    sql=f'INSERT INTO user(u_email,u_pw,u_state) VALUES("{user.getPlaneEmail()}","{user.getPw()}",{user.getState()})'
+    sql = f'''INSERT INTO user(u_email,u_pw,u_state) VALUES("{user.getPlaneEmail()}","{user.getPw()}",{user.getState()})'''
     sqlList.append(sql)
     result = db.setDatas(sqlList=sqlList)
     if result != 0:
@@ -268,7 +267,7 @@ parameter: userNo(int), u_state(int)
 return: 실패 0, 성공 1
 '''
 def updateUserState(uno, u_state):
-    sql = f'UPDATE user SET u_state = {u_state} WHERE u_no = {uno}'
+    sql = f'''UPDATE user SET u_state = {u_state} WHERE u_no = {uno}'''
     result = db.setData(sql=sql)
     return result
 
@@ -298,7 +297,7 @@ def updateUserPassword(user, nowPw, newPw, newConfirm):
     elif user.getPw() != __encryptPw(nowPw):
         return store.USER_RESULT_CODE['비밀번호 틀림']
     else:
-        sql = f'UPDATE user SET u_pw = "{__encryptPw(newPw)}" WHERE u_no = {user.getNo()}'
+        sql = f'''UPDATE user SET u_pw = "{__encryptPw(newPw)}" WHERE u_no = {user.getNo()}'''
         result = db.setData(sql=sql)
         if result == 0:
             return store.USER_RESULT_CODE['실패-unknown']
@@ -326,7 +325,7 @@ parameter: user객체(userDTO)
 return: 실패 0, 성공 1 (int)
 '''
 def updateSessionTime(user):
-    sql = f'UPDATE sessionlist SET s_expire = NOW() + INTERVAL {store.sessionTime} HOUR WHERE u_no = {user.getNo()}'
+    sql = f'''UPDATE sessionlist SET s_expire = NOW() + INTERVAL {store.sessionTime} HOUR WHERE u_no = {user.getNo()}'''
     result = db.setData(sql=sql)
     return result
 
@@ -336,7 +335,7 @@ parameter: email(String), pw(String)
 return: sessionKey(string)
 '''
 def getSessionKeyByEmailAndPw(email,pw,ip):
-    sql = f'SELECT * FROM user WHERE u_email="{email}" AND u_pw="{__encryptPw(pw=pw)}" AND u_state NOT IN (0, 3)'
+    sql = f'''SELECT * FROM user WHERE u_email="{email}" AND u_pw="{__encryptPw(pw=pw)}" AND u_state NOT IN (0, 3)'''
     result = db.getData(sql=sql)
     user = userDTO.UserDTO()
     user.setUser(result[0])
@@ -352,7 +351,7 @@ return: user객체(userDTO)
 def getUserByUserNo(uno, ip=''):
     user = userDTO.UserDTO()
     if uno != 0:
-        sql = f'SELECT * FROM user WHERE u_no = {uno} AND u_state != 0'
+        sql = f'''SELECT * FROM user WHERE u_no = {uno} AND u_state != 0'''
         result = db.getData(sql=sql)
         if len(result) != 0:
             user.setUser(result[0])
@@ -369,7 +368,7 @@ def getUserBySessionKey(cookieKey, ip):
         user = userDTO.UserDTO()
         user.setIp(ip)
         return user
-    sql = f'SELECT u_no FROM sessionlist WHERE s_key = "{cookieKey}"'
+    sql = f'''SELECT u_no FROM sessionlist WHERE s_key = "{cookieKey}"'''
     uno = db.getData(sql=sql)[0][0]
     user = getUserByUserNo(uno=uno, ip=ip)
     return user
@@ -380,7 +379,7 @@ parameter: 유저번호(int)
 return: user객체(userDTO)
 '''
 def getSessionTimeByUserNo(uno):
-    sql = f'SELECT s_expire FROM sessionlist WHERE u_no = {uno}'
+    sql = f'''SELECT s_expire FROM sessionlist WHERE u_no = {uno}'''
     s_expire = db.getData(sql=sql)[0][0]
     return s_expire
 
@@ -425,12 +424,12 @@ return: 블랙리스트(List)
 '''
 def getBlackList():
     blackList = []
-    sql = 'SELECT u_no FROM blacklist WHERE bl_expire >= NOW()'
+    sql = f'''SELECT u_no FROM blacklist WHERE bl_expire >= NOW()'''
     result = db.getData(sql=sql)
     for uno in result:
         if uno != 0:
             blackList.append(uno)
-    sql = 'SELECT bl_ip FROM blacklist WHERE bl_expire >= NOW()'
+    sql = f'''SELECT bl_ip FROM blacklist WHERE bl_expire >= NOW()'''
     result = db.getData(sql=sql)
     for bip in result:
         blackList.append(bip)

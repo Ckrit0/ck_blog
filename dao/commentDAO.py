@@ -65,7 +65,7 @@ return: 댓글 페이지 리스트(list)
 '''
 def getCommentPageListByBoardNo(bno):
     pageList = []
-    sql = f'SELECT count(*) FROM comment WHERE b_no = {bno} AND co_upper IS NULL'
+    sql = f'''SELECT count(*) FROM comment WHERE b_no = {bno} AND co_upper IS NULL'''
     result = math.ceil(db.getData(sql=sql)[0][0]/store.PAGE_COUNT['댓글'])
     for i in range(result):
         pageList.append(i+1)
@@ -85,7 +85,7 @@ parameter: 유저번호(int)
 return: 작성한 댓글 갯수(int)
 '''
 def getCommentCountByUserNo(uno):
-    sql=f'SELECT count(*) FROM comment WHERE u_no = {uno} AND co_isdelete = 0'
+    sql = f'''SELECT count(*) FROM comment WHERE u_no = {uno} AND co_isdelete = 0'''
     result = db.getData(sql=sql)
     return result[0][0]
 
@@ -96,7 +96,7 @@ return: 댓글 목록 리스트([commentDTO,....])
 '''
 def getRecentlyCommentList(uno):
     result = []
-    sql=f'''SELECT * FROM comment WHERE u_no = {uno} AND co_isdelete = 0 ORDER BY co_no DESC LIMIT {store.PAGE_COUNT['유저별']} OFFSET 0'''
+    sql = f'''SELECT * FROM comment WHERE u_no = {uno} AND co_isdelete = 0 ORDER BY co_no DESC LIMIT {store.PAGE_COUNT['유저별']} OFFSET 0'''
     commentList = db.getData(sql=sql)
     for comment in commentList:
         c = commentDTO.CommentDTO()
