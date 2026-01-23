@@ -58,7 +58,7 @@ def getRecentlyCommentList(uno):
         JOIN user u ON c.u_no = u.u_no \
         JOIN board b ON c.b_no = b.b_no \
         WHERE c.u_no = {uno} \
-        ORDER BY c.co_no DESC LIMIT {store.PAGE_COUNT['유저별']} OFFSET 0'''
+        ORDER BY c.co_no DESC LIMIT {store.PAGE_COUNT['유저']} OFFSET 0'''
     commentList = db.getData(sql=sql)
     for comment in commentList:
         c = commentDTO.CommentDTO()

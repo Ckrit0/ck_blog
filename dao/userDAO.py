@@ -57,7 +57,7 @@ def getRecentlyTitleList_user(user):
     parameter: 유저객체(userDTO)
     return: 마지막 본 글 제목 리스트([[글번호(int),글제목(string)]...])
     '''
-    limit = store.PAGE_COUNT['유저별']
+    limit = store.PAGE_COUNT['유저']
     sql = f''''''
     uno = user.getNo()
     uip = user.getIp()

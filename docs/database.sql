@@ -129,11 +129,23 @@ SELECT * FROM category WHERE c_upper=1 ORDER BY c_no;
 -- Board DAO  --
 ----------------
 -- 전체 글 제목의 목록 가져오기(최신순, 페이지별)
-SELECT b_title FROM board WHERE b_isdelete=0 ORDER BY b_no DESC LIMIT 5 OFFSET 0;
+SELECT
+    b.b_no, b.b_title,
+    (SELECT count(DISTINCT u_no) + count(DISTINCT v_ip) FROM views v WHERE v.b_no=b.b_no),
+    (SELECT count(DISTINCT u_no) + count(DISTINCT l_ip) FROM likes l WHERE l.b_no=b.b_no)
+FROM board b
+WHERE b_isdelete=0
+ORDER BY b_no DESC
+LIMIT 5 OFFSET 0;
 -- 전체 글 갯수 가져오기
 SELECT count(*) FROM board WHERE b_isdelete=0;
 -- 카테고리별 글 제목의 목록 가져오기(최신순, 페이지별)
-SELECT b_title FROM board WHERE c_no=1 AND b_isdelete=0 ORDER BY b_no DESC LIMIT 5 OFFSET 0;
+SELECT
+    b_no, b_title,
+    (SELECT count(DISTINCT u_no) + count(DISTINCT v_ip) FROM views WHERE b_no=b.b_no),
+    (SELECT count(DISTINCT u_no) + count(DISTINCT l_ip) FROM likes WHERE b_no=b.b_no)
+FROM board WHERE c_no="c_no" AND b_isdelete=0
+ORDER BY b_no DESC LIMIT 5 OFFSET 0;
 -- 카테고리별 글 갯수 가져오기
 SELECT count(*) FROM board WHERE c_no=1 AND b_isdelete=0;
 -- 카테고리별 글 제목의 목록에서 현재 글이 몇번째인지 가져오기

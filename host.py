@@ -12,7 +12,7 @@ def getTemplateData(req):
     # 클라이언트 정보 가져오기
     clientUser = userDAO.getUserBySessionKey(cookieKey=req.cookies.get('sessionKey'),ip=req.remote_addr)
     categoryList = categoryDAO.getCategoryList()
-    recentlyTitleList = boardDAO.getRecentlyTitleList_user(clientUser)
+    recentlyTitleList = userDAO.getRecentlyTitleList_user(clientUser)
     return clientUser, categoryList, recentlyTitleList
 
 @app.before_request
@@ -156,7 +156,7 @@ def loginHandler():
                 httponly=True)
     except:
         # alert 메시지 생성
-        flash(store.USER_MESSAGE['로그인실패'])
+        flash(store.USER_MESSAGE[store.USER_RESULT_CODE['실패-unknown']])
     return resp
 
 @app.route("/logout", methods=["POST"])
@@ -167,7 +167,7 @@ def logoutHandler():
     resp.delete_cookie('sessionKey')
     
     # alert 메시지 생성
-    flash(store.USER_MESSAGE['로그아웃'])
+    flash(store.USER_MESSAGE[store.USER_RESULT_CODE['로그아웃']])
     return resp
 
 @app.route("/join", methods=["POST"])
@@ -179,7 +179,7 @@ def joinHandler():
     
     # 이미 로그인 되어있는 경우
     if clientUser.getNo() != 0:
-        flash(store.USER_MESSAGE['기로그인'])
+        flash(store.USER_MESSAGE[store.USER_RESULT_CODE['기로그인']])
         return resp
     
     # form data 가져오기

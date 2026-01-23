@@ -34,6 +34,7 @@ parameter: SQL문(String)
 return: DATA List(List)
 '''
 def getData(sql):
+    # print('db.getData sql:',sql)
     data = []
     con, cur = __getCursor()
     try:

@@ -14,10 +14,10 @@ def getTitleList_all(page):
     '''
     limit = store.PAGE_COUNT['기본값']
     offset = limit * (page-1)
-    sql = f'''SELECT b_no, b_title, \
-            (SELECT count(DISTINCT u_no) + count(DISTINCT v_ip) FROM views WHERE b_no=b.b_no), \
-            (SELECT count(DISTINCT u_no) + count(DISTINCT l_ip) FROM likes WHERE b_no=b.b_no) \
-            FROM board WHERE b_isdelete=0 ORDER BY b_no DESC LIMIT {limit} OFFSET {offset}'''
+    sql = f'''SELECT b.b_no, b.b_title, \
+            (SELECT count(DISTINCT u_no) + count(DISTINCT v_ip) FROM views v WHERE v.b_no=b.b_no), \
+            (SELECT count(DISTINCT u_no) + count(DISTINCT l_ip) FROM likes l WHERE l.b_no=b.b_no) \
+            FROM board b WHERE b_isdelete=0 ORDER BY b_no DESC LIMIT {limit} OFFSET {offset}'''
     result = db.getData(sql=sql)
     return result
 
@@ -129,14 +129,14 @@ def getRecentlyBoardList(uno):
     '''
     result = []
     sql = f'''
-        SELECT *b.*, u.u_email, u.u_state, \
+        SELECT b.*, u.u_email, u.u_state, \
             (SELECT count(DISTINCT u_no) + count(DISTINCT v_ip) FROM views WHERE b_no=b.b_no), \
             (SELECT count(DISTINCT u_no) + count(DISTINCT l_ip) FROM likes WHERE b_no=b.b_no) \
         FROM board b \
         JOIN user u \
         ON b.u_no = u.u_no \
-        WHERE u_no = {uno} AND b_isdelete = 0 \
-        ORDER BY b_no DESC LIMIT {store.PAGE_COUNT['유저별']}'''
+        WHERE b.u_no = {uno} AND b.b_isdelete = 0 \
+        ORDER BY b_no DESC LIMIT {store.PAGE_COUNT['유저']}'''
     boardList = db.getData(sql=sql)
     for b in boardList:
         board = boardDTO.BoardDTO()

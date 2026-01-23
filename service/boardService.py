@@ -18,9 +18,9 @@ def checkIsLiked(user, board):
     '''
     sql = f''''''
     if user.getNo() == 0:
-        sql = f'''SELECT count(*) FROM like WHERE l_ip = "{user.getIp()}" AND b_no = {board.getNo()}'''
+        sql = f'''SELECT count(*) FROM likes WHERE l_ip = "{user.getIp()}" AND b_no = {board.getNo()}'''
     else:
-        sql = f'''SELECT count(*) FROM like WHERE u_no = {user.getNo()} AND b_no = {board.getNo()}'''
+        sql = f'''SELECT count(*) FROM likes WHERE u_no = {user.getNo()} AND b_no = {board.getNo()}'''
     result = db.getData(sql=sql)[0][0]
     if result == 0:
         return False

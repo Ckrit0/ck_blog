@@ -83,7 +83,7 @@ class CommentDTO:
         return self.userEmail
     
     def getMarkingEmail(self):
-        return userService.markingEmail(self.userEmail)
+        return userService.markingEmail(self.userEmail, self.userState)
     
     def getBoardTitle(self):
         return self.boardTitle

@@ -38,8 +38,8 @@
         <div class="userInfoContents">
             <ul>
                 {% for board in targetUserBoardList %}
-                <li onclick="window.location.href='/board/{{board.getNo()}}'">
-                    <span class="pointer bolder">{{board.getTitle()}}</span>
+                <li>
+                    <span class="pointer bolder" onclick="window.location.href='/board/{{board.getNo()}}'">{{board.getTitle()}}</span>
                 </li>
                 {% endfor %}
             </ul>
@@ -48,8 +48,8 @@
         <div class="userInfoContents">
             <ul>
                 {% for comment in targetUserCommentList %}
-                <li  onclick="window.location.href='/board/{{comment.getBoardNo()}}'">
-                    <span class="pointer bolder">{{comment.getBoardShortTitle()}}</span><br>
+                <li>
+                    <span class="pointer bolder" onclick="window.location.href='/board/{{comment.getBoardNo()}}'">{{comment.getBoardShortTitle()}}</span><br>
                     <span class="pointer indentation"> ㄴ{{comment.getComment()}}</span>
                 </li>
                 {% endfor %}

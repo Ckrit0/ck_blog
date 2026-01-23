@@ -131,7 +131,7 @@ def markingEmail(email, state):
         return markingEmail + "(미인증)"
     elif state == store.USER_STATE_CODE['탈퇴']:
         return '(탈퇴한 회원)'
-    elif state == store.USER_STATE_CODE['차단']:
+    elif state == store.USER_STATE_CODE['블랙리스트']:
         return '(차단중인 회원)'
     elif state == store.USER_STATE_CODE['관리자']:
         return markingEmail + '(관리자)'
