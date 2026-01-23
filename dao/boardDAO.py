@@ -3,140 +3,148 @@ from service import db
 from service import store
 import math
 
-'''
-글 작성하기
-parameter: 글객체(boardDTO)
-return: 
-'''
-def setBoard(board):
-    uno = board.getUserNo()
-    cno = board.getCategoryNo()
-    bTitle = board.getTitle()
-    bContents = board.getContents()
-    sql = f'''INSERT INTO board(u_no,c_no,b_title,b_contents) VALUES({uno},{cno},"{bTitle}","{bContents}")'''
-    result = db.setData(sql=sql)
-    return result
-
-'''
-이미지 저장하기
-parameter: 글객체(boardDTO), 이미지객체(타입미정)
-return: 
-'''
-def setImage(board,image):
-    sql = f''''''
-
-'''
-조회 설정하기.(최근 본 글 목록에서 볼 수 있도록 모두 저장)
-parameter: user객체(userDTO), 글객체(boardDTO)
-return: 실패 0, 성공 1 (int)
-'''
-def setView(user, board):
-    sql = f'''INSERT INTO views(b_no,u_no,v_ip) VALUES({board.getNo()},{user.getNo()},"{user.getIp()}")'''
-    result = db.setData(sql=sql)
-    return result
-
-'''
-좋아요 설정하기.(유저번호 또는 IP가 겹치면 토글)
-parameter: user객체(userDTO)
-return: 
-'''
-def setLike(user):
-    sql = f''''''
-
-'''
-글 수정하기
-parameter: 글객체(boardDTO)
-return: 
-'''
-def updateBoard(board):
-    sql = f''''''
-
-'''
-전체 글목록 가져오기
-parameter: 페이지(int)
-return: 해당 페이지의 [글 번호(int), 제목(String)]의 리스트
-'''
+#################################################################################################
+####################################### Get Board Object ########################################
+#################################################################################################
 def getTitleList_all(page):
-    limit = store.PAGE_COUNT['메인통합']
+    '''
+    전체 글제목 목록 가져오기
+    parameter: 페이지(int)
+    return: 해당 페이지의 [글 번호(int), 제목(String), 조회수(int), 좋아요수(int)]의 리스트
+    '''
+    limit = store.PAGE_COUNT['기본값']
     offset = limit * (page-1)
-    sql = f'''SELECT b_no,b_title FROM board WHERE b_isdelete=0 ORDER BY b_no DESC LIMIT {limit} OFFSET {offset}'''
+    sql = f'''SELECT b_no, b_title, \
+            (SELECT count(DISTINCT u_no) + count(DISTINCT v_ip) FROM views WHERE b_no=b.b_no), \
+            (SELECT count(DISTINCT u_no) + count(DISTINCT l_ip) FROM likes WHERE b_no=b.b_no) \
+            FROM board WHERE b_isdelete=0 ORDER BY b_no DESC LIMIT {limit} OFFSET {offset}'''
     result = db.getData(sql=sql)
     return result
 
-'''
-전체 페이지 리스트 가져오기
-return: 페이지 리스트(list)
-'''
 def getPageList_all():
+    '''
+    전체 페이지 리스트 가져오기
+    return: 페이지 리스트(list)
+    '''
     pageList = []
     sql = f'''SELECT count(*) FROM board WHERE b_isdelete=0'''
-    result = math.ceil(db.getData(sql=sql)[0][0]/store.PAGE_COUNT['메인통합'])
+    result = math.ceil(db.getData(sql=sql)[0][0]/store.PAGE_COUNT['기본값'])
     for i in range(result):
         pageList.append(i+1)
     return pageList
 
-
-'''
-카테고리별 글목록 가져오기
-parameter: 카테고리객체(categoryDTO), 페이지(int)
-return: 해당 페이지의 [글 번호(int), 제목(String)]의 리스트
-'''
 def getTitleList_cathgory(category, page):
-    boardNoAndTitleList = []
-    sql = f''''''
-    return boardNoAndTitleList
-
-'''
-카테고리 내에서 해당 글의 앞뒤 글목록 가져오기
-parameter: 글객체(boardDTO), 페이지(int)
-return: 해당 페이지의 [글 번호(int), 제목(String)]의 리스트
-'''
-def getTitleList_board(board, page):
-    boardNoAndTitleList = []
-    sql = f''''''
-    return boardNoAndTitleList
-
-'''
-글번호로 글 가져오기
-parameter: 글번호(int)
-return: 글 객체(boardDTO)
-'''
-def getBoardByBoardNo(bno):
-    board = boardDTO.BoardDTO()
-    sql = f'''SELECT * FROM board WHERE b_no = {bno}'''
-    result = db.getData(sql=sql)[0]
-    board.setBoard(
-        no=result[0],
-        uno=result[1],
-        cno=result[2],
-        date=result[3],
-        title=result[4],
-        content=result[5],
-        isDelete=result[6]
-    )
-    return board
-
-'''
-마지막 게시글 가져오기
-return: 마지막 글 객체(boardDTO)
-'''
-def getRecentlyBoard():
-    board = boardDTO.BoardDTO()
-    sql = f'''SELECT * FROM board WHERE b_isdelete=0 ORDER BY b_no DESC LIMIT 1 OFFSET 0'''
+    '''
+    카테고리별 글목록 가져오기
+    parameter: 카테고리객체(categoryDTO), 페이지(int)
+    return: 해당 페이지의 [글 번호(int), 제목(String), 조회수(int), 좋아요수(int)]의 리스트
+    '''
+    limit = store.PAGE_COUNT['카테고리']
+    offset = limit * (page-1)
+    sql = f'''SELECT b_no, b_title, \
+            (SELECT count(DISTINCT u_no) + count(DISTINCT v_ip) FROM views WHERE b_no=b.b_no), \
+            (SELECT count(DISTINCT u_no) + count(DISTINCT l_ip) FROM likes WHERE b_no=b.b_no) \
+            FROM board WHERE c_no={category.getNo()} AND b_isdelete=0 \
+            ORDER BY b_no DESC LIMIT {limit} OFFSET {offset}'''
     result = db.getData(sql=sql)
-    board.setBoard(
-        no=result[0][0],
-        uno=result[0][1],
-        cno=result[0][2],
-        date=result[0][3],
-        title=result[0][4],
-        content=result[0][5]
-    )
-    view = getViewByBoardNo(board.getNo())
-    board.setView(view=view)
-    like = getLikeByBoardNo(board.getNo())
-    board.setLike(like=like)
+    return result
+
+def getPageList_category(category):
+    '''
+    카테고리별 페이지 리스트 가져오기
+    parameter: 카테고리객체(categoryDTO)
+    return: 페이지 리스트(list)
+    '''
+    pageList = []
+    sql = f'''SELECT count(*) FROM board WHERE c_no={category.getNo()} AND b_isdelete=0'''
+    result = math.ceil(db.getData(sql=sql)[0][0]/store.PAGE_COUNT['카테고리'])
+    for i in range(result):
+        pageList.append(i+1)
+    return pageList
+
+def getPageOfCategory(board):
+    '''
+    카테고리 내에서 해당 글의 페이지 번호 가져오기
+    parameter: 글객체(boardDTO)
+    return: 해당 글이 속한 페이지 번호(int)
+    '''
+    sql = f'''SELECT count(*) FROM board WHERE c_no={board.getCategoryNo()} AND b_isdelete=0 AND b_no > {board.getNo()}'''
+    page = math.ceil(db.getData(sql=sql)[0][0]/store.PAGE_COUNT['카테고리'])
+    return page
+
+def getBoardByBoardNo(bno):
+    '''
+    글번호로 글 가져오기
+    parameter: 글번호(int)
+    return: 글 객체(boardDTO)
+    '''
+    board = boardDTO.BoardDTO()
+    sql = f'''
+        SELECT \
+            b.*, u.u_email, u.u_state, \
+            (SELECT count(DISTINCT u_no) + count(DISTINCT v_ip) FROM views WHERE b_no=b.b_no), \
+            (SELECT count(DISTINCT u_no) + count(DISTINCT l_ip) FROM likes WHERE b_no=b.b_no) \
+        FROM board b \
+        JOIN user u \
+        ON b.u_no = u.u_no \
+        WHERE b.b_no = {bno} AND b.b_isdelete=0'''
+    result = db.getData(sql=sql)[0]
+    board.setBoardByDbResult(dbResult=result)
     return board
+
+def getRecentlyBoard():
+    '''
+    마지막 게시글 가져오기
+    return: 마지막 글 객체(boardDTO)
+    '''
+    board = boardDTO.BoardDTO()
+    sql = f'''
+        SELECT b.*, u.u_email, u.u_state, \
+            (SELECT count(DISTINCT u_no) + count(DISTINCT v_ip) FROM views WHERE b_no=b.b_no), \
+            (SELECT count(DISTINCT u_no) + count(DISTINCT l_ip) FROM likes WHERE b_no=b.b_no) \
+        FROM board b \
+        JOIN user u \
+        ON b.u_no = u.u_no \
+        WHERE b.b_isdelete=0 \
+        ORDER BY b.b_no DESC LIMIT 1'''
+    result = db.getData(sql=sql)[0]
+    board.setBoardByDbResult(dbResult=result)
+    return board
+
+def getBoardCountByUserNo(uno):
+    '''
+    유저별 작성한 글 갯수 가져오기
+    parameter: 유저번호(int)
+    return: 작성한 글 갯수(int)
+    '''
+    sql = f'''SELECT count(*) FROM board WHERE u_no = {uno} AND b_isdelete = 0'''
+    result = db.getData(sql=sql)
+    return result[0][0]
+
+def getRecentlyBoardList(uno):
+    '''
+    유저별 작성한 최신글 목록 가져오기
+    parameter: 유저번호(int)
+    return: 글 목록 리스트([boardDTO,....])
+    '''
+    result = []
+    sql = f'''
+        SELECT *b.*, u.u_email, u.u_state, \
+            (SELECT count(DISTINCT u_no) + count(DISTINCT v_ip) FROM views WHERE b_no=b.b_no), \
+            (SELECT count(DISTINCT u_no) + count(DISTINCT l_ip) FROM likes WHERE b_no=b.b_no) \
+        FROM board b \
+        JOIN user u \
+        ON b.u_no = u.u_no \
+        WHERE u_no = {uno} AND b_isdelete = 0 \
+        ORDER BY b_no DESC LIMIT {store.PAGE_COUNT['유저별']}'''
+    boardList = db.getData(sql=sql)
+    for b in boardList:
+        board = boardDTO.BoardDTO()
+        board.setBoardByDbResult(dbResult=b)
+        result.append(board)
+    return result
+
+
 
 '''
 이미지번호로 이미지객체 가져오기
@@ -148,34 +156,89 @@ def getImageByImageNo(ino):
     sql = f''''''
     return image
 
-'''
-글번호로 조회수 가져오기 (겹치는 이메일/아이피는 1회만)
-parameter: 글번호(int)
-return: 조회수(int)
-'''
-def getViewByBoardNo(bno):
-    sql = f'''SELECT count(DISTINCT v_ip) FROM views WHERE b_no={bno}'''
-    result = db.getData(sql=sql)
-    view = result[0][0]
-    return view
+#################################################################################################
+####################################### Set Board Object ########################################
+#################################################################################################
+
+def setBoard(board):
+    '''
+    글 작성하기
+    parameter: 글객체(boardDTO)
+    return: 성공 True, 실패 False (bool)
+    '''
+    uno = board.getUserNo()
+    cno = board.getCategoryNo()
+    bTitle = board.getTitle()
+    bContents = board.getContents()
+    bIp = board.getIp()
+    sql = f'''INSERT INTO board(u_no,c_no,b_title,b_contents,b_ip) VALUES({uno},{cno},"{bTitle}","{bContents}","{bIp}")'''
+    result = db.setData(sql=sql)
+    if result == 0:
+        return False
+    return True
+
+def updateBoard(board):
+    '''
+    글 수정하기
+    parameter: 글객체(boardDTO)
+    return: 성공 True, 실패 False (bool)
+    '''
+    cno = board.getCategoryNo()
+    bTitle = board.getTitle()
+    bContents = board.getContents()
+    sql = f'''UPDATE board SET c_no={cno}, b_title="{bTitle}", b_contents="{bContents}" WHERE b_no={board.getNo()}'''
+    result = db.setData(sql=sql)
+    if result == 0:
+        return False
+    return True
+
+def changeCategory(board, newCno):
+    '''
+    글 카테고리 변경하기
+    parameter: 글객체(boardDTO), 새로운 카테고리번호(int)
+    return: 성공 True, 실패 False (bool)
+    '''
+    sql = f'''UPDATE board SET c_no={newCno} WHERE b_no={board.getNo()}'''
+    result = db.setData(sql=sql)
+    if result == 0:
+        return False
+    return True
+
+def deleteBoard(board):
+    '''
+    글 삭제하기 (b_isdelete를 1로 update)
+    parameter: 글객체(boardDTO)
+    return: 성공 True, 실패 False (bool)
+    '''
+    sql = f'''UPDATE board SET b_isdelete = 1 WHERE b_no = {board.getNo()}'''
+    result = db.setData(sql=sql)
+    if result == 0:
+        return False
+    return True
+
+def setLike(user, board):
+    '''
+    좋아요 설정하기.
+    parameter: user객체(userDTO), 글객체(boardDTO)
+    return: 성공 True, 실패 False (bool)
+    '''
+    sql = f'''\
+        INSERT INTO likes (b_no, u_no, l_ip) \
+        SELECT {board.getNo()}, {user.getNo()}, "{user.getIp()}" FROM DUAL \
+        WHERE NOT EXISTS \
+        (SELECT 1 FROM likes WHERE b_no = {board.getNo()} AND (u_no = {user.getNo()} OR l_ip = "{user.getIp()}"));'''
+    result = db.setData(sql=sql)
+    if result == 0:
+        return False
+    return True
+
 
 '''
-글 번호로 좋아요수 가져오기
-parameter: 글번호(int)
-return: 좋아요수(int)
-'''
-def getLikeByBoardNo(bno):
-    sql = f'''SELECT count(DISTINCT l_ip) FROM likes WHERE b_no={bno}'''
-    result = db.getData(sql=sql)
-    like = result[0][0]
-    return like
-
-'''
-글 삭제하기 (b_isdelete를 1로 update)
-parameter: 글객체(boardDTO)
+이미지 저장하기
+parameter: 글객체(boardDTO), 이미지객체(타입미정)
 return: 
 '''
-def deleteBoard(board):
+def setImage(board,image):
     sql = f''''''
 
 '''
@@ -186,35 +249,3 @@ return:
 def deleteImage(ino):
     sql = f''''''
 
-'''
-유저별 작성한 글 갯수 가져오기
-parameter: 유저번호(int)
-return: 작성한 글 갯수(int)
-'''
-def getBoardCountByUserNo(uno):
-    sql = f'''SELECT count(*) FROM board WHERE u_no = {uno} AND b_isdelete = 0'''
-    result = db.getData(sql=sql)
-    return result[0][0]
-
-'''
-유저별 작성한 최신글 목록 가져오기
-parameter: 유저번호(int)
-return: 글 목록 리스트([boardDTO,....])
-'''
-def getRecentlyBoardList(uno):
-    result = []
-    sql = f'''SELECT * FROM board WHERE u_no = {uno} AND b_isdelete = 0 ORDER BY b_no DESC LIMIT {store.PAGE_COUNT['유저별']} OFFSET 0'''
-    boardList = db.getData(sql=sql)
-    for board in boardList:
-        b = boardDTO.BoardDTO()
-        b.setBoard(
-            no=board[0],
-            uno=board[1],
-            cno=board[2],
-            date=board[3],
-            title=board[4],
-            content=board[5],
-            isDelete=board[6]
-        )
-        result.append(b)
-    return result

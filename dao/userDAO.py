@@ -232,16 +232,18 @@ def leaveUser(uno, pw):
         return store.USER_RESULT_CODE['실패-unknown']
     return store.USER_RESULT_CODE['회원 탈퇴 성공']
 
-def setView(user):
+def setView(user, bno=0):
     '''
     글이 아닌 페이지의 조회 설정하기
     b_no를 0으로 설정, 비회원의 경우 userNo를 0으로 설정
     parameter: user객체(userDTO)
-    return: 실패 0, 성공 1 (int)
+    return: 성공 True, 실패 False (bool)
     '''
-    sql = f'''INSERT INTO views(b_no,u_no,v_ip) VALUES(0,{user.getNo()},"{user.getIp()}")'''
+    sql = f'''INSERT INTO views(b_no,u_no,v_ip) VALUES({bno},{user.getNo()},"{user.getIp()}")'''
     result = db.setData(sql=sql)
-    return result
+    if result == 0:
+        return False
+    return True
 
 ################################################################################################
 ########################################### Session ############################################
@@ -287,11 +289,13 @@ def updateSessionTime(user):
     '''
     세션 만료시간 갱신
     parameter: user객체(userDTO)
-    return: 실패 0, 성공 1 (int)
+    return: 성공 True, 실패 False (bool)
     '''
     sql = f'''UPDATE sessionlist SET s_expire = NOW() + INTERVAL {store.sessionTime} HOUR WHERE u_no = {user.getNo()}'''
     result = db.setData(sql=sql)
-    return result
+    if result == 0:
+        return False
+    return True
 
 def getSessionKeyByEmailAndPw(email,pw,ip=''):
     '''

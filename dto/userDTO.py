@@ -1,4 +1,4 @@
-from service import store
+from service import store, userService
 
 class UserDTO:
     def __init__(self):
@@ -51,26 +51,13 @@ class UserDTO:
         return self.email
 
     def getMarkingEmail(self):
-        emailParts = self.email.split('@')
-        markingEmail = emailParts[0][0:3] + '*' * (len(emailParts[0]) -3) + '@' + emailParts[1]
-        if self.state == store.USER_STATE_CODE['비회원']:
-            return '비회원'
-        elif self.state == store.USER_STATE_CODE['미인증']:
-            return markingEmail + "(미인증)"
-        elif self.state == store.USER_STATE_CODE['탈퇴']:
-            return '(탈퇴한 회원)'
-        elif self.state == store.USER_STATE_CODE['차단']:
-            return '(차단중인 회원)'
-        elif self.state == store.USER_STATE_CODE['관리자']:
-            return markingEmail + '(관리자)'
+        return userService.markingEmail(self.email, self.state)
     
     def getIp(self):
         return self.ip
     
     def getMarkingIp(self):
-        ipList = self.ip.split('.')
-        markingIp = ipList[0] + '.' + ipList[1] + '.' + '*' + '.' + '*'
-        return markingIp
+        return userService.markingIp(self.ip)
     
     def getPw(self):
         return self.pw

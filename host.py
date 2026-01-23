@@ -53,7 +53,7 @@ def main():
     commentPageList = commentDAO.getCommentPageListByBoardNo(recentlyboard.getNo())
     
     # 뷰 설정하기
-    boardDAO.setView(user=clientUser,board=recentlyboard)
+    userDAO.setView(user=clientUser, bno=recentlyboard.getNo())
     
     return render_template('main.html',
         clientUser=clientUser,
@@ -94,7 +94,8 @@ def joinPage():
 def userPage(userNo):
     # 템플릿 정보
     clientUser, categoryList, recentlyTitleList = getTemplateData(req=request)
-    # 유저정보
+
+    # 대상 유저정보
     targetUser = userDAO.getUserByUserNo(uno=userNo)
     if targetUser.getState() == 0:
         resp = make_response(redirect(request.referrer or url_for('main')))
@@ -110,6 +111,9 @@ def userPage(userNo):
     targetUserBoardList = boardDAO.getRecentlyBoardList(uno=targetUser.getNo())
     # 작성한 최근댓글 목록
     targetUserCommentList = commentDAO.getRecentlyCommentList(uno=targetUser.getNo())
+
+    # 뷰 설정
+    userDAO.setView(clientUser)
 
     return render_template('user.html',
         clientUser=clientUser,

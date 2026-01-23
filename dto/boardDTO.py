@@ -1,4 +1,4 @@
-from dao import userDAO
+from service import userService
 
 class BoardDTO:
     def __init__(self):
@@ -8,19 +8,26 @@ class BoardDTO:
         self.date = None
         self.title = None
         self.content = None
+        self.isDelete = 0
+        self.ip = None
+        self.uEmail = None
+        self.uState = 0
         self.view = None
         self.like = None
     
-    def setBoard(self,uno,cno,title,content,no=None,date=None,view=None,like=None,isDelete=0):
-        self.no = no
-        self.uno = uno
-        self.cno = cno
-        self.date = date
-        self.title = title
-        self.content = content
-        self.view = view
-        self.like = like
-        self.isDelete = isDelete
+    def setBoardByDbResult(self,dbResult):
+        self.no = dbResult[0]
+        self.uno = dbResult[1]
+        self.cno = dbResult[2]
+        self.date = dbResult[3]
+        self.title = dbResult[4]
+        self.content = dbResult[5]
+        self.isDelete = dbResult[6]
+        self.ip = dbResult[7]
+        self.uEmail = dbResult[8]
+        self.uState = dbResult[9]
+        self.view = dbResult[10]
+        self.like = dbResult[11]
 
     def setNo(self,no):
         self.no = no
@@ -40,24 +47,30 @@ class BoardDTO:
     def setContent(self,content):
         self.content = content
 
+    def setIsDelete(self,isDelete):
+        self.isDelete = isDelete
+
+    def setIp(self,ip):
+        self.ip = ip
+    
+    def setUEmail(self,uEmail):
+        self.uEmail = uEmail
+    
+    def setUState(self,uState):
+        self.uState = uState
+
     def setLike(self,like):
         self.like = like
     
     def setView(self,view):
         self.view = view
-    
-    def setIsDelete(self,isDelete):
-        self.isDelete = isDelete
-    
+        
     def getNo(self):
         return self.no
 
     def getUserNo(self):
         return self.uno
-    
-    def getUserEmail(self):
-        return userDAO.getUserByUserNo(uno=self.uno).getMarkingEmail()
-    
+        
     def getCategoryNo(self):
         return self.cno
     
@@ -70,11 +83,26 @@ class BoardDTO:
     def getContents(self):
         return self.content
     
+    def getIsDelete(self):
+        return self.isDelete
+    
+    def getIp(self):
+        return self.ip
+    
+    def getMarkingIp(self):
+        return userService.markingIp(self.ip)
+            
+    def getUserEmail(self):
+        return self.uEmail
+    
+    def getUserMarkingEmail(self):
+        return userService.markingEmail(self.uEmail, self.uState)
+    
+    def getUserState(self):
+        return self.uState
+
     def getView(self):
         return self.view
     
     def getLike(self):
         return self.like
-
-    def getIsDelete(self):
-        return self.isDelete

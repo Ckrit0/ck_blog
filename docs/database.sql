@@ -28,7 +28,8 @@ CREATE TABLE board(
     b_date DATETIME NOT NULL DEFAULT NOW(),
     b_title VARCHAR(100) NOT NULL,
     b_contents MEDIUMTEXT NOT NULL,
-    b_isdelete INT(1) NOT NULL DEFAULT 0
+    b_isdelete INT(1) NOT NULL DEFAULT 0,
+    b_ip VARCHAR(15) NOT NULL
 );
 
 CREATE TABLE image(
@@ -47,8 +48,7 @@ CREATE TABLE likes(
     b_no INT(10) NOT NULL,
     u_no INT(10) NULL,
     l_ip VARCHAR(15) NOT NULL,
-    l_date DATE NOT NULL DEFAULT NOW(),
-    l_islike  INT(1) NOT NULL DEFAULT 0
+    l_date DATE NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE comment(
@@ -81,20 +81,6 @@ CREATE TABLE sessionlist(
 ------------------------------------------------------------------------------------------------------------
 -------------------------------------------------- SELECT --------------------------------------------------
 ------------------------------------------------------------------------------------------------------------
-
--- 전체 글 제목의 목록 가져오기(최신순, 페이지별)
-SELECT b_title FROM board WHERE b_isdelete=0 ORDER BY b_no DESC LIMIT 5 OFFSET 0;
--- 전체 글 갯수 가져오기
-SELECT count(*) FROM board WHERE b_isdelete=0;
--- 마지막 게시글 가져오기
-SELECT * FROM board WHERE b_isdelete=0 ORDER BY b_no DESC LIMIT 1 OFFSET 0;
--- 게시글 조회수 가져오기
-SELECT count(DISTINCT v_ip) FROM views WHERE b_no=11;
--- 게시글 좋아요수 가져오기
-SELECT count(DISTINCT l_ip) FROM likes WHERE b_no=11;
--- 글번호로 글 가져오기
-SELECT * FROM board WHERE b_no = 11;
-
 ---------------
 -- User DAO  --
 ---------------
@@ -130,10 +116,6 @@ ON b.b_no = v.b_no;
 SELECT u_no FROM blacklist WHERE bl_expire >= NOW() AND u_no != 0
 UNION ALL
 SELECT bl_ip FROM blacklist WHERE bl_expire >= NOW() AND bl_ip != "";
--- 유저번호로 작성한 글 갯수 가져오기
-SELECT count(*) FROM board WHERE u_no = 1 AND b_isdelete = 0;
--- 유저번호로 작성한 최신글 목록 가져오기
-SELECT * FROM board WHERE u_no = 1 AND b_isdelete = 0 ORDER BY b_no DESC LIMIT 5 OFFSET 0;
 
 -------------------
 -- Category DAO  --
@@ -142,6 +124,66 @@ SELECT * FROM board WHERE u_no = 1 AND b_isdelete = 0 ORDER BY b_no DESC LIMIT 5
 SELECT * FROM category WHERE c_upper IS NULL ORDER BY c_no;
 -- 하위 카테고리 가져오기
 SELECT * FROM category WHERE c_upper=1 ORDER BY c_no;
+
+----------------
+-- Board DAO  --
+----------------
+-- 전체 글 제목의 목록 가져오기(최신순, 페이지별)
+SELECT b_title FROM board WHERE b_isdelete=0 ORDER BY b_no DESC LIMIT 5 OFFSET 0;
+-- 전체 글 갯수 가져오기
+SELECT count(*) FROM board WHERE b_isdelete=0;
+-- 카테고리별 글 제목의 목록 가져오기(최신순, 페이지별)
+SELECT b_title FROM board WHERE c_no=1 AND b_isdelete=0 ORDER BY b_no DESC LIMIT 5 OFFSET 0;
+-- 카테고리별 글 갯수 가져오기
+SELECT count(*) FROM board WHERE c_no=1 AND b_isdelete=0;
+-- 카테고리별 글 제목의 목록에서 현재 글이 몇번째인지 가져오기
+SELECT count(*) FROM board WHERE c_no=1 AND b_isdelete=0 AND b_no > 11;
+-- 글번호로 글 가져오기
+SELECT
+	b.*, u.u_email, u.u_state,
+	(SELECT count(DISTINCT u_no) + count(DISTINCT v_ip) FROM views WHERE b_no=b.b_no),
+	(SELECT count(DISTINCT u_no) + count(DISTINCT l_ip) FROM likes WHERE b_no=b.b_no)
+FROM board b
+JOIN user u
+ON b.u_no = u.u_no 
+WHERE b.b_no = 11 AND b.b_isdelete=0;
+-- 마지막 게시글 가져오기
+SELECT
+	b.*, u.u_email, u.u_state,
+	(SELECT count(DISTINCT u_no) + count(DISTINCT v_ip) FROM views WHERE b_no=b.b_no),
+	(SELECT count(DISTINCT u_no) + count(DISTINCT l_ip) FROM likes WHERE b_no=b.b_no)
+FROM board b
+JOIN user u
+ON b.u_no = u.u_no 
+WHERE b.b_isdelete=0
+ORDER BY b_no DESC LIMIT 1;
+-- 유저번호로 작성한 글 갯수 가져오기
+SELECT count(*) FROM board WHERE u_no = 1 AND b_isdelete = 0;
+-- 유저번호로 작성한 최신글 목록 가져오기
+SELECT b.*, u.u_email, u.u_state,
+	(SELECT count(DISTINCT u_no) + count(DISTINCT v_ip) FROM views WHERE b_no=b.b_no),
+	(SELECT count(DISTINCT u_no) + count(DISTINCT l_ip) FROM likes WHERE b_no=b.b_no)
+FROM board b
+JOIN user u
+ON b.u_no = u.u_no 
+WHERE b.u_no = 1 AND b.b_isdelete = 0
+ORDER BY b_no DESC LIMIT 5;
+
+
+
+
+
+-- 검색어가 포함된 글 제목의 목록 가져오기(최신순, 페이지별)
+SELECT b_title FROM board
+WHERE
+    b_isdelete=0 AND
+    (b_title LIKE "%검색어%" OR b_contents LIKE "%검색어%")
+ORDER BY b_no DESC LIMIT 5 OFFSET 0;
+-- 검색어가 포함된 글 갯수 가져오기
+SELECT count(*) FROM board WHERE b_isdelete=0 AND (b_title LIKE "%검색어%" OR b_contents LIKE "%검색어%");
+
+
+
 
 ------------------
 -- Comment DAO  --
@@ -170,15 +212,6 @@ ORDER BY c.co_no DESC LIMIT 5 OFFSET 0;
 ------------------------------------------------------------------------------------------------------------
 -------------------------------------------------- INSERT --------------------------------------------------
 ------------------------------------------------------------------------------------------------------------
-
-
--- 글
-INSERT INTO board(u_no,c_no,b_title,b_contents) VALUES("u_no","c_no","b_title","b_contents");
--- 좋아요
-INSERT INTO likes(b_no,u_no,l_ip,l_islike) VALUES("b_no","u_no","l_ip","l_islike");
--- 세션리스트
-INSERT INTO sessionlist(u_no,s_key,s_ip,s_expire) VALUES("u_no","s_key","s_ip","s_expire") ON DUPLICATE KEY UPDATE s_key = VALUES(s_key), s_ip = VALUES(s_ip), s_expire = VALUES(s_expire);
-
 ---------------
 -- User DAO  --
 ---------------
@@ -188,12 +221,26 @@ INSERT INTO views(b_no,u_no,v_ip) VALUES("b_no","u_no","v_ip");
 INSERT INTO user(u_email,u_pw,u_state) VALUES("email","pw","state");
 -- 블랙리스트
 INSERT INTO blacklist(u_no,bl_ip,bl_expire,bl_cause,bl_reason) VALUES("u_no","bl_ip","bl_expire","bl_cause","bl_reason");
+-- 세션리스트
+INSERT INTO sessionlist(u_no,s_key,s_ip,s_expire) VALUES("u_no","s_key","s_ip","s_expire") ON DUPLICATE KEY UPDATE s_key = VALUES(s_key), s_ip = VALUES(s_ip), s_expire = VALUES(s_expire);
 
 -------------------
 -- Category DAO  --
 -------------------
 -- 카테고리
 INSERT INTO category(c_name,c_upper) VALUES("c_name","c_upper");
+
+----------------
+-- Board DAO  --
+----------------
+
+
+-- 글
+INSERT INTO board(u_no,c_no,b_title,b_contents,b_ip) VALUES("u_no","c_no","b_title","b_contents","b_ip");
+-- 좋아요 (취소불가 노빠꾸임)
+INSERT INTO likes (b_no, u_no, l_ip)
+SELECT "b_no", "u_no", "l_ip" FROM DUAL
+WHERE NOT EXISTS (SELECT 1 FROM likes WHERE b_no = "b_no" AND (u_no = "u_no" OR l_ip = "l_ip"));
 
 -----------------
 -- Comment DAO --
@@ -227,6 +274,16 @@ UPDATE sessionlist SET s_expire = NOW() + INTERVAL 1 HOUR WHERE u_no = "u_no";
 -- 카테고리 수정
 UPDATE category SET c_name="c_name", c_upper=Null, c_order=1 WHERE c_no=0;
 
+----------------
+-- Board DAO  --
+----------------
+-- 글 수정하기
+UPDATE board SET c_no={cno}, b_title="{bTitle}", b_contents="{bContents}" WHERE b_no={board.getNo()}
+-- 글 카테고리 변경
+UPDATE board SET c_no = "c_no" WHERE b_no = "b_no";
+-- 글 삭제
+UPDATE board SET b_isdelete = 1 WHERE b_no = "b_no";
+
 -----------------
 -- Comment DAO --
 -----------------
@@ -239,11 +296,18 @@ UPDATE comment SET co_isdelete = 1 WHERE co_no = "co_no";
 ---------------
 -- User DAO  --
 ---------------
+
 -------------------
 -- Category DAO  --
 -------------------
 -- 카테고리 삭제
 DELETE FROM category WHERE c_no = "c_no";
+
+----------------
+-- Board DAO  --
+----------------
+
+
 -----------------
 -- Comment DAO --
 -----------------
