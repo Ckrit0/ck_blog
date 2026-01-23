@@ -2,18 +2,18 @@
 
 {% block content %}
 <div id="contentsDiv">
-    contentsPage({{contentsNo}})
     <div id="contentsTitleDiv">
-
+        {{targetBoard.getTitle()}}
     </div>
     <div id="contentsDiv">
+        {{targetBoard.getContents()}}
 
     </div>
     <div id="commentDiv">
 
     </div>
     <div id="contentsRecentlyContentsListDiv" class="contentsList">
-
+        {{targetBoard.getCategoryNo()}}
     </div>
 </div>
 <script>

@@ -251,30 +251,45 @@ def leaveHandler():
 #############################
 ######### 글 페이지 #########
 #############################
-
-@app.route("/contents/<contentsNo>")
-def contentsPage(contentsNo):
-    return render_template('contetns.html', contentsNo=contentsNo)
+@app.route("/board/<bno>")
+def contentsPage(bno):
+    # 템플릿 정보
+    clientUser, categoryList, recentlyTitleList = getTemplateData(req=request)
+    targetBoard = boardDAO.getBoardByBoardNo(bno=bno)
+    return render_template('board.html',
+        clientUser=clientUser,
+        categoryList=categoryList,
+        recentlyTitleList=recentlyTitleList,
+        targetBoard=targetBoard
+        )
 
 #############################
 ######### 글 핸들러 #########
 #############################
 
+###############################
+######## 카테고리 페이지 ########
+###############################
+@app.route("/category/<categoryNo>")
+def categoryPage(categoryNo):
+    return render_template('category.html', categoryNo=categoryNo)
+
+###############################
+######## 카테고리 핸들러 ########
+###############################
+
 #############################
 ######## 검색 페이지 ########
 #############################
+@app.route("/search/<keyword>")
+def searchPage(keyword):
+    return render_template('search.html', keyword=keyword)
 
 #############################
 ######## 검색 핸들러 ########
 #############################
 
-@app.route("/category/<categoryNo>")
-def categoryPage(categoryNo):
-    return render_template('category.html', categoryNo=categoryNo)
 
-@app.route("/search/<keyword>")
-def searchPage(keyword):
-    return render_template('search.html', keyword=keyword)
 
 
 #############################
