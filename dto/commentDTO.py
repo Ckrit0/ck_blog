@@ -1,4 +1,4 @@
-from dao import userDAO, boardDAO
+from service import userService, boardService
 
 class CommentDTO:
     def __init__(self):
@@ -63,9 +63,7 @@ class CommentDTO:
         return self.ip
     
     def getMarkingIp(self):
-        ipList = self.ip.split('.')
-        markingIp = ipList[0] + '.' + ipList[1] + '.' + '*' + '.' + '*'
-        return markingIp
+        return userService.markingIp(self.ip)
     
     def getComment(self):
         if self.isDelete == 1:
@@ -85,15 +83,10 @@ class CommentDTO:
         return self.userEmail
     
     def getMarkingEmail(self):
-        emailParts = self.userEmail.split('@')
-        markingEmail = emailParts[0][0:3] + '*' * (len(emailParts[0]) -3) + '@' + emailParts[1]
-        return markingEmail
+        return userService.markingEmail(self.userEmail)
     
     def getBoardTitle(self):
         return self.boardTitle
 
     def getShortBoardTitle(self):
-        boardTitle = self.boardTitle
-        if len(boardTitle) > 15:
-            boardTitle = boardTitle[0:15] + '...'
-        return boardTitle
+        return boardService.shortTitle(self.boardTitle)

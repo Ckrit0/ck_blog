@@ -1,4 +1,4 @@
-from service import userService
+from service import userService, boardService
 
 class BoardDTO:
     def __init__(self):
@@ -79,6 +79,9 @@ class BoardDTO:
     
     def getTitle(self):
         return self.title
+    
+    def getShortTitle(self):
+        return boardService.shortTitle(self.title)
     
     def getContents(self):
         return self.content
