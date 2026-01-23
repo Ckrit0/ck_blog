@@ -88,5 +88,5 @@ class CommentDTO:
     def getBoardTitle(self):
         return self.boardTitle
 
-    def getShortBoardTitle(self):
+    def getBoardShortTitle(self):
         return boardService.shortTitle(self.boardTitle)

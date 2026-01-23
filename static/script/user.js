@@ -1,6 +1,7 @@
 
-
-
+/**
+ * 유저 모달 초기화
+ */
 function userModalInit(){
     /* changePwModal */
     let changePwOpenBtn = document.getElementById('changePwOpenBtn')
@@ -11,7 +12,10 @@ function userModalInit(){
     let userChangePwInfo = document.getElementById('userChangePwInfo')
     let changePwSubmitBtn = document.getElementById('changePwSubmitBtn')
     let changePwCancelBtn = document.getElementById('changePwCancelBtn')
-
+    
+    /**
+     * changePwModal 초기화
+     */
     function resetPwModal(){
         userNowPwInput.value = ''
         userNewPwInput.value = ''
@@ -20,44 +24,52 @@ function userModalInit(){
         changePwModal.style['display'] = 'none'
     }
 
+    /**
+     * changePwModal 열기
+     */
     changePwOpenBtn.addEventListener('click',()=>{
         changePwModal.style['display'] = 'inline-grid'
         resetVerifyModal()
         resetLeaveModal()
     })
 
+    /**
+     * 엔터키로 다음 input으로 이동
+     */
     userNowPwInput.addEventListener('keydown',(e)=>{
         if(e.key=="Enter"){
             userNewPwInput.focus()
         }
     })
 
+    /**
+     * 엔터키로 다음 input으로 이동
+     */
     userNewPwInput.addEventListener('keydown',(e)=>{
         if(e.key=="Enter"){
             userNewConfirmInput.focus()
         }
     })
 
-
+    /**
+     * 엔터키로 변경하기 버튼 클릭
+     */
     userNewConfirmInput.addEventListener('keydown',(e)=>{
         if(e.key=="Enter"){
             changePwSubmitBtn.click()
         }
     })
 
+    /**
+     * 비밀번호 변경 요청
+     */
     changePwSubmitBtn.addEventListener('click',()=>{
         changePwSubmitBtn.innerHTML = '<span class="spiner">🌀</span>'
         let userNowPw = userNowPwInput.value
         let userNewPw = userNewPwInput.value
         let userNewConfirm = userNewConfirmInput.value
 
-        if(userNowPw == ''){
-            changePwSubmitBtn.innerHTML = '변경하기'
-            return
-        }else if(userNewPw == ''){
-            changePwSubmitBtn.innerHTML = '변경하기'
-            return
-        }else if(userNewConfirm == ''){
+        if(userNowPw == '' || userNewPw == '' || userNewConfirm == ''){
             changePwSubmitBtn.innerHTML = '변경하기'
             return
         }else if(userNewPw != userNewConfirm){
@@ -83,25 +95,18 @@ function userModalInit(){
         })
         .then((response) => response.json())
         .then((result) => {
-            if(result == 8){
-                alert('비밀번호가 변경되었습니다.')
+            alert(result[1])
+            if(result[0] == 8){
                 resetPwModal()
-            }else if(result == 2){
-                alert('비밀번호 형식이 잘못되었습니다.')
-            }else if(result == 3){
-                alert('비밀번호와 확인이 서로 다릅니다.')
-            }else if(result == 7){
-                alert('사용중인 비밀번호가 틀렸습니다.')
-            }else if(result == 9){
-                alert('사용중인 비밀번호와 같습니다.')
-            }else if(result == 998){
-                alert('알 수 없는 이유로 변경에 실패하였습니다.')
             }
             changePwSubmitBtn.innerHTML = '변경하기'
             return
         });
     })
 
+    /**
+     * 비밀번호 변경 모달 닫기
+     */
     changePwCancelBtn.addEventListener('click',()=>{
         resetPwModal()
     })
@@ -114,6 +119,9 @@ function userModalInit(){
     let userVerifyMailBtn = document.getElementById('userVerifyMailBtn')
     let userVerifyCancelBtn = document.getElementById('userVerifyCancelBtn')
 
+    /**
+     * userVerifyModal 초기화
+     */
     function resetVerifyModal(){
         if(userVerifyConfirmBtn !== null){
             turnDisabled(userVerifyConfirmBtn)
@@ -122,6 +130,9 @@ function userModalInit(){
         }
     }
 
+    /**
+     * userVerifyModal 열기
+     */
     if(userVerifyOpenBtn !== null){
         userVerifyOpenBtn.addEventListener('click',()=>{
             userVerifyModal.style['display'] = 'inline-grid'
@@ -130,6 +141,9 @@ function userModalInit(){
         })
     }
 
+    /**
+     * 엔터키로 인증코드 확인
+     */
     if(userVerifyInput !== null){
         userVerifyInput.addEventListener('keydown',(e)=>{
             if(e.key == 'Enter'){
@@ -138,10 +152,13 @@ function userModalInit(){
         })
     }
 
+    /**
+     * 인증코드 확인 요청
+     */
     if(userVerifyConfirmBtn !== null){
         userVerifyConfirmBtn.addEventListener('click',()=>{
             userVerifyConfirmBtn.innerHTML = '<span class="spiner">🌀</span>'
-            let userEmail = document.getElementById('userEmail').innerText.split('(')[0]
+            let userEmail = document.getElementById('userEmail').innerText
             let userVerify = userVerifyInput.value
             console.log(userEmail)
             console.log(userVerify)
@@ -157,33 +174,26 @@ function userModalInit(){
                 })
                 .then((response) => response.json())
                 .then((result) => {
-                    if(result == 0){
-                        alert('메일 인증에 성공하였습니다.')
+                    alert(result[1])
+                    if(result[0] == 11){
                         resetVerifyModal()
-                    }else if(result == 1){
+                    }else if(result[0] == 13){
+                        userVerifyInput.value = ''
+                    }else{
                         userVerifyInput.value = ''
                         turnDisabled(userVerifyConfirmBtn)
-                        alert('발급된 코드가 없습니다. 메일 재발송 부탁드립니다.')
-                    }else if(result == 2){
-                        userVerifyInput.value = ''
-                        alert('코드가 일치하지 않습니다. 대소문자를 구분하니 주의 부탁드립니다.')
-                    }else if(result == 3){
-                        userVerifyInput.value = ''
-                        turnDisabled(userVerifyConfirmBtn)
-                        alert('시간이 만료되었습니다. 메일 재발송 부탁드립니다.')
-                    }else if(result == 99){
-                        userVerifyInput.value = ''
-                        turnDisabled(userVerifyConfirmBtn)
-                        alert('알 수 없는 사유로 실패하였습니다.')
                     }
                 });
         })
     }
 
+    /**
+     * 인증 메일 발송 요청
+     */
     if(userVerifyMailBtn !== null){
         userVerifyMailBtn.addEventListener('click',()=>{
             userVerifyMailBtn.innerHTML = '<span class="spiner">🌀</span>'
-            let userEmail = document.getElementById('userEmail').innerText.split('(')[0]
+            let userEmail = document.getElementById('userEmail').innerText
             fetch("/sendMail", {
                 method: "POST",
                 headers: {
@@ -195,19 +205,19 @@ function userModalInit(){
             })
             .then((response) => response.json())
             .then((result) => {
-                if(result == 4){
+                alert(result[1])
+                if(result[0] == 15){
                     turnActive(userVerifyConfirmBtn)
                     userVerifyInput.focus()
-                    userVerifyMailBtn.innerHTML = '메일발송'
-                    alert('메일이 발송되었습니다. 인증코드는 10분이 지나면 사용이 불가능합니다.')
-                }else{
-                    userVerifyMailBtn.innerHTML = '메일발송'
-                    alert('메일 발송에 실패하였습니다.')
                 }
+                userVerifyMailBtn.innerHTML = '메일발송'
             });
         })
     }
 
+    /**
+     * userVerifyModal 닫기
+     */
     if(userVerifyCancelBtn !== null){
         userVerifyCancelBtn.addEventListener('click',()=>{
             resetVerifyModal()
@@ -221,19 +231,28 @@ function userModalInit(){
     let userLeaveSubmitBtn = document.getElementById('userLeaveSubmitBtn')
     let userLeaveCancelBtn = document.getElementById('userLeaveCancelBtn')
 
+    /**
+     * userLeaveModal 초기화
+     */
     function resetLeaveModal(){
         userLeavePw.value = ''
         userLeaveModal.style['display'] = 'none'
     }
 
+    /**
+     * userLeaveModal 열기
+     */
     userLeaveOpenBtn.addEventListener('click',()=>{
         userLeaveModal.style['display'] = 'inline-block'
         resetPwModal()
         resetVerifyModal()
     })
     
+    /**
+     * 회원탈퇴 요청
+     */
     userLeaveSubmitBtn.addEventListener('click',()=>{
-        let userEmail = document.getElementById('userEmail').innerText.split('(')[0]
+        let userEmail = document.getElementById('userEmail').innerText
         fetch("/leave", {
             method: "POST",
             headers: {
@@ -246,23 +265,25 @@ function userModalInit(){
             })
             .then((response) => response.json())
             .then((result) => {
-                if(result == 10){
+                alert(result[1])
+                if(result[0] == 10){
                     window.location.href='/'
-                    alert('회원 탈퇴에 성공하였습니다.')
-                }else if(result == 7){
-                    alert('비밀번호가 틀렸습니다.')
-                }else{
-                    alert('회원 탈퇴에 실패하였습니다.')
                 }
                 return
             });
     })
 
+    /**
+     * userLeaveModal 닫기
+     */
     userLeaveCancelBtn.addEventListener('click',()=>{
         resetLeaveModal()
     })
 }
 
+/**
+ * 본인 화면이면 유저 모달 초기화
+ */
 if(document.getElementById('changePwOpenBtn') !== null){
     userModalInit()
 }

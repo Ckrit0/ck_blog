@@ -30,8 +30,6 @@ def encryptPw(pw):
         encPw = tempPw
     return encPw
 
-
-
 def sendMail(email):
     '''
     인증코드 메일 발송

@@ -7,13 +7,15 @@
     <div id="userInfo">
         <div class="userInfoTitle">이메일 :</div>
         <div class="userInfoContents">
-            <span id="userEmail">{{targetUser.getEmail()}}</span>
             {% if clientUser.getNo() == targetUser.getNo() %}
+            <span id="userEmail">{{targetUser.getEmail()}}</span>
             {% if clientUser.getState() == 1 %}
             <button id="userVerifyOpenBtn">인증받기</button>
             {% endif %}
             <button id="changePwOpenBtn">비번변경</button>
             <button id="userLeaveOpenBtn">회원탈퇴</button>
+            {% else %}
+            <span id="userEmail">{{targetUser.getMarkingEmail()}}</span>
             {% endif %}
         </div>
         <div class="userInfoTitle">가입 날짜 :</div>
@@ -47,7 +49,7 @@
             <ul>
                 {% for comment in targetUserCommentList %}
                 <li  onclick="window.location.href='/board/{{comment.getBoardNo()}}'">
-                    <span class="pointer bolder">{{comment.getBoardTitle()}}</span><br>
+                    <span class="pointer bolder">{{comment.getBoardShortTitle()}}</span><br>
                     <span class="pointer indentation"> ㄴ{{comment.getComment()}}</span>
                 </li>
                 {% endfor %}

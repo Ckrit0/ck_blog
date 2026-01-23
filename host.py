@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify, abort, make_response, flash
 from dao import userDAO, categoryDAO, boardDAO, commentDAO
-from service import store, validate, userService
+from service import store, validate, userService, boardService
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = store.secret_key
@@ -50,7 +50,7 @@ def main():
     pageList = boardDAO.getPageList_all()
     recentlyboard = boardDAO.getRecentlyBoard()
     commentList = commentDAO.getCommentListByBoardNo(recentlyboard.getNo())
-    commentPageList = commentDAO.getCommentPageListByBoardNo(recentlyboard.getNo())
+    isLiked = boardService.checkIsLiked(user=clientUser, board=recentlyboard)
     
     # 뷰 설정하기
     userDAO.setView(user=clientUser, bno=recentlyboard.getNo())
@@ -63,7 +63,7 @@ def main():
         pageList=pageList,
         recentlyboard=recentlyboard,
         commentList=commentList,
-        commentPageList=commentPageList
+        isLiked=isLiked
     )
 
 #############################
@@ -170,8 +170,6 @@ def logoutHandler():
     flash(store.USER_MESSAGE['로그아웃'])
     return resp
 
-
-
 @app.route("/join", methods=["POST"])
 def joinHandler():
     # 클라이언트 정보 가져오기
@@ -204,7 +202,7 @@ def checkMailHandler():
 def sendMailHandler():
     email = request.json["joinEmail"]
     result = userService.sendMail(email=email)
-    return jsonify(result)
+    return jsonify([result, store.USER_MESSAGE[result]])
 
 @app.route("/matchVerify", methods=["POST"])
 def matchVerifyHandler():
@@ -224,7 +222,7 @@ def changePwHandler():
     userNewConfirm = request.json["userNewConfirm"]
 
     result = userDAO.updateUserPassword(user=clientUser, nowPw=userNowPw, newPw=userNewPw, newConfirm=userNewConfirm)
-    return jsonify(result)
+    return jsonify([result, store.USER_MESSAGE[result]])
 
 @app.route("/getVerify", methods=["POST"])
 def getVerifyHandler():
@@ -236,7 +234,7 @@ def getVerifyHandler():
         dbResult = userDAO.updateUserState(uno=userNo,u_state=store.USER_STATE_CODE['인증'])
         if dbResult == 0:
             return jsonify(store.USER_RESULT_CODE['실패-unknown'])
-    return jsonify(result)
+    return jsonify([result, store.USER_MESSAGE[result]])
 
 @app.route("/leave", methods=["POST"])
 def leaveHandler():
@@ -244,7 +242,7 @@ def leaveHandler():
     pw = request.json["userPw"]
     userNo = userDAO.getUserByEmailAddress(email=email)[0][0]
     result = userDAO.leaveUser(uno=userNo, pw=pw)
-    resp = jsonify(result)
+    resp = jsonify([result, store.USER_MESSAGE[result]])
     if result == store.USER_RESULT_CODE['회원 탈퇴 성공']:
         # 쿠키 삭제
         resp.delete_cookie('sessionKey')

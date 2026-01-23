@@ -12,6 +12,9 @@ let joinCommitBtn = document.getElementById('joinCommit')
 
 let joinBtnSpiner = '<span class="spiner">🌀</span>'
 
+/**
+ * 이메일 정규식 검사
+ */
 function checkEmailRegex(){
     let pattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
     let email = joinEmailInput.value
@@ -22,6 +25,10 @@ function checkEmailRegex(){
     }
 }
 
+/**
+ * 비밀번호 정규식 검사
+ * @returns 성공이면 true, 실패이면 false (boolean)
+ */
 function checkPwRegex(){
     let pattern = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,16}$/
     let pw = joinPwInput.value
@@ -37,6 +44,10 @@ function checkPwRegex(){
     }
 }
 
+/**
+ * 비밀번호 확인 검사
+ * @returns 성공이면 true, 실패이면 false (boolean)
+ */
 function checkConfirm(){
     let pw = joinPwInput.value
     let confirm = joinConfirmInput.value
@@ -49,6 +60,10 @@ function checkConfirm(){
     }
 }
 
+/**
+ * 이메일 확인 검사
+ * @returns 성공이면 true, 실패이면 false (boolean)
+ */
 function checkUseEmail(){
     if(joinEmailBtn.innerHTML == '✅'){
         return true
@@ -57,6 +72,10 @@ function checkUseEmail(){
     }
 }
 
+/**
+ * 인증 코드 확인 검사
+ * @returns 성공이면 true, 실패이면 false (boolean)
+ */
 function checkVerify(){
     if(joinInfoDiv.innerHTML == '강제 가입의 경우 verify(메일 인증)을 완료해야 가입이 가능합니다.'){
         if(joinVerifyCheckBtn.innerHTML == '✅'){
@@ -69,16 +88,25 @@ function checkVerify(){
     }
 }
 
+/**
+ * 이메일 입력 검사
+ */
 joinEmailInput.addEventListener('input',()=>{
     checkEmailRegex()
 })
 
+/**
+ * 엔터키로 이메일 확인 버튼 클릭
+ */
 joinEmailInput.addEventListener('keydown',(e)=>{
     if(e.key=="Enter"){
         joinEmailBtn.click()
     }
 })
 
+/**
+ * 이메일 중복 확인 요청
+ */
 joinEmailBtn.addEventListener('click',()=>{
     joinEmailBtn.innerHTML = joinBtnSpiner
     fetch("/checkMail", {
@@ -116,32 +144,50 @@ joinEmailBtn.addEventListener('click',()=>{
         });
 })
 
+/**
+ * 비밀번호 정규식 검사
+ */
 joinPwInput.addEventListener('input',()=>{
     checkPwRegex()
 })
 
+/**
+ * 엔터키로 다음 input으로 이동
+ */
 joinPwInput.addEventListener('keydown',(e)=>{
     if(e.key=="Enter"){
         joinConfirmInput.focus()
     }
 })
 
+/**
+ * 비밀번호 확인 검사
+ */
 joinConfirmInput.addEventListener('input',()=>{
     checkConfirm()
 })
 
+/**
+ * 엔터키로 가입하기 버튼 클릭
+ */
 joinConfirmInput.addEventListener('keydown',(e)=>{
     if(e.key=="Enter"){
         joinCommitBtn.click()
     }
 })
 
+/**
+ * 엔터키로 인증 코드 확인 버튼 클릭
+ */
 joinVerifyInput.addEventListener('keydown',(e)=>{
     if(e.key=="Enter"){
         joinVerifyCheckBtn.click()
     }
 })
 
+/**
+ * 인증 코드 메일 발송 요청
+ */
 joinVerifySendBtn.addEventListener('click',()=>{
     joinVerifySendBtn.innerHTML = joinBtnSpiner
     fetch("/sendMail", {
@@ -155,20 +201,20 @@ joinVerifySendBtn.addEventListener('click',()=>{
         })
         .then((response) => response.json())
         .then((result) => {
-            if(result == 4){
-                joinVerifySendBtn.innerHTML = 'sent'
+            alert(result[1])
+            if(result[0] == 15){
                 turnActive(joinVerifyInput)
                 turnActive(joinVerifyCheckBtn)
                 turnDisabled(joinVerifySendBtn)
                 joinVerifyInput.focus()
-                alert('메일이 발송되었습니다. 인증코드는 10분이 지나면 사용이 불가능합니다.')
-            }else{
-                joinVerifySendBtn.innerHTML = 'send'
-                alert('메일 발송에 실패하였습니다.')
             }
+            joinVerifySendBtn.innerHTML = 'send'
         });
 })
 
+/**
+ * 인증 코드 확인 요청
+ */
 joinVerifyCheckBtn.addEventListener('click',()=>{
     joinVerifyCheckBtn.innerHTML = joinBtnSpiner
     fetch("/matchVerify", {
@@ -188,24 +234,22 @@ joinVerifyCheckBtn.addEventListener('click',()=>{
                     joinVerifySendBtn.innerHTML = 'send'
                     turnActive(joinVerifySendBtn)
                 }
-                if(result == 0){
+                alert(result[1])
+                if(result[0] == 11){
                     joinVerifyCheckBtn.innerHTML = '<span id="joinVerifyCheckBtn" class="joinWarning joinChecked">✅</span>'
                     turnDisabled(joinVerifyInput)
-                }else if(result == 1){
+                }else if(result[0] == 13){
                     verifyReset()
-                    turnDisabled(joinVerifyCheckBtn)
-                    alert('발급된 코드가 없습니다. 메일 재발송 부탁드립니다.')
-                }else if(result == 2){
-                    verifyReset()
-                    alert('코드가 일치하지 않습니다. 대소문자를 구분하니 주의 부탁드립니다.')
-                }else if(result == 3){
-                    verifyReset()
-                    turnDisabled(joinVerifyCheckBtn)
-                    alert('시간이 만료되었습니다. 메일 재발송 부탁드립니다.')
+                }else{
+                    turnDisabled(joinVerifyCheckBtn)                 
+                    verifyReset()                 
                 }
             });
 })
 
+/**
+ * 가입하기 버튼 클릭
+ */
 joinCommitBtn.addEventListener('click',()=>{
     joinCommitBtn.innerHTML = joinBtnSpiner
     turnActive(joinEmailInput)
@@ -213,4 +257,7 @@ joinCommitBtn.addEventListener('click',()=>{
     document.getElementById('joinForm').submit()
 })
 
+/**
+ * 초기 포커스 이메일 input
+ */
 joinEmailInput.focus()

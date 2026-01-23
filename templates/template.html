@@ -47,7 +47,7 @@
                 오늘도 행복한 하루 되시길 바랍니다.
             </div>
             <div id="userInfoDiv">
-                {{clientUser.getEmail()}}({{clientUser.getMarkingIp()}})
+                {{clientUser.getEmail()}}({{clientUser.getIp()}})
             </div>
             <div id="searchDiv">
                 <input id="searchInput" />
@@ -57,10 +57,10 @@
                 <span class="subTitle">category</span>
                 <ul>
                     {% for category in categoryList %}
-                    <li class="mainCategory">{{category[0].getName()}}</li>
+                    <li id="category1_{{category[0].getNo()}}" class="mainCategory">{{category[0].getName()}}</li>
                     <ul>
                         {% for childCategory in category[1] %}
-                        <li class="subCategory">-{{childCategory.getName()}}</li>
+                        <li id="category2_{{childCategory.getNo()}}" class="subCategory">-{{childCategory.getName()}}</li>
                         {% endfor %}
                     </ul>
                     {% endfor %}
@@ -70,7 +70,7 @@
                 <span class="subTitle">lastest</span>
                 <ul>
                     {% for recentlyTitle in recentlyTitleList %}
-                    <li class="recentlyLi">{{recentlyTitle[0]}}, {{recentlyTitle[1]}}</li>
+                    <li id="recentTitleUser_{{recentlyTitle[0]}}" class="recentlyLi">{{recentlyTitle[1]}}</li>
                     {% endfor %}
                 </ul>
             </div>
