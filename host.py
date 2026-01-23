@@ -1,20 +1,19 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify, abort, make_response, flash
 from dao import userDAO, categoryDAO, boardDAO, commentDAO
-from service import store, validate
+from service import store, validate, userService
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = store.secret_key
 
+################################
+##### 메인 페이지, Service #####
+################################
 def getTemplateData(req):
     # 클라이언트 정보 가져오기
     clientUser = userDAO.getUserBySessionKey(cookieKey=req.cookies.get('sessionKey'),ip=req.remote_addr)
     categoryList = categoryDAO.getCategoryList()
     recentlyTitleList = boardDAO.getRecentlyTitleList_user(clientUser)
     return clientUser, categoryList, recentlyTitleList
-
-##########################
-##### validate와 메인 #####
-##########################
 
 @app.before_request
 def validateCheck():
@@ -40,7 +39,6 @@ def validateCheck():
             # 메시지 생성
             flash(store.USER_MESSAGE['세션만료'])
             return resp
-    
 
 @app.route("/")
 def main():
@@ -68,9 +66,71 @@ def main():
         commentPageList=commentPageList
     )
 
-##########################
-######## 유저 관련 ########
-##########################
+#############################
+######## 유저 페이지 ########
+#############################
+
+@app.route("/join")
+def joinPage():
+    # 템플릿 정보 가져오기
+    clientUser, categoryList, recentlyTitleList = getTemplateData(req=request)
+    
+    # 이미 로그인 되어있는 경우
+    if clientUser.getNo() != 0:
+        resp = make_response(redirect(url_for('main')))
+        flash(store.USER_MESSAGE['기로그인'])
+        return resp
+    
+    # 뷰 설정
+    userDAO.setView(clientUser)
+
+    return render_template('join.html',
+        clientUser = clientUser,
+        categoryList = categoryList,
+        recentlyTitleList = recentlyTitleList
+    )
+
+@app.route("/user/<userNo>")
+def userPage(userNo):
+    # 템플릿 정보
+    clientUser, categoryList, recentlyTitleList = getTemplateData(req=request)
+    # 유저정보
+    targetUser = userDAO.getUserByUserNo(uno=userNo)
+    if targetUser.getState() == 0:
+        resp = make_response(redirect(request.referrer or url_for('main')))
+        flash("유저를 찾을 수 없습니다.")
+        return resp
+    # 마지막 세션시간
+    targetUserLastSessionTime = userDAO.getSessionTimeByUserNo(uno=targetUser.getNo()).strftime("%Y-%m-%d")
+    # 작성한 글 갯수
+    targetUserBoardCount = boardDAO.getBoardCountByUserNo(uno=targetUser.getNo())
+    # 작성한 댓글 갯수
+    targetUserCommentCount = commentDAO.getCommentCountByUserNo(uno=targetUser.getNo())
+    # 작성한 최근글 목록
+    targetUserBoardList = boardDAO.getRecentlyBoardList(uno=targetUser.getNo())
+    # 작성한 최근댓글 목록
+    targetUserCommentList = commentDAO.getRecentlyCommentList(uno=targetUser.getNo())
+
+    return render_template('user.html',
+        clientUser=clientUser,
+        categoryList=categoryList,
+        recentlyTitleList=recentlyTitleList,
+        targetUser=targetUser,
+        targetUserLastSessionTime=targetUserLastSessionTime,
+        targetUserBoardCount=targetUserBoardCount,
+        targetUserCommentCount=targetUserCommentCount,
+        targetUserBoardList=targetUserBoardList,
+        targetUserCommentList=targetUserCommentList
+    )
+
+
+@app.route("/find")
+def findPage():
+    return render_template('find.html')
+
+#############################
+######## 유저 핸들러 ########
+#############################
 
 @app.route("/login", methods=["POST"])
 def loginHandler():
@@ -106,25 +166,7 @@ def logoutHandler():
     flash(store.USER_MESSAGE['로그아웃'])
     return resp
 
-@app.route("/join")
-def joinPage():
-    # 템플릿 정보 가져오기
-    clientUser, categoryList, recentlyTitleList = getTemplateData(req=request)
-    
-    # 이미 로그인 되어있는 경우
-    if clientUser.getNo() != 0:
-        resp = make_response(redirect(url_for('main')))
-        flash(store.USER_MESSAGE['기로그인'])
-        return resp
-    
-    # 뷰 설정
-    userDAO.setView(clientUser)
 
-    return render_template('join.html',
-        clientUser = clientUser,
-        categoryList = categoryList,
-        recentlyTitleList = recentlyTitleList
-    )
 
 @app.route("/join", methods=["POST"])
 def joinHandler():
@@ -145,7 +187,7 @@ def joinHandler():
     verify = request.form["joinVerify"]
 
     result = userDAO.setUser(email=email, pw=pw, confirm=confirm, verify=verify)
-    flash(store.getJoinResult(result))
+    flash(store.getUserResult(result))
     return resp
 
 @app.route("/checkMail", methods=["POST"])
@@ -157,48 +199,15 @@ def checkMailHandler():
 @app.route("/sendMail", methods=["POST"])
 def sendMailHandler():
     email = request.json["joinEmail"]
-    result = userDAO.sendMail(email=email)
+    result = userService.sendMail(email=email)
     return jsonify(result)
 
 @app.route("/matchVerify", methods=["POST"])
 def matchVerifyHandler():
     email = request.json["joinEmail"]
     verify = request.json["joinVerify"]
-    result = userDAO.matchVerify(email=email, code=verify)
+    result = userService.matchVerify(email=email, code=verify)
     return jsonify(result)
-
-@app.route("/user/<userNo>")
-def userPage(userNo):
-    # 템플릿 정보
-    clientUser, categoryList, recentlyTitleList = getTemplateData(req=request)
-    # 유저정보
-    targetUser = userDAO.getUserByUserNo(uno=userNo)
-    if targetUser.getState() == 0:
-        resp = make_response(redirect(request.referrer or url_for('main')))
-        flash("유저를 찾을 수 없습니다.")
-        return resp
-    # 마지막 세션시간
-    targetUserLastSessionTime = userDAO.getSessionTimeByUserNo(uno=targetUser.getNo()).strftime("%Y-%m-%d")
-    # 작성한 글 갯수
-    targetUserBoardCount = boardDAO.getBoardCountByUserNo(uno=targetUser.getNo())
-    # 작성한 댓글 갯수
-    targetUserCommentCount = commentDAO.getCommentCountByUserNo(uno=targetUser.getNo())
-    # 작성한 최근글 목록
-    targetUserBoardList = boardDAO.getRecentlyBoardList(uno=targetUser.getNo())
-    # 작성한 최근댓글 목록
-    targetUserCommentList = commentDAO.getRecentlyCommentList(uno=targetUser.getNo())
-
-    return render_template('user.html',
-        clientUser=clientUser,
-        categoryList=categoryList,
-        recentlyTitleList=recentlyTitleList,
-        targetUser=targetUser,
-        targetUserLastSessionTime=targetUserLastSessionTime,
-        targetUserBoardCount=targetUserBoardCount,
-        targetUserCommentCount=targetUserCommentCount,
-        targetUserBoardList=targetUserBoardList,
-        targetUserCommentList=targetUserCommentList
-    )
     
 @app.route("/changePw", methods=["POST"])
 def changePwHandler():
@@ -217,7 +226,7 @@ def changePwHandler():
 def getVerifyHandler():
     email = request.json["userEmail"]
     verify = request.json["userVerify"]
-    result = userDAO.matchVerify(email=email, code=verify)
+    result = userService.matchVerify(email=email, code=verify)
     userNo = userDAO.getUserByEmailAddress(email=email)[0][0]
     if result == 0:
         dbResult = userDAO.updateUserState(uno=userNo,u_state=store.USER_STATE_CODE['인증'])
@@ -237,21 +246,25 @@ def leaveHandler():
         resp.delete_cookie('sessionKey')
     return resp
 
-@app.route("/find")
-def findPage():
-    return render_template('find.html')
-
-##########################
-######### 글 관련 #########
-##########################
+#############################
+######### 글 페이지 #########
+#############################
 
 @app.route("/contents/<contentsNo>")
 def contentsPage(contentsNo):
     return render_template('contetns.html', contentsNo=contentsNo)
 
-##########################
-######## 검색 관련 ########
-##########################
+#############################
+######### 글 핸들러 #########
+#############################
+
+#############################
+######## 검색 페이지 ########
+#############################
+
+#############################
+######## 검색 핸들러 ########
+#############################
 
 @app.route("/category/<categoryNo>")
 def categoryPage(categoryNo):
@@ -260,6 +273,11 @@ def categoryPage(categoryNo):
 @app.route("/search/<keyword>")
 def searchPage(keyword):
     return render_template('search.html', keyword=keyword)
+
+
+#############################
+######### Flask App #########
+#############################
 
 if __name__ == '__main__':
     app.run(

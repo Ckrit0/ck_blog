@@ -81,10 +81,7 @@ CREATE TABLE sessionlist(
 ------------------------------------------------------------------------------------------------------------
 -------------------------------------------------- SELECT --------------------------------------------------
 ------------------------------------------------------------------------------------------------------------
--- 상위 카테고리 가져오기
-SELECT * FROM category WHERE c_upper IS NULL ORDER BY c_no;
--- 하위 카테고리 가져오기
-SELECT * FROM category WHERE c_upper=1 ORDER BY c_no;
+
 -- 전체 글 제목의 목록 가져오기(최신순, 페이지별)
 SELECT b_title FROM board WHERE b_isdelete=0 ORDER BY b_no DESC LIMIT 5 OFFSET 0;
 -- 전체 글 갯수 가져오기
@@ -95,19 +92,8 @@ SELECT * FROM board WHERE b_isdelete=0 ORDER BY b_no DESC LIMIT 1 OFFSET 0;
 SELECT count(DISTINCT v_ip) FROM views WHERE b_no=11;
 -- 게시글 좋아요수 가져오기
 SELECT count(DISTINCT l_ip) FROM likes WHERE b_no=11;
-
-
--- 유저번호로 작성한 글 갯수 가져오기
-SELECT count(*) FROM board WHERE u_no = 1 AND b_isdelete = 0;
-
--- 유저번호로 작성한 최신글 목록 가져오기
-SELECT * FROM board WHERE u_no = 1 AND b_isdelete = 0 ORDER BY b_no DESC LIMIT 5 OFFSET 0;
-
 -- 글번호로 글 가져오기
 SELECT * FROM board WHERE b_no = 11;
-
-
-
 
 ---------------
 -- User DAO  --
@@ -144,7 +130,18 @@ ON b.b_no = v.b_no;
 SELECT u_no FROM blacklist WHERE bl_expire >= NOW() AND u_no != 0
 UNION ALL
 SELECT bl_ip FROM blacklist WHERE bl_expire >= NOW() AND bl_ip != "";
+-- 유저번호로 작성한 글 갯수 가져오기
+SELECT count(*) FROM board WHERE u_no = 1 AND b_isdelete = 0;
+-- 유저번호로 작성한 최신글 목록 가져오기
+SELECT * FROM board WHERE u_no = 1 AND b_isdelete = 0 ORDER BY b_no DESC LIMIT 5 OFFSET 0;
 
+-------------------
+-- Category DAO  --
+-------------------
+-- 상위 카테고리 가져오기
+SELECT * FROM category WHERE c_upper IS NULL ORDER BY c_no;
+-- 하위 카테고리 가져오기
+SELECT * FROM category WHERE c_upper=1 ORDER BY c_no;
 
 ------------------
 -- Comment DAO  --
@@ -174,8 +171,7 @@ ORDER BY c.co_no DESC LIMIT 5 OFFSET 0;
 -------------------------------------------------- INSERT --------------------------------------------------
 ------------------------------------------------------------------------------------------------------------
 
--- 카테고리
-INSERT INTO category(c_name,c_upper) VALUES("c_name","c_upper");
+
 -- 글
 INSERT INTO board(u_no,c_no,b_title,b_contents) VALUES("u_no","c_no","b_title","b_contents");
 -- 좋아요
@@ -193,6 +189,12 @@ INSERT INTO user(u_email,u_pw,u_state) VALUES("email","pw","state");
 -- 블랙리스트
 INSERT INTO blacklist(u_no,bl_ip,bl_expire,bl_cause,bl_reason) VALUES("u_no","bl_ip","bl_expire","bl_cause","bl_reason");
 
+-------------------
+-- Category DAO  --
+-------------------
+-- 카테고리
+INSERT INTO category(c_name,c_upper) VALUES("c_name","c_upper");
+
 -----------------
 -- Comment DAO --
 -----------------
@@ -203,8 +205,6 @@ INSERT INTO comment(b_no,u_no,co_ip,co_comment,co_upper) VALUES("b_no","u_no","c
 ------------------------------------------------------------------------------------------------------------
 -------------------------------------------------- UPDATE --------------------------------------------------
 ------------------------------------------------------------------------------------------------------------
-
-
 ---------------
 -- User DAO  --
 ---------------
@@ -221,6 +221,12 @@ UPDATE user SET u_state = 3 WHERE u_no = "u_no";
 -- 세션 시간 초기화
 UPDATE sessionlist SET s_expire = NOW() + INTERVAL 1 HOUR WHERE u_no = "u_no";
 
+-------------------
+-- Category DAO  --
+-------------------
+-- 카테고리 수정
+UPDATE category SET c_name="c_name", c_upper=Null, c_order=1 WHERE c_no=0;
+
 -----------------
 -- Comment DAO --
 -----------------
@@ -230,3 +236,14 @@ UPDATE comment SET co_isdelete = 1 WHERE co_no = "co_no";
 ------------------------------------------------------------------------------------------------------------
 -------------------------------------------------- DELETE --------------------------------------------------
 ------------------------------------------------------------------------------------------------------------
+---------------
+-- User DAO  --
+---------------
+-------------------
+-- Category DAO  --
+-------------------
+-- 카테고리 삭제
+DELETE FROM category WHERE c_no = "c_no";
+-----------------
+-- Comment DAO --
+-----------------

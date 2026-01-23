@@ -1,138 +1,6 @@
 from dto import userDTO
-from service import db, store, loger
-import string, random, re, smtplib
-from datetime import datetime, timedelta
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-
-################################################################################################
-######################################## Service Logic #########################################
-################################################################################################
-
-def __updateVerifyList():
-    '''
-    30분 초과 인증코드들 삭제
-    '''
-    expireIndexList = []
-    for i in range(len(store.verifyList)):
-        if store.verifyList[i]['expire']  + timedelta(minutes=30) < datetime.now():
-            expireIndexList.append(i)
-    for i in range(len(expireIndexList)):
-        store.verifyList.pop(expireIndexList[i]-i)
-
-def encryptPw(pw):
-    '''
-    비밀번호 암호화 (복호화 불가. 암호화 된 비밀번호를 서로 비교해야 함.)
-    parameter: pw(String)
-    return: encPw(String)
-    '''
-    encPw = ""
-    key = store.secret_key
-    for i in range(len(pw)):
-        pwCharNo = ord(pw[i]) + 10
-        keyCharNo = ord(key[i % len(key)])
-        saveCharNo = (pwCharNo * keyCharNo) // 10
-        encPw += str(saveCharNo)
-    while len(encPw) < 40:
-        tempPw = ""
-        for i in range(len(encPw)):
-            tempPw += encPw[i] + str((ord(pw[i%len(pw)]) * ord(key[i%len(key)]))//8)
-        encPw = tempPw
-    while len(encPw) > 100:
-        tempPw = ""
-        for i in range(len(encPw)):
-            if i % 5 != 0:
-                tempPw += encPw[i]
-        encPw = tempPw
-    return encPw
-
-def setView(user):
-    '''
-    글이 아닌 페이지의 조회 설정하기
-    b_no를 0으로 설정, 비회원의 경우 userNo를 0으로 설정
-    parameter: user객체(userDTO)
-    return: 실패 0, 성공 1 (int)
-    '''
-    sql = f'''INSERT INTO views(b_no,u_no,v_ip) VALUES(0,{user.getNo()},"{user.getIp()}")'''
-    result = db.setData(sql=sql)
-    return result
-
-def sendMail(email):
-    '''
-    인증코드 메일 발송
-    parameter: email(String), verifyCode(String)
-    return: (int)
-        store.USER_RESULT_CODE['메일 발송 완료']
-        store.USER_RESULT_CODE['실패-unknown']
-    '''
-    def __getCode(): # 8자리 랜덤 인증코드 생성
-        code = ''
-        pool = string.ascii_letters + string.digits
-        for i in range(8):
-            code += random.choice(pool)
-        return code
-    
-    def __setVerify(email,code): # 인증코드 저장(host의 store에서 관리)
-        expireTime = datetime.now() + timedelta(minutes=store.verifyExpireTime)
-        verifyDict = {
-            'email': email,
-            'code' : code,
-            'expire' : expireTime
-        }
-        store.verifyList.append(verifyDict)
-    
-    __updateVerifyList() # 만료된 인증코드 삭제
-    code = __getCode()
-
-    # 이메일 발송 설정
-    message = MIMEMultipart()
-    message["From"] = store.send_email_addr
-    message["To"] = email
-    message["Subject"] = store.send_email_title + f'"{code}"' # 제목에도 인증코드 포함
-    text = f'인증 코드: "{code}"\n' + store.send_email_message
-    message.attach(MIMEText(text, 'plain'))
-
-    # 이메일 발송 시도
-    try:
-        server = smtplib.SMTP(host=store.send_eamil_smtp, port=store.send_email_port)
-        server.starttls() # TLS 암호화 적용
-        server.login(user=store.send_email_addr, password=store.send_email_key)
-        server.sendmail(store.send_email_addr, email, message.as_string())
-        __setVerify(email=email,code=code)
-        log = loger.Loger()
-        log.setLog(store.LOG_NAME['유저'], f"이메일 전송 완료: {email}, 인증코드: {code}")
-        return store.USER_RESULT_CODE['메일 발송 완료']
-    except Exception as e:
-        log = loger.Loger()
-        log.setLog(store.LOG_NAME['유저'], f"이메일 전송 실패: {e}")
-        return store.USER_RESULT_CODE['실패-unknown']
-    finally:
-        server.quit() # 서버 연결 종료
-
-def matchVerify(email,code):
-    '''
-    인증코드 확인
-    parameter: email(String), code(String)
-    return: (int)
-        store.USER_RESULT_CODE['인증 성공']
-        store.USER_RESULT_CODE['시간 종료']
-        store.USER_RESULT_CODE['코드 불일치']
-        store.USER_RESULT_CODE['발급된 코드 없음']
-    '''
-    __updateVerifyList() # 만료된 인증코드 삭제
-    for verifyDict in store.verifyList:
-        if verifyDict['email'] == email:
-            if verifyDict['code'] == code:
-                if verifyDict['expire'] > datetime.now():
-                    # 확인 성공시점에서 1시간 유지
-                    verifyDict['expire'] = datetime.now() + timedelta(hours=store.sessionTime)
-                    return store.USER_RESULT_CODE['인증 성공']
-                else:
-                    return store.USER_RESULT_CODE['시간 종료']
-            else:
-                return store.USER_RESULT_CODE['코드 불일치']
-    return store.USER_RESULT_CODE['발급된 코드 없음']
-
+from service import db, store, loger, userService
+import string, random, re
 
 ################################################################################################
 ####################################### Get User Object ########################################
@@ -261,7 +129,7 @@ def setUser(email, pw, confirm, verify):
         
         # verify 진행시 처리
         else:
-            verifyResult = matchVerify(email=email, code=verify) # 인증코드 확인
+            verifyResult = userService.matchVerify(email=email, code=verify) # 인증코드 확인
             
             # 인증 성공시 기존 생성된 이메일 주소의 탈퇴처리
             if verifyResult == store.USER_RESULT_CODE['인증 성공']:
@@ -277,7 +145,7 @@ def setUser(email, pw, confirm, verify):
     # 신규 이메일 주소인 경우 처리
     else:
         user.setEmail(email=email)
-        user.setPw(pw=encryptPw(pw=pw))
+        user.setPw(pw=userService.encryptPw(pw=pw))
         user.setState(state=store.USER_STATE_CODE['미인증'])
 
     sql = f'''INSERT INTO user(u_email,u_pw,u_state) VALUES("{user.getEmail()}","{user.getPw()}",{user.getState()})'''
@@ -336,10 +204,10 @@ def updateUserPassword(user, nowPw, newPw, newConfirm):
     elif not __checkPwRegex(newPw):
         return store.USER_RESULT_CODE['Pw 형식 오류']
     # 현재 비밀번호가 틀렸을 때
-    elif user.getPw() != encryptPw(nowPw):
+    elif user.getPw() != userService.encryptPw(nowPw):
         return store.USER_RESULT_CODE['비밀번호 틀림']
     else:
-        sql = f'''UPDATE user SET u_pw = "{encryptPw(newPw)}" WHERE u_no = {user.getNo()}'''
+        sql = f'''UPDATE user SET u_pw = "{userService.encryptPw(newPw)}" WHERE u_no = {user.getNo()}'''
         result = db.setData(sql=sql)
         if result == 0:
             return store.USER_RESULT_CODE['실패-unknown']
@@ -356,13 +224,24 @@ def leaveUser(uno, pw):
         store.USER_RESULT_CODE['실패-unknown']
     '''
     user = getUserByUserNo(uno=uno)
-    if user.getPw() != encryptPw(pw=pw):
+    if user.getPw() != userService.encryptPw(pw=pw):
         return store.USER_RESULT_CODE['비밀번호 틀림']
     sql = f'''UPDATE user SET u_state = {store.USER_STATE_CODE['탈퇴']} WHERE u_no = {uno}'''
     result = db.setData(sql=sql)
     if result == 0:
         return store.USER_RESULT_CODE['실패-unknown']
     return store.USER_RESULT_CODE['회원 탈퇴 성공']
+
+def setView(user):
+    '''
+    글이 아닌 페이지의 조회 설정하기
+    b_no를 0으로 설정, 비회원의 경우 userNo를 0으로 설정
+    parameter: user객체(userDTO)
+    return: 실패 0, 성공 1 (int)
+    '''
+    sql = f'''INSERT INTO views(b_no,u_no,v_ip) VALUES(0,{user.getNo()},"{user.getIp()}")'''
+    result = db.setData(sql=sql)
+    return result
 
 ################################################################################################
 ########################################### Session ############################################
@@ -420,7 +299,7 @@ def getSessionKeyByEmailAndPw(email,pw,ip=''):
     parameter: email(String), pw(String)
     return: sessionKey(String)
     '''
-    sql = f'''SELECT * FROM user WHERE u_email="{email}" AND u_pw="{encryptPw(pw=pw)}" AND u_state NOT IN (0, 3)'''
+    sql = f'''SELECT * FROM user WHERE u_email="{email}" AND u_pw="{userService.encryptPw(pw=pw)}" AND u_state NOT IN (0, 3)'''
     result = db.getData(sql=sql)[0]
     user = userDTO.UserDTO()
     user.setUserByDbResult(dbResult=result)

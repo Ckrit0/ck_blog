@@ -95,7 +95,7 @@ def getUserState(userStateCode):
         if value == userStateCode:
             return key
         
-def getJoinResult(joinResultCode):
+def getUserResult(joinResultCode):
     for key, value in USER_RESULT_CODE.items():
         if value == joinResultCode:
             return key
