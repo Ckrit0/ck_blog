@@ -33,6 +33,9 @@
     font-size: var(--post-info-font-size);
     text-shadow: 3px 3px 2px var(--dark-color);
 }
+#likeMarkSpan{
+    cursor: pointer;
+}
 #postInfo1{
     box-sizing: border-box;
     grid-row: 2;

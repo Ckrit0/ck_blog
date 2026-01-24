@@ -285,6 +285,17 @@ def boardPage(bno):
 #############################
 ######### 글 핸들러 #########
 #############################
+@app.route("/setLike", methods=["POST"])
+def setLikeHandler():
+    clientUser = userDAO.getUserBySessionKey(cookieKey=request.cookies.get('sessionKey'),ip=request.remote_addr)
+    bno = request.json['bno']
+    board = boardDAO.getBoardByBoardNo(bno=bno)
+    result = boardDAO.setLike(user=clientUser, board=board)
+    if result :
+        return jsonify([result, store.USER_MESSAGE[store.USER_RESULT_CODE['좋아요 성공']], board.getLike()+1])
+    else:
+        return jsonify([result, store.USER_MESSAGE[store.USER_RESULT_CODE['실패-unknown']], board.getLike()])
+
 
 ###############################
 ######## 카테고리 페이지 ########

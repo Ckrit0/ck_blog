@@ -13,7 +13,8 @@
             {% if isLiked %}
             <span id="likeMarkSpan">❤️</span>
             {% else %}
-            <span id="likeMarkSpan">🤍</span>
+            <span id="likeMarkSpan" onclick="setLike()">🤍</span>
+            <div id="boardNoDiv" style="display: none;">{{targetBoard.getNo()}}</div>
             {% endif %}
             &nbsp;<span id="likeCountSpan">{{targetBoard.getLike()}}</span>
         </div>
@@ -78,7 +79,5 @@
         </ul>
     </div>
 </div>
-<script>
-    
-</script>
+<script src="{{url_for('static',filename='./script/board.js')}}"></script>
 {% endblock %}
