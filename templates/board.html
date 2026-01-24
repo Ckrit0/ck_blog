@@ -1,19 +1,81 @@
 {% extends 'template.html' %}
 
 {% block content %}
-<div id="contentsDiv">
-    <div id="contentsTitleDiv">
-        {{targetBoard.getTitle()}}
-    </div>
-    <div id="contentsDiv">
-        {{targetBoard.getContents()}}
+<link rel="stylesheet" href="{{url_for('static',filename='./css/board.css')}}">
 
+<div id="boardDiv">
+    <div id="boardTitleDiv">
+        <div id="postTitle">{{targetBoard.getTitle()}}</div>
+        <div id="postView">
+            👁️&nbsp;
+            {{targetBoard.getView()}}
+            &nbsp;&nbsp;
+            {% if isLiked %}
+            <span id="likeMarkSpan">❤️</span>
+            {% else %}
+            <span id="likeMarkSpan">🤍</span>
+            {% endif %}
+            &nbsp;<span id="likeCountSpan">{{targetBoard.getLike()}}</span>
+        </div>
+        <div></div>
+        <div id="postInfo1">{{targetBoard.getMarkingEmail()}}</div>
+        <div id="postInfo2">{{targetBoard.getDate()}}</div>
     </div>
-    <div id="commentDiv">
-
+    <div id="boardContentsDiv">
+        <!-- 임시로 for문 돌려서 내용 꽉꽉 채우기 -->
+        {% for i in range(1000) %}
+            {{targetBoard.getContents()}}
+        {% endfor %}
     </div>
-    <div id="contentsRecentlyContentsListDiv" class="contentsList">
+    <div id="boardCommentDiv">
+        <span class="subTitle">comment</span>
+            <ul class="commentUl">
+                {% for comment in commentList %}
+                <li>
+                    <span class="commentEmail">{{comment[0].getMarkingEmail()}}</span>
+                    <span class="commentIp">({{comment[0].getMarkingIp()}})</span>
+                    <span class="commentDate">{{comment[0].getDate()}}</span><br>
+                    <span class="commentContents">{{comment[0].getComment()}}</span>
+                </li>
+                <ul class="subCommentUl">
+                    {% for childComment in comment[1] %}
+                    <li>
+                        <span class="commentEmail">{{childComment.getMarkingEmail()}}</span>
+                        <span class="commentIp">({{childComment.getMarkingIp()}})</span>
+                        <span class="commentDate">{{childComment.getDate()}}</span><br>
+                        <span class="commentContents">{{childComment.getComment()}}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endfor %}
+            </ul><br>
+            <ul class="pagingUl">
+                {% for commentPage in commentPageList %}
+                <li id="commentPage{{commentPage}}">{{commentPage}}</li>
+                {% endfor %}
+            </ul>
+    </div>
+    <div id="boardCategoryListDiv" class="contentsList">
         {{targetBoard.getCategoryNo()}}
+        <span class="subTitle">Category Post</span>
+        <ul class="listUl">
+            {% for title in titleList %}
+            {% if title[0] == targetBoard.getNo() %}
+            <li id="title_{{title[0]}}">'{{title[1]}}'</li>
+            {% else %}
+            <li id="title_{{title[0]}}">{{title[1]}}</li>
+            {% endif %}
+            {% endfor %}
+        </ul><br>
+        <ul class="pagingUl">
+            {% for page in pageList %}
+            {% if page == nowPage %}
+            <li id="page_{{page}}">'{{page}}'</li>
+            {% else %}
+            <li id="page_{{page}}">{{page}}</li>
+            {% endif %}
+            {% endfor %}
+        </ul>
     </div>
 </div>
 <script>

@@ -256,11 +256,17 @@ def leaveHandler():
 ######### 글 페이지 #########
 #############################
 @app.route("/board/<bno>")
-def contentsPage(bno):
+def boardPage(bno):
     # 템플릿 정보
     clientUser, categoryList, recentlyTitleList = getTemplateData(req=request)
-    targetBoard = boardDAO.getBoardByBoardNo(bno=bno)
 
+    # 데이터 가져오기
+    targetBoard = boardDAO.getBoardByBoardNo(bno=bno)
+    isLiked = boardService.checkIsLiked(user=clientUser, board=targetBoard)
+    commentList = commentDAO.getCommentListByBoardNo(targetBoard.getNo())
+    pageList = boardDAO.getPageList_category(targetBoard.getCategoryNo())
+    nowPage = boardDAO.getPageOfCategory(board=targetBoard)
+    titleList = boardDAO.getTitleList_cathgory(targetBoard.getCategoryNo(),page=nowPage)
     # 뷰 설정하기
     userDAO.setView(user=clientUser, bno=targetBoard.getNo(), url=request.path)
 
@@ -268,8 +274,13 @@ def contentsPage(bno):
         clientUser=clientUser,
         categoryList=categoryList,
         recentlyTitleList=recentlyTitleList,
-        targetBoard=targetBoard
-        )
+        targetBoard=targetBoard,
+        isLiked=isLiked,
+        commentList=commentList,
+        titleList=titleList,
+        pageList=pageList,
+        nowPage=nowPage
+    )
 
 #############################
 ######### 글 핸들러 #########

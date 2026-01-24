@@ -126,9 +126,11 @@ def markingEmail(email, state):
     emailParts = email.split('@')
     markingEmail = emailParts[0][0:3] + '*' * (len(emailParts[0]) -3) + '@' + emailParts[1]
     if state == store.USER_STATE_CODE['비회원']:
-        return '비회원'
+        return '(비회원)'
     elif state == store.USER_STATE_CODE['미인증']:
         return markingEmail + "(미인증)"
+    elif state == store.USER_STATE_CODE['인증']:
+        return markingEmail
     elif state == store.USER_STATE_CODE['탈퇴']:
         return '(탈퇴한 회원)'
     elif state == store.USER_STATE_CODE['블랙리스트']:

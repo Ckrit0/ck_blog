@@ -25,11 +25,11 @@
                 {{recentlyboard.getView()}}
                 &nbsp;&nbsp;
                 {% if isLiked %}
-                ❤️
+                <span id="likeMarkSpan">❤️</span>
                 {% else %}
-                🤍
+                <span id="likeMarkSpan">🤍</span>
                 {% endif %}
-                &nbsp;{{recentlyboard.getLike()}}
+                &nbsp;<span id="likeCountSpan">{{recentlyboard.getLike()}}</span>
             </div>
             <div></div>
             <div id="postInfo1">{{recentlyboard.getUserEmail()}}</div>

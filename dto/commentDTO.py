@@ -48,7 +48,7 @@ class CommentDTO:
         self.upper = upper
     
     def setIsDelete(self,isDelete):
-        self.isDelete
+        self.isDelete = isDelete
 
     def getNo(self):
         return self.no

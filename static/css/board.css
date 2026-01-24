@@ -1,0 +1,91 @@
+
+/* 글 페이지 */
+
+#boardTitleDiv{
+    box-sizing: border-box;
+    display: grid;
+    position: sticky;
+    top: 53px;
+    grid-template-columns: 25% 25% 25% 25%;
+    margin-top: 0;
+    background-color: var(--theme-color);
+    box-shadow: inset 0px 0px 80px 0px var(--bg-color);
+    font-weight: 600;
+    color: var(--bg-color);
+    text-shadow: 3px 3px 2px var(--dark-color);
+}
+#postTitle{
+    box-sizing: border-box;
+    grid-row: 1;
+    grid-column-start: 1;
+    grid-column-end: 5;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    font-family: var(--subject-font);
+    font-size: var(--post-title-font-size);
+}
+#postView{
+    box-sizing: border-box;
+    grid-row: 2;
+    grid-column: 1;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    font-size: var(--post-info-font-size);
+    text-shadow: 3px 3px 2px var(--dark-color);
+}
+#postInfo1{
+    box-sizing: border-box;
+    grid-row: 2;
+    grid-column: 3;
+    padding: 20px;
+    font-size: var(--post-info-font-size);
+}
+#postInfo2{
+    box-sizing: border-box;
+    grid-row: 2;
+    grid-column: 4;
+    padding: 20px;
+    font-size: var(--post-info-font-size);
+}
+#postContents{
+    box-sizing: border-box;
+    border: 1px solid var(--theme-color);
+    padding: 20px;
+    text-align: left;
+    font-size: var(--contents-font-size);
+}
+
+/* 미디어쿼리 */
+@media screen and (max-width: 1200px) {
+    #boardTitleDiv{
+        top: 41px;
+        position: relative;
+    }
+    #postTitle{
+        padding: 10px;
+    }
+    #postView{
+        grid-column-start: 3;
+        grid-column-end: 5;
+        padding: 0;
+    }
+    #postInfo1{
+        grid-row: 3;
+        grid-column-start: 1;
+        grid-column-end: 3;
+        padding: 5px 0 10px 0;
+    }
+    #postInfo2{
+        grid-row: 3;
+        grid-column-start: 3;
+        grid-column-end: 5;
+        padding: 5px 0 10px 0;
+    }
+}
+
+@media screen and (max-width:805px){
+    #boardTitleDiv{
+        top: 35px;
+        position: sticky;
+    }
+}
