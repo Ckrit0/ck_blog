@@ -21,6 +21,7 @@ b_date      	작성일
 b_title         글 제목
 b_contents  	글 내용
 b_isdelete      삭제여부(0: 미삭제, 1: 삭제)
+b_ip            IP
 
 < IMAGE >
 i_no	        이미지번호
@@ -31,13 +32,13 @@ b_no            글번호
 u_no            유저번호
 v_ip            IP
 v_date          날짜
+v_url           URL
 
 < LIKES >
 b_no            글번호
 u_no            유저번호
 l_ip            IP
 l_date          날짜
-l_islike        좋아요
 
 < COMMENT >
 co_no	        pk, 댓글번호
@@ -54,7 +55,8 @@ u_no	        유저번호
 bl_ip           IP
 bl_date	        블랙날짜
 bl_expire   	만료날짜
-bl_cause        블랙사유
+bl_cause        블랙 사유코드
+bl_reason       블랙 사유(100자 이내)
 
 < SESSIONLIST >
 u_no	        유저번호

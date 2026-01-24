@@ -73,11 +73,11 @@ def sendMail(email):
         server.sendmail(store.send_email_addr, email, message.as_string())
         __setVerify(email=email,code=code)
         log = loger.Loger()
-        log.setLog(store.LOG_NAME['유저'], f"이메일 전송 완료: {email}, 인증코드: {code}")
+        log.setLog(store.LOG_NAME['유저'], f"이메일 전송 완료: {email}")
         return store.USER_RESULT_CODE['메일 발송 완료']
     except Exception as e:
         log = loger.Loger()
-        log.setLog(store.LOG_NAME['유저'], f"이메일 전송 실패: {e}")
+        log.setLog(store.LOG_NAME['유저'], f"이메일 전송 실패: {email}, 에러메시지: {e}")
         return store.USER_RESULT_CODE['실패-unknown']
     finally:
         server.quit() # 서버 연결 종료

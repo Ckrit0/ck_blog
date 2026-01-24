@@ -53,7 +53,7 @@ def main():
     isLiked = boardService.checkIsLiked(user=clientUser, board=recentlyboard)
     
     # 뷰 설정하기
-    userDAO.setView(user=clientUser, bno=recentlyboard.getNo())
+    userDAO.setView(user=clientUser, bno=recentlyboard.getNo(), url=request.path)
     
     return render_template('main.html',
         clientUser=clientUser,
@@ -81,8 +81,8 @@ def joinPage():
         flash(store.USER_MESSAGE['기로그인'])
         return resp
     
-    # 뷰 설정
-    userDAO.setView(clientUser)
+    # 뷰 설정하기
+    userDAO.setView(user=clientUser,url=request.path)
 
     return render_template('join.html',
         clientUser = clientUser,
@@ -112,8 +112,8 @@ def userPage(userNo):
     # 작성한 최근댓글 목록
     targetUserCommentList = commentDAO.getRecentlyCommentList(uno=targetUser.getNo())
 
-    # 뷰 설정
-    userDAO.setView(clientUser)
+    # 뷰 설정하기
+    userDAO.setView(user=clientUser,url=request.path)
 
     return render_template('user.html',
         clientUser=clientUser,
@@ -130,6 +130,10 @@ def userPage(userNo):
 
 @app.route("/find")
 def findPage():
+    # 템플릿 정보
+    clientUser, categoryList, recentlyTitleList = getTemplateData(req=request)
+    # 뷰 설정하기
+    userDAO.setView(user=clientUser,url=request.path)
     return render_template('find.html')
 
 #############################
@@ -256,6 +260,10 @@ def contentsPage(bno):
     # 템플릿 정보
     clientUser, categoryList, recentlyTitleList = getTemplateData(req=request)
     targetBoard = boardDAO.getBoardByBoardNo(bno=bno)
+
+    # 뷰 설정하기
+    userDAO.setView(user=clientUser, bno=targetBoard.getNo(), url=request.path)
+
     return render_template('board.html',
         clientUser=clientUser,
         categoryList=categoryList,
@@ -272,6 +280,11 @@ def contentsPage(bno):
 ###############################
 @app.route("/category/<categoryNo>")
 def categoryPage(categoryNo):
+    # 템플릿 정보
+    clientUser, categoryList, recentlyTitleList = getTemplateData(req=request)
+
+    # 뷰 설정하기
+    userDAO.setView(user=clientUser, url=request.path)
     return render_template('category.html', categoryNo=categoryNo)
 
 ###############################
@@ -283,6 +296,11 @@ def categoryPage(categoryNo):
 #############################
 @app.route("/search/<keyword>")
 def searchPage(keyword):
+    # 템플릿 정보
+    clientUser, categoryList, recentlyTitleList = getTemplateData(req=request)
+
+    # 뷰 설정하기
+    userDAO.setView(user=clientUser, url=request.path)
     return render_template('search.html', keyword=keyword)
 
 #############################

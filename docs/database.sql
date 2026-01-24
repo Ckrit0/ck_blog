@@ -41,7 +41,8 @@ CREATE TABLE views(
     b_no INT(10) NOT NULL,
     u_no INT(10) NULL,
     v_ip VARCHAR(15) NOT NULL,
-    v_date DATETIME NOT NULL DEFAULT NOW()
+    v_date DATETIME NOT NULL DEFAULT NOW(),
+    v_url VARCHAR(100) NULL
 );
 
 CREATE TABLE likes(
@@ -228,7 +229,7 @@ ORDER BY c.co_no DESC LIMIT 5 OFFSET 0;
 -- User DAO  --
 ---------------
 -- 조회 설정
-INSERT INTO views(b_no,u_no,v_ip) VALUES("b_no","u_no","v_ip");
+INSERT INTO views(b_no,u_no,v_ip,v_url) VALUES("b_no","u_no","v_ip","v_url");
 -- 유저
 INSERT INTO user(u_email,u_pw,u_state) VALUES("email","pw","state");
 -- 블랙리스트
