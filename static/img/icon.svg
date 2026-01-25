@@ -1,0 +1,27 @@
+<svg width="400" height="200" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+    <path d="M 0,230 
+            q 0,-50,180,-150
+            q 50,50,-100,150
+            q 100,0,320,-120 
+            q -50,50,20,120"
+        fill="none" 
+        stroke="#A67F78" 
+        stroke-width="30"
+        stroke-linecap="round" 
+        stroke-linejoin="round">
+      
+    </path>
+    <path d="M 0,230 
+            q 0,-50,180,-150
+            q 50,50,-100,150
+            q 100,0,320,-120 
+            q -50,50,20,120"
+        fill="none" 
+        stroke="#352C27" 
+        stroke-width="10"
+        stroke-linecap="round" 
+        stroke-linejoin="round">
+      
+    </path>
+    
+</svg>
