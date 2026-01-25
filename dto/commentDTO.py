@@ -10,8 +10,9 @@ class CommentDTO:
         self.upper = None
         self.isDelete = None
         self.userEmail = None
-        self.userState = None
+        self.userState = 0
         self.boardTitle = None
+        self.childCount = 0
         
     def setCommentByDbResult(self,dbResult):
         self.no = dbResult[0]
@@ -25,6 +26,7 @@ class CommentDTO:
         self.userEmail = dbResult[8]
         self.userState = dbResult[9]
         self.boardTitle = dbResult[10]
+        self.childCount = dbResult[11]
 
     def setNo(self,no):
         self.no = no
@@ -90,3 +92,6 @@ class CommentDTO:
 
     def getBoardShortTitle(self):
         return boardService.shortTitle(self.boardTitle)
+    
+    def getChildCount(self):
+        return self.childCount

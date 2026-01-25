@@ -2,8 +2,20 @@
 
 {% block content %}
 <link rel="stylesheet" href="{{url_for('static',filename='./css/board.css')}}">
+<div id="boardNoDiv" style="display: none;">{{targetBoard.getNo()}}</div>
+<div id="nowCnoDiv" style="display: none;">{{targetBoard.getCategoryNo()}}</div>
+<div id="nowPageDiv" style="display: none;">{{nowPage}}</div>
 
 <div id="boardDiv">
+    <div id="boardCategoryListDiv" class="contentsList">
+        <span class="subTitle">Category Post - '<span onclick="window.location.href='/category/{{targetBoard.getCategoryNo()}}'">{{cName}}'</span></span>
+        <ul id="titlesUl" class="listUl"></ul><br>
+        <ul class="pagingUl">
+            {% for page in pageList %}
+            <li class="pages" onclick="setCateList('{{page}}')">{{page}}</li>
+            {% endfor %}
+        </ul>
+    </div>
     <div id="boardTitleDiv">
         <div id="postTitle">{{targetBoard.getTitle()}}</div>
         <div id="postView">
@@ -14,12 +26,11 @@
             <span id="likeMarkSpan">❤️</span>
             {% else %}
             <span id="likeMarkSpan" onclick="setLike()">🤍</span>
-            <div id="boardNoDiv" style="display: none;">{{targetBoard.getNo()}}</div>
             {% endif %}
             &nbsp;<span id="likeCountSpan">{{targetBoard.getLike()}}</span>
         </div>
         <div></div>
-        <div id="postInfo1">{{targetBoard.getMarkingEmail()}}</div>
+        <div id="postInfo1" class="pointer" onclick="window.location.href='/user/{{targetBoard.getUserNo()}}'">{{targetBoard.getMarkingEmail()}}</div>
         <div id="postInfo2">{{targetBoard.getDate()}}</div>
     </div>
     <div id="boardContentsDiv">
@@ -30,51 +41,16 @@
     </div>
     <div id="boardCommentDiv">
         <span class="subTitle">comment</span>
-            <ul class="commentUl">
-                {% for comment in commentList %}
-                <li>
-                    <span class="commentEmail">{{comment[0].getMarkingEmail()}}</span>
-                    <span class="commentIp">({{comment[0].getMarkingIp()}})</span>
-                    <span class="commentDate">{{comment[0].getDate()}}</span><br>
-                    <span class="commentContents">{{comment[0].getComment()}}</span>
-                </li>
-                <ul class="subCommentUl">
-                    {% for childComment in comment[1] %}
-                    <li>
-                        <span class="commentEmail">{{childComment.getMarkingEmail()}}</span>
-                        <span class="commentIp">({{childComment.getMarkingIp()}})</span>
-                        <span class="commentDate">{{childComment.getDate()}}</span><br>
-                        <span class="commentContents">{{childComment.getComment()}}</span>
-                    </li>
-                    {% endfor %}
-                </ul>
-                {% endfor %}
-            </ul><br>
-            <ul class="pagingUl">
-                {% for commentPage in commentPageList %}
-                <li id="commentPage{{commentPage}}">{{commentPage}}</li>
-                {% endfor %}
-            </ul>
-    </div>
-    <div id="boardCategoryListDiv" class="contentsList">
-        {{targetBoard.getCategoryNo()}}
-        <span class="subTitle">Category Post</span>
-        <ul class="listUl">
-            {% for title in titleList %}
-            {% if title[0] == targetBoard.getNo() %}
-            <li id="title_{{title[0]}}">'{{title[1]}}'</li>
-            {% else %}
-            <li id="title_{{title[0]}}">{{title[1]}}</li>
-            {% endif %}
-            {% endfor %}
+        <ul class="commentUl">
+            <div>
+                <textarea id="commentTextarea"></textarea><br>
+                <button id="commentInputBtn">등록 (0/1000자)</button>
+            </div>
+            <div id="commentParentDiv"></div>
         </ul><br>
         <ul class="pagingUl">
-            {% for page in pageList %}
-            {% if page == nowPage %}
-            <li id="page_{{page}}">'{{page}}'</li>
-            {% else %}
-            <li id="page_{{page}}">{{page}}</li>
-            {% endif %}
+            {% for commentPage in commentPageList %}
+            <li id="commentPage{{commentPage}}">{{commentPage}}</li>
             {% endfor %}
         </ul>
     </div>

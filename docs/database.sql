@@ -201,12 +201,16 @@ SELECT count(*) FROM board WHERE b_isdelete=0 AND (b_title LIKE "%검색어%" OR
 ------------------
 -- Comment DAO  --
 ------------------
--- 게시글의 상위 댓글 가져오기(오래된 순, 유저 이메일, 유저 상태, 게시글 제목 포함)
-SELECT c.*, u.u_email, u.u_state, b.b_title FROM comment c
+-- 게시글의 상위 댓글 가져오기(오래된 순, 유저 이메일, 유저 상태, 게시글 제목, 하위글 갯수 포함)
+SELECT c.*, u.u_email, u.u_state, b.b_title, (SELECT count(*) FROM comment WHERE co_upper = c.co_no)
+FROM comment c
 JOIN user u ON c.u_no = u.u_no
 JOIN board b ON c.b_no = b.b_no
 WHERE c.b_no=11 AND c.co_upper IS NULL
 ORDER BY c.co_no;
+
+
+
 -- 게시글의 하위 댓글 가져오기(오래된 순, 유저 이메일, 유저 상태, 게시글 제목 포함)
 SELECT c.*, u.u_email, u.u_state, b.b_title FROM comment c
 JOIN user u ON c.u_no = u.u_no

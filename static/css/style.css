@@ -117,6 +117,10 @@ a{
     display: inline-flex;
 }
 
+.pages{
+    cursor: pointer;
+}
+
 .pagingUl>li{
     box-sizing: border-box;
     margin: 5px 5px;
@@ -126,57 +130,7 @@ a{
     font-weight: 600;
 }
 
-.commentUl{
-    box-sizing: border-box;
-    display: inline-block;
-    width: var(--list-width);
-    text-align: left;
-}
 
-.subCommentUl{
-    box-sizing: border-box;
-    display: inline-block;
-    width: 80%;
-}
-
-.subCommentUl>li{
-    box-sizing: border-box;
-    padding: 10px;
-    padding-left: 50px;
-}
-
-.commentUl>li{
-    box-sizing: border-box;
-    border-top: 1px dotted var(--theme-color);
-    border-bottom: 1px dotted var(--theme-color);
-    padding: 10px;
-}
-
-.commentEmail{
-    box-sizing: border-box;
-    font-family: var(--category-font);
-    font-size: var(--comment-email-font-size);
-    font-weight: 600;
-    color: var(--theme-color);
-}
-
-.commentIp{
-    box-sizing: border-box;
-    font-size: var(--comment-ip-font-size);
-    color: var(--font-color);
-}
-
-.commentDate{
-    box-sizing: border-box;
-    font-size: var(--comment-ip-font-size);
-    color: var(--font-color);
-}
-
-.commentContents{
-    box-sizing: border-box;
-    padding-left: 10px;
-    font-size: var(--comment-font-size);
-}
 
 .horizontalLine{
     box-sizing: border-box;
@@ -200,6 +154,14 @@ a{
 
 .pointer{
     cursor: pointer;
+}
+
+.font20{
+    font-size: 20px;
+}
+
+.font30{
+    font-size: 30px;
 }
 
 .bolder{

@@ -1,5 +1,5 @@
 from dto import commentDTO
-from service import db, store
+from service import db, store, userService
 
 #################################################################################################
 ###################################### Get Comment Object #######################################
@@ -12,7 +12,7 @@ def getCommentListByBoardNo(bno):
     '''
     commentList = []
     sql = f'''\
-        SELECT c.*, u.u_email, u.u_state, b.b_title FROM comment c \
+        SELECT c.*, u.u_email, u.u_state, b.b_title, u.u_no FROM comment c \
         JOIN user u ON c.u_no = u.u_no \
         JOIN board b ON c.b_no = b.b_no \
         WHERE c.b_no={bno} AND c.co_upper IS NULL \
@@ -23,7 +23,7 @@ def getCommentListByBoardNo(bno):
         pc.setCommentByDbResult(dbResult=parentComment)
         tempList = []
         sql = f'''\
-            SELECT c.*, u.u_email, u.u_state, b.b_title FROM comment c \
+            SELECT c.*, u.u_email, u.u_state, b.b_title, u.u_no FROM comment c \
             JOIN user u ON c.u_no = u.u_no \
             JOIN board b ON c.b_no = b.b_no \
             WHERE c.b_no={bno} AND c.co_upper = {pc.getNo()} \
@@ -35,6 +35,55 @@ def getCommentListByBoardNo(bno):
             tempList.append(cc)
         commentList.append([pc,tempList])
     return commentList
+
+def getParentCommentListByBno(bno):
+    '''
+    글번호로 상위 댓글객체 리스트 가져오기
+    parameter: 글번호(int)
+    return: 댓글 데이터의 이중 리스트(List)
+    '''
+    sql = f'''\
+        SELECT \
+            c.*, u.u_email, u.u_state, b.b_title, \
+            (SELECT count(*) FROM comment WHERE co_upper = c.co_no) \
+        FROM comment c \
+        JOIN user u ON c.u_no = u.u_no \
+        JOIN board b ON c.b_no = b.b_no \
+        WHERE c.b_no={bno} AND c.co_upper IS NULL \
+        ORDER BY c.co_no'''
+    f'''(SELECT count(*) FROM comment WHERE co_upper = c.cno)'''
+    result = db.getData(sql=sql)
+    for r in result:
+        r[3] = userService.markingIp(ip=r[3])
+        if r[7] == 1:
+            r[4] = store.USER_MESSAGE[store.USER_RESULT_CODE['삭제된 댓글']]
+        r[8] = userService.markingEmail(email=r[8],state=r[9])
+    return result
+
+def getChildCommentListByBnoAndCono(bno, cono):
+    '''
+    글번호와 상위댓글번호로 하위댓글객체 리스트 가져오기
+    parameter: 글번호(int), 상위댓글번호(int)
+    return: 댓글 데이터의 이중 리스트(List)
+    '''
+    sql = f'''\
+        SELECT \
+            c.*, u.u_email, u.u_state, b.b_title
+        FROM comment c \
+        JOIN user u ON c.u_no = u.u_no \
+        JOIN board b ON c.b_no = b.b_no \
+        WHERE c.b_no={bno} AND c.co_upper={cono} \
+        ORDER BY c.co_no'''
+    f'''(SELECT count(*) FROM comment WHERE co_upper = c.cno)'''
+    result = db.getData(sql=sql)
+    for r in result:
+        r[3] = userService.markingIp(ip=r[3])
+        if r[7] == 1:
+            r[4] = store.USER_MESSAGE[store.USER_RESULT_CODE['삭제된 댓글']]
+        r[8] = userService.markingEmail(email=r[8],state=r[9])
+    return result
+
+
 
 def getCommentCountByUserNo(uno):
     '''

@@ -57,6 +57,98 @@
     text-align: left;
     font-size: var(--contents-font-size);
 }
+#boardContentsDiv{
+    box-sizing: border-box;
+    border-bottom: 1px dotted var(--theme-color);
+    padding: 30px;
+    text-align: left;
+}
+#commentTextarea{
+    box-sizing: border-box;
+    margin-bottom: -10px;
+    padding: 10px;
+    width: 100%;
+    resize: none;
+    scrollbar-color: var(--bg-color);
+    border: 2px solid var(--theme-color);
+    border-radius: 20px 20px 0 0;
+    background-color: var(--bg-color);
+    scrollbar-width: none;
+}
+#commentTextarea:focus{
+    outline: none;
+}
+#commentInputBtn{
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    width: 100%;
+    border: 2px solid var(--theme-color);
+    border-radius: 0 0 20px 20px;
+
+}
+.commentGetChild{
+    color: gray;
+    font-size: var(--comment-ip-font-size);
+    cursor: pointer;
+}
+.commentSetChild{
+    color: gray;
+    font-size: var(--comment-ip-font-size);
+    cursor: pointer;
+}
+
+.commentUl{
+    box-sizing: border-box;
+    display: inline-block;
+    width: var(--list-width);
+    text-align: left;
+}
+
+#commentParentDiv>li{
+    box-sizing: border-box;
+    border-top: 1px dotted var(--theme-color);
+    border-bottom: 1px dotted var(--theme-color);
+    padding: 10px;
+}
+
+.subCommentUl{
+    box-sizing: border-box;
+    display: inline-block;
+    width: 80%;
+}
+
+.subCommentUl>li{
+    box-sizing: border-box;
+    padding: 10px;
+    padding-left: 50px;
+}
+
+.commentEmail{
+    box-sizing: border-box;
+    font-family: var(--category-font);
+    font-size: var(--comment-email-font-size);
+    font-weight: 600;
+    color: var(--theme-color);
+    cursor: pointer;
+}
+
+.commentIp{
+    box-sizing: border-box;
+    font-size: var(--comment-ip-font-size);
+    color: var(--font-color);
+}
+
+.commentDate{
+    box-sizing: border-box;
+    font-size: var(--comment-ip-font-size);
+    color: var(--font-color);
+}
+
+.commentContents{
+    box-sizing: border-box;
+    padding-left: 10px;
+    font-size: var(--comment-font-size);
+}
 
 /* 미디어쿼리 */
 @media screen and (max-width: 1200px) {

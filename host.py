@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify, abort, make_response, flash
 from dao import userDAO, categoryDAO, boardDAO, commentDAO
-from service import store, validate, userService, boardService
+from service import store, validate, userService, boardService, categoryService
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = store.secret_key
@@ -263,10 +263,10 @@ def boardPage(bno):
     # 데이터 가져오기
     targetBoard = boardDAO.getBoardByBoardNo(bno=bno)
     isLiked = boardService.checkIsLiked(user=clientUser, board=targetBoard)
-    commentList = commentDAO.getCommentListByBoardNo(targetBoard.getNo())
+    cName = categoryService.getCategoryNameByCnoInCategoryList(cList=categoryList,cno=targetBoard.getCategoryNo())
     pageList = boardDAO.getPageList_category(targetBoard.getCategoryNo())
     nowPage = boardDAO.getPageOfCategory(board=targetBoard)
-    titleList = boardDAO.getTitleList_cathgory(targetBoard.getCategoryNo(),page=nowPage)
+
     # 뷰 설정하기
     userDAO.setView(user=clientUser, bno=targetBoard.getNo(), url=request.path)
 
@@ -276,8 +276,7 @@ def boardPage(bno):
         recentlyTitleList=recentlyTitleList,
         targetBoard=targetBoard,
         isLiked=isLiked,
-        commentList=commentList,
-        titleList=titleList,
+        cName=cName,
         pageList=pageList,
         nowPage=nowPage
     )
@@ -295,6 +294,25 @@ def setLikeHandler():
         return jsonify([result, store.USER_MESSAGE[store.USER_RESULT_CODE['좋아요 성공']], board.getLike()+1])
     else:
         return jsonify([result, store.USER_MESSAGE[store.USER_RESULT_CODE['실패-unknown']], board.getLike()])
+
+@app.route("/getTitleListOnBoardByPage/<cno>/<page>", methods=["POST"])
+def getTitleListOnBoardByPageHandler(cno,page):
+    titleList = boardDAO.getTitleList_cathgory(cno=cno,page=page)
+    return jsonify(titleList)
+
+@app.route("/getParentComment", methods=["POST"])
+def getParentCommentHanler():
+    bno = request.json['bno']
+    commentList = commentDAO.getParentCommentListByBno(bno=bno)
+    return jsonify(commentList)
+
+@app.route("/getChildComment", methods=["POST"])
+def getChildCommentHanler():
+    bno = request.json['bno']
+    upperNo = request.json['upperNo']
+    commentList = commentDAO.getChildCommentListByBnoAndCono(bno=bno, cono=upperNo)
+    return jsonify(commentList)
+
 
 
 ###############################
