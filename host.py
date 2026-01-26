@@ -49,6 +49,17 @@ def main():
     titleList = boardDAO.getTitleList_all(1)
     pageList = boardDAO.getPageList_all()
     
+    # 공지사항 가져오기. 현재 DB 연결 없이 강제로 보냄
+    notice = [
+        '안녕하세요 어차피 블로그를 운영할 계획이면 내가 만들자고 시작한 블로그입니다.',
+        '해당 블로그의 전체 코드는 깃허브(https://github.com/Ckrit0/ck_blog)에서 확인이 가능합니다.',
+        '현재는 제작중이라 서버가 자주 불안정할 예정입니다.',
+        '아직 도메인도 없습니다.',
+        '이 글도 DB랑 연결 안하고 그냥 디자인 잡기 위해 생으로 입력한 글입니다.',
+        '대충 이정도 분량으로 디자인을 잡으면 될 것 같습니다.',
+        '기타 문의사항은 제작자(ckrit3@gmail.com)으로 부탁드립니다.',
+        '감사합니다.'
+    ]
     
     # 뷰 설정하기
     userDAO.setView(user=clientUser, url=request.path)
@@ -57,6 +68,7 @@ def main():
         clientUser=clientUser,
         categoryList=categoryList,
         recentlyTitleList=recentlyTitleList,
+        notice=notice,
         titleList=titleList,
         pageList=pageList
     )

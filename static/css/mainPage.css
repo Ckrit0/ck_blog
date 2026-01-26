@@ -5,6 +5,21 @@
     padding-bottom: 30px;
 }
 
+#mainNoticeDiv{
+    box-sizing: border-box;
+    margin: 10px auto;
+    margin-top: 15px;
+    padding: 10px;
+    width: 80%;
+    border: 3px solid var(--theme-color);
+    border-radius: 30px;
+}
+
+#mainNoticeContents{
+    box-sizing: border-box;
+    font-size: var(--contents-font-size);
+    color: var(--font-color);
+}
 
 /* 미디어쿼리 */
 @media screen and (max-width: 1200px) {

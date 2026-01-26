@@ -4,6 +4,14 @@
 <link rel="stylesheet" href="{{url_for('static',filename='./css/mainPage.css')}}">
 
 <div id="mainDiv">
+    <div id="mainNoticeDiv">
+        <div class="subTitle">NOTICE</div>
+        <div id="mainNoticeContents">
+            {% for line in notice %}
+                <p>{{line}}</p>
+            {% endfor %}
+        </div>
+    </div>
     <div id="mainRecentlyContentsListDiv">
         <span class="subTitle">Lastest Post</span>
         <ul class="listUl">
@@ -17,7 +25,7 @@
             {% endfor %}
         </ul>
     </div>
-    <div>여긴 차라리 공지사항 같은걸 남기자</div>
+    
 </div>
 <script>
     

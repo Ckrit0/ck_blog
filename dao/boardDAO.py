@@ -11,7 +11,7 @@ def getTitleList_all(page):
     parameter: 페이지(int)
     return: 해당 페이지의 [글 번호(int), 제목(String), 조회수(int), 좋아요수(int)]의 리스트
     '''
-    limit = store.PAGE_COUNT['기본값']
+    limit = store.PAGE_COUNT['메인']
     offset = limit * (page-1)
     sql = f'''SELECT b.b_no, b.b_title, \
             (SELECT count(DISTINCT u_no) + count(DISTINCT v_ip) FROM views v WHERE v.b_no=b.b_no), \
@@ -27,7 +27,7 @@ def getPageList_all():
     '''
     pageList = []
     sql = f'''SELECT count(*) FROM board WHERE b_isdelete=0'''
-    result = math.ceil(db.getData(sql=sql)[0][0]/store.PAGE_COUNT['기본값'])
+    result = math.ceil(db.getData(sql=sql)[0][0]/store.PAGE_COUNT['메인'])
     for i in range(result):
         pageList.append(i+1)
     return pageList
