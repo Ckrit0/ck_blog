@@ -254,6 +254,7 @@ INSERT INTO category(c_name,c_upper) VALUES("c_name","c_upper");
 
 -- 글
 INSERT INTO board(u_no,c_no,b_title,b_contents,b_ip) VALUES("u_no","c_no","b_title","b_contents","b_ip");
+
 -- 좋아요 (취소불가 노빠꾸임)
 INSERT INTO likes (b_no, u_no, l_ip)
 SELECT "b_no", "u_no", "l_ip" FROM DUAL

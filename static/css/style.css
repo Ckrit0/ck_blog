@@ -28,6 +28,7 @@
     --comment-email-font-size : 16px;
     --comment-ip-font-size : 12px;
     --sidebar-font-size : 16px;
+    --sidebar-lil-font-size : 14px;
 }
 
 /* 태그 */
@@ -110,15 +111,12 @@ a{
     font-size: var(--comment-font-size);
     border-bottom: 1px dotted var(--theme-color);
     padding : 3px 10px;
+    cursor: pointer;
 }
 
 .pagingUl{
     box-sizing: border-box;
     display: inline-flex;
-}
-
-.pages{
-    cursor: pointer;
 }
 
 .pagingUl>li{
@@ -128,6 +126,7 @@ a{
     font-size: var(--paging-font-size);
     color: var(--theme-color);
     font-weight: 600;
+    cursor: pointer;
 }
 
 

@@ -46,7 +46,6 @@ def main():
     clientUser, categoryList, recentlyTitleList = getTemplateData(req=request)
     
     # 메인페이지 데이터 가져오기
-    titleList = boardDAO.getTitleList_all(1)
     pageList = boardDAO.getPageList_all()
     
     # 공지사항 가져오기. 현재 DB 연결 없이 강제로 보냄
@@ -69,9 +68,17 @@ def main():
         categoryList=categoryList,
         recentlyTitleList=recentlyTitleList,
         notice=notice,
-        titleList=titleList,
         pageList=pageList
     )
+
+#############################
+######## 메인 핸들러 ########
+#############################
+
+@app.route("/getTitleListOnBoardByPage/<page>", methods=["POST"])
+def getTitleListOnMainByPageHandler(page):
+    titleList = boardDAO.getTitleList_all(page=page)
+    return jsonify(titleList)
 
 #############################
 ######## 유저 페이지 ########

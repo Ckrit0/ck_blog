@@ -11,6 +11,7 @@ def getTitleList_all(page):
     parameter: 페이지(int)
     return: 해당 페이지의 [글 번호(int), 제목(String), 조회수(int), 좋아요수(int)]의 리스트
     '''
+    page = int(page)
     limit = store.PAGE_COUNT['메인']
     offset = limit * (page-1)
     sql = f'''SELECT b.b_no, b.b_title, \
@@ -18,6 +19,8 @@ def getTitleList_all(page):
             (SELECT count(DISTINCT u_no) + count(DISTINCT l_ip) FROM likes l WHERE l.b_no=b.b_no) \
             FROM board b WHERE b_isdelete=0 ORDER BY b_no DESC LIMIT {limit} OFFSET {offset}'''
     result = db.getData(sql=sql)
+    for data in result:
+        data[1] = boardService.middleTitle(data[1])
     return result
 
 def getPageList_all():
@@ -49,7 +52,7 @@ def getTitleList_cathgory(cno, page=1):
             ORDER BY b.b_no DESC LIMIT {limit} OFFSET {offset}'''
     result = db.getData(sql=sql)
     for titleData in result:
-        titleData[1] = boardService.shortTitle(titleData[1])
+        titleData[1] = boardService.middleTitle(titleData[1])
     return result
 
 def getPageList_category(cno):

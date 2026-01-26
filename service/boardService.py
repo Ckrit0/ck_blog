@@ -6,8 +6,18 @@ def shortTitle(boardTitle):
     parameter: 글제목(String)
     return: 줄여진 글제목(String)
     '''
-    if len(boardTitle) > 15:
-        boardTitle = boardTitle[0:15] + '...'
+    if len(boardTitle) > 12:
+        boardTitle = boardTitle[0:12] + '...'
+    return boardTitle
+
+def middleTitle(boardTitle):
+    '''
+    제목이 너무 길면 줄여주는 함수
+    parameter: 글제목(String)
+    return: 줄여진 글제목(String)
+    '''
+    if len(boardTitle) > 40:
+        boardTitle = boardTitle[0:40] + '...'
     return boardTitle
 
 def checkIsLiked(user, board):

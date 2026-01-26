@@ -4,6 +4,7 @@
 <link rel="stylesheet" href="{{url_for('static',filename='./css/mainPage.css')}}">
 
 <div id="mainDiv">
+    <div id="mainNowPage" style="display: none;">1</div>
     <div id="mainNoticeDiv">
         <div class="subTitle">NOTICE</div>
         <div id="mainNoticeContents">
@@ -14,20 +15,14 @@
     </div>
     <div id="mainRecentlyContentsListDiv">
         <span class="subTitle">Lastest Post</span>
-        <ul class="listUl">
-            {% for title in titleList %}
-            <li id="title_{{title[0]}}">{{title[1]}}</li>
-            {% endfor %}
-        </ul><br>
+        <ul id="mainListUl" class="listUl"></ul><br>
         <ul class="pagingUl">
             {% for page in pageList %}
-            <li id="page_{{page}}">{{page}}</li>
+            <li class="pages" onclick="setMainList('{{page}}')">{{page}}</li>
             {% endfor %}
         </ul>
     </div>
     
 </div>
-<script>
-    
-</script>
+<script src="{{url_for('static',filename='./script/main.js')}}"></script>
 {% endblock %}

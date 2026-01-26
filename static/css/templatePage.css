@@ -159,6 +159,7 @@ main{
     box-sizing: border-box;
     padding: 1px 10px;
     cursor: pointer;
+    font-size: var(--sidebar-lil-font-size);
 }
 
 /* 템플릿 컨텐츠 */

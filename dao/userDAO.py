@@ -1,5 +1,5 @@
 from dto import userDTO
-from service import db, store, loger, userService
+from service import db, store, loger, userService, boardService
 import string, random, re
 
 ################################################################################################
@@ -70,6 +70,8 @@ def getRecentlyTitleList_user(user):
             JOIN (SELECT DISTINCT b_no FROM views WHERE u_no = {uno} AND b_no != 0 ORDER BY v_date DESC LIMIT {limit}) v\
             ON b.b_no = v.b_no'''
     result = db.getData(sql=sql)
+    for data in result:
+        data[1] = boardService.shortTitle(data[1])
     return result
 
 
