@@ -12,7 +12,7 @@ def getCommentListByBoardNo(bno):
     '''
     commentList = []
     sql = f'''\
-        SELECT c.*, u.u_email, u.u_state, b.b_title, u.u_no FROM comment c \
+        SELECT c.*, u.u_email, u.u_state, b.b_title, 0 FROM comment c \
         JOIN user u ON c.u_no = u.u_no \
         JOIN board b ON c.b_no = b.b_no \
         WHERE c.b_no={bno} AND c.co_upper IS NULL \
@@ -23,7 +23,7 @@ def getCommentListByBoardNo(bno):
         pc.setCommentByDbResult(dbResult=parentComment)
         tempList = []
         sql = f'''\
-            SELECT c.*, u.u_email, u.u_state, b.b_title, u.u_no FROM comment c \
+            SELECT c.*, u.u_email, u.u_state, b.b_title, 0 FROM comment c \
             JOIN user u ON c.u_no = u.u_no \
             JOIN board b ON c.b_no = b.b_no \
             WHERE c.b_no={bno} AND c.co_upper = {pc.getNo()} \
@@ -103,7 +103,7 @@ def getRecentlyCommentList(uno):
     '''
     result = []
     sql = f'''\
-        SELECT c.*, u.u_email, u.u_state, b.b_title FROM comment c \
+        SELECT c.*, u.u_email, u.u_state, b.b_title, 0 FROM comment c \
         JOIN user u ON c.u_no = u.u_no \
         JOIN board b ON c.b_no = b.b_no \
         WHERE c.u_no = {uno} \
