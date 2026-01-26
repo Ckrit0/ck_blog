@@ -1,5 +1,6 @@
 let mainListUl = document.getElementById('mainListUl')
 let mainNowPage = document.getElementById('mainNowPage')
+let mainPagingUl = document.getElementById('mainPagingUl')
 let pageLiList = document.getElementsByClassName('pages')
 
 /**
@@ -7,6 +8,11 @@ let pageLiList = document.getElementsByClassName('pages')
  * @param setPageNum
  */
 function setMainList(setPageNum){
+    if(setPageNum < 0){
+        setPageNum = 1
+    }else if(setPageNum > mainPagingUl.children.length - 2){
+        setPageNum = mainPagingUl.children.length - 2
+    }
     mainNowPage.innerHTML = setPageNum
     
     url = "/getTitleListOnBoardByPage/" + setPageNum
@@ -31,15 +37,70 @@ function setMainList(setPageNum){
                 mainListUl.appendChild(item)
             }
         });
-    for(let i=0;i<pageLiList.length;i++){
-        if(pageLiList[i].innerHTML == mainNowPage.innerHTML){
-            pageLiList[i].style['font-size'] = '30px'
-            pageLiList[i].style['vertical-align'] = 'bottom'
+    setMainPagingList(setPageNum)
+}
+
+function setMainPagingList(showPage){
+    function getShowList(showPage, totalPage){
+        if(showPage < 3){
+            return ['1','2','3','4','5','[next]']
+        }else if(showPage > totalPage - 2){
+            return [
+                '[prev]',
+                String(totalPage-4),
+                String(totalPage-3),
+                String(totalPage-2),
+                String(totalPage-1),
+                String(totalPage)
+            ]
         }else{
-            pageLiList[i].style['font-size'] = '20px'
-            pageLiList[i].style['align-self'] = 'end'
+            return [
+                '[prev]',
+                String(showPage-2),
+                String(showPage-1),
+                String(showPage),
+                String(showPage+1),
+                String(showPage+2),
+                '[next]'
+            ]
         }
     }
+    let totalPage = mainPagingUl.children
+    if(totalPage.length-2 > 5){
+        showList = getShowList(showPage,totalPage.length-2)
+        for(let i=0; i<totalPage.length;i++){
+            if(showList.indexOf(totalPage[i].innerHTML) >= 0 ){
+                totalPage[i].style['display'] = ''
+            }else{
+                totalPage[i].style['display'] = 'none'
+            }
+        }
+    }else{
+        for(let i=0; i<totalPage.length;i++){
+            if(['1','2','3','4','5'].indexOf(totalPage[i].innerHTML) >= 0 ){
+                totalPage[i].style['display'] = ''
+            }else{
+                totalPage[i].style['display'] = 'none'
+            }
+        }
+    }
+    for(let i=0;i<mainPagingUl.children.length;i++){
+        if(mainPagingUl.children[i].innerHTML == mainNowPage.innerHTML){
+            mainPagingUl.children[i].style['font-size'] = '30px'
+            mainPagingUl.children[i].style['vertical-align'] = 'bottom'
+        }else{
+            mainPagingUl.children[i].style['font-size'] = '20px'
+            mainPagingUl.children[i].style['align-self'] = 'end'
+        }
+    }
+}
+
+function mainPrevPage(){
+    setMainList(parseInt(mainNowPage.innerHTML)-5)
+}
+
+function mainNextPage(){
+    setMainList(parseInt(mainNowPage.innerHTML)+5)
 }
 
 setMainList(mainNowPage.innerHTML)

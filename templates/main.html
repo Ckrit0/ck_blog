@@ -16,10 +16,12 @@
     <div id="mainRecentlyContentsListDiv">
         <span class="subTitle">Lastest Post</span>
         <ul id="mainListUl" class="listUl"></ul><br>
-        <ul class="pagingUl">
+        <ul id="mainPagingUl" class="pagingUl">
+            <li id="mainPrev" onclick="mainPrevPage()">[prev]</li>
             {% for page in pageList %}
             <li class="pages" onclick="setMainList('{{page}}')">{{page}}</li>
             {% endfor %}
+            <li id="mainNext" onclick="mainNextPage()">[next]</li>
         </ul>
     </div>
     
