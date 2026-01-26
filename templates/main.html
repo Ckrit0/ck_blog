@@ -17,60 +17,7 @@
             {% endfor %}
         </ul>
     </div>
-    <div id="mainRecentlyContentsDiv">
-        <div id="postTitleBox">
-            <div id="postTitle">{{recentlyboard.getTitle()}}</div>
-            <div id="postView">
-                👁️&nbsp;
-                {{recentlyboard.getView()}}
-                &nbsp;&nbsp;
-                {% if isLiked %}
-                <span id="likeMarkSpan">❤️</span>
-                {% else %}
-                <span id="likeMarkSpan">🤍</span>
-                {% endif %}
-                &nbsp;<span id="likeCountSpan">{{recentlyboard.getLike()}}</span>
-            </div>
-            <div></div>
-            <div id="postInfo1">{{recentlyboard.getUserEmail()}}</div>
-            <div id="postInfo2">{{recentlyboard.getDate()}}</div>
-        </div>
-        <div id="postContents">
-            {{recentlyboard.getContents()}}<br>
-            <!-- 개발용 내용 부풀리기.. -->
-            {% for i in range(200): %}
-            테스트용 DB를 너무 짧게 만들어서 걍 쌩으로 채움 ㅅㄱ
-            {% endfor %}
-        </div>
-        <div id="commentDiv">
-            <span class="subTitle">comment</span>
-            <ul class="commentUl">
-                {% for comment in commentList %}
-                <li>
-                    <span class="commentEmail">{{comment[0].getMarkingEmail()}}</span>
-                    <span class="commentIp">({{comment[0].getMarkingIp()}})</span>
-                    <span class="commentDate">{{comment[0].getDate()}}</span><br>
-                    <span class="commentContents">{{comment[0].getComment()}}</span>
-                </li>
-                <ul class="subCommentUl">
-                    {% for childComment in comment[1] %}
-                    <li>
-                        <span class="commentEmail">{{childComment.getMarkingEmail()}}</span>
-                        <span class="commentIp">({{childComment.getMarkingIp()}})</span>
-                        <span class="commentDate">{{childComment.getDate()}}</span><br>
-                        <span class="commentContents">{{childComment.getComment()}}</span>
-                    </li>
-                    {% endfor %}
-                </ul>
-                {% endfor %}
-            </ul><br>
-            <ul class="pagingUl">
-                {% for commentPage in commentPageList %}
-                <li id="commentPage{{commentPage}}">{{commentPage}}</li>
-                {% endfor %}
-            </ul>
-        </div>
-    </div>
+    <div>여긴 차라리 공지사항 같은걸 남기자</div>
 </div>
 <script>
     

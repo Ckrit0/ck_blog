@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify, abort, make_response, flash
 from dao import userDAO, categoryDAO, boardDAO, commentDAO
-from service import store, validate, userService, boardService, categoryService
+from service import store, validate, userService, boardService, categoryService, serachService
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = store.secret_key
@@ -48,22 +48,17 @@ def main():
     # 메인페이지 데이터 가져오기
     titleList = boardDAO.getTitleList_all(1)
     pageList = boardDAO.getPageList_all()
-    recentlyboard = boardDAO.getRecentlyBoard()
-    commentList = commentDAO.getCommentListByBoardNo(recentlyboard.getNo())
-    isLiked = boardService.checkIsLiked(user=clientUser, board=recentlyboard)
+    
     
     # 뷰 설정하기
-    userDAO.setView(user=clientUser, bno=recentlyboard.getNo(), url=request.path)
+    userDAO.setView(user=clientUser, url=request.path)
     
     return render_template('main.html',
         clientUser=clientUser,
         categoryList=categoryList,
         recentlyTitleList=recentlyTitleList,
         titleList=titleList,
-        pageList=pageList,
-        recentlyboard=recentlyboard,
-        commentList=commentList,
-        isLiked=isLiked
+        pageList=pageList
     )
 
 #############################
@@ -325,7 +320,11 @@ def categoryPage(categoryNo):
 
     # 뷰 설정하기
     userDAO.setView(user=clientUser, url=request.path)
-    return render_template('category.html', categoryNo=categoryNo)
+    return render_template('category.html',
+        clientUser=clientUser,
+        categoryList=categoryList,
+        recentlyTitleList=recentlyTitleList
+    )
 
 ###############################
 ######## 카테고리 핸들러 ########
@@ -339,9 +338,24 @@ def searchPage(keyword):
     # 템플릿 정보
     clientUser, categoryList, recentlyTitleList = getTemplateData(req=request)
 
+    # 키워드 가공
+    formattedKeyword, keywordLength = serachService.getFormattedKeyword(keyword=keyword)
+    
+    if keywordLength < 2: # 검색어 부족
+        resp = make_response(redirect(request.referrer or url_for('main')))
+        flash(store.USER_MESSAGE[store.USER_RESULT_CODE['검색어 부족']])
+        return resp
+    
+    
+
     # 뷰 설정하기
     userDAO.setView(user=clientUser, url=request.path)
-    return render_template('search.html', keyword=keyword)
+    return render_template('search.html',
+        clientUser=clientUser,
+        categoryList=categoryList,
+        recentlyTitleList=recentlyTitleList,
+        keyword=keyword
+    )
 
 #############################
 ######## 검색 핸들러 ########

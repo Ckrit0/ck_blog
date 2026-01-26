@@ -6,7 +6,7 @@
     position: sticky;
     margin-top: 5px;
     top: 0px;
-    left: 0;
+    left: 0px;
     width: 100%;
     height: var(--title-height);
     background-color: var(--dark-color);
@@ -61,7 +61,6 @@ main{
 /* 사이드바 */
 #sidebar{
     box-sizing: border-box;
-    position: sticky;
     top: var(--title-height);
     align-self: flex-start;
     padding: 20px 10px;
@@ -71,6 +70,7 @@ main{
     color: var(--dark-color);
 }
 
+/* 사이드바 - 로고 */
 #logoDiv{
     box-sizing: border-box;
     margin: 10px auto;
@@ -78,11 +78,13 @@ main{
     height: var(--logo-size-height);
 }
 
+/* 사이드바 - 한줄공지 */
 #noticeDiv{
     box-sizing: border-box;
     margin: 10px auto;
 }
 
+/* 사이드바 - 검색바 */
 #searchDiv{
     box-sizing: border-box;
     margin: 10px auto;
@@ -99,6 +101,9 @@ main{
     border-left-width: 2px;
     border-bottom-width: 2px;
 }
+#searchInput:focus{
+    outline: none;
+}
 
 #searchBtn{
     box-sizing: border-box;
@@ -111,13 +116,16 @@ main{
     border-right-width: 2px;
     border-bottom-width: 2px;
 }
+#searchBtn:focus{
+    outline: none;
+}
 
+/* 사이드바 - 카테고리 */
 #categoryDiv{
     box-sizing: border-box;
     margin: 10px auto;
     padding: 10px;
     width: 200px;
-    height: 400px;
     border: 2px solid var(--theme-color);
     border-radius: 20px;
     text-align: left;
@@ -136,13 +144,12 @@ main{
     cursor: pointer;
 }
 
-
+/* 사이드바 - 최근 글 */
 #recentDiv{
     box-sizing: border-box;
     margin: 10px auto;
     padding: 10px;
     width: 200px;
-    height: 150px;
     border: 2px solid var(--theme-color);
     border-radius: 20px;
     text-align: left;
@@ -151,6 +158,7 @@ main{
 .recentlyLi{
     box-sizing: border-box;
     padding: 1px 10px;
+    cursor: pointer;
 }
 
 /* 템플릿 컨텐츠 */

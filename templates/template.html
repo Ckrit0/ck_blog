@@ -48,7 +48,11 @@
                 오늘도 행복한 하루 되시길 바랍니다.
             </div>
             <div id="userInfoDiv">
+                {% if clientUser.getNo() != 0 %}
                 {{clientUser.getEmail()}}({{clientUser.getIp()}})
+                {% else %}
+                {{clientUser.getIp()}}
+                {% endif %}
             </div>
             <div id="searchDiv">
                 <input id="searchInput" />
@@ -58,10 +62,10 @@
                 <span class="subTitle">category</span>
                 <ul>
                     {% for category in categoryList %}
-                    <li id="category1_{{category[0].getNo()}}" class="mainCategory">{{category[0].getName()}}</li>
+                    <li class="mainCategory">{{category[0].getName()}}</li>
                     <ul>
                         {% for childCategory in category[1] %}
-                        <li id="category2_{{childCategory.getNo()}}" class="subCategory">-{{childCategory.getName()}}</li>
+                        <li class="subCategory" onclick="window.location.href='/category/{{childCategory.getNo()}}'">-{{childCategory.getName()}}</li>
                         {% endfor %}
                     </ul>
                     {% endfor %}
@@ -71,7 +75,7 @@
                 <span class="subTitle">lastest</span>
                 <ul>
                     {% for recentlyTitle in recentlyTitleList %}
-                    <li id="recentTitleUser_{{recentlyTitle[0]}}" class="recentlyLi">{{recentlyTitle[1]}}</li>
+                    <li class="recentlyLi" onclick="window.location.href='/board/{{recentlyTitle[0]}}'">{{recentlyTitle[1]}}</li>
                     {% endfor %}
                 </ul>
             </div>
@@ -80,5 +84,6 @@
             {% block content %} {% endblock %}
         </div>
     </main>
+<script src="{{url_for('static',filename='./script/template.js')}}"></script>
 </body>
 </html>
