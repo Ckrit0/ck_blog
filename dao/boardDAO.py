@@ -166,18 +166,13 @@ def getImageByImageNo(ino):
 ####################################### Set Board Object ########################################
 #################################################################################################
 
-def setBoard(board):
+def setBoard(uno,cno,title,contents,ip):
     '''
     글 작성하기
     parameter: 글객체(boardDTO)
     return: 성공 True, 실패 False (bool)
     '''
-    uno = board.getUserNo()
-    cno = board.getCategoryNo()
-    bTitle = board.getTitle()
-    bContents = board.getContents()
-    bIp = board.getIp()
-    sql = f'''INSERT INTO board(u_no,c_no,b_title,b_contents,b_ip) VALUES({uno},{cno},"{bTitle}","{bContents}","{bIp}")'''
+    sql = f'''INSERT INTO board(u_no,c_no,b_title,b_contents,b_ip) VALUES({uno},{cno},"{title}","{contents}","{ip}")'''
     result = db.setData(sql=sql)
     if result == 0:
         return False

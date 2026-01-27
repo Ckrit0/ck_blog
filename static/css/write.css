@@ -1,0 +1,101 @@
+#editorForm{
+    margin: 10px auto;
+    width: 80%;
+}
+
+#writeSelectLabel{
+    box-sizing: border-box;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+#writeSelect{
+    box-sizing: border-box;
+    background: var(--bg-color);
+    border: 1px solid var(--theme-color);
+    border-radius: 10px;
+    margin: 10px;
+    padding: 5px 10px;
+    width: 90%;
+    font-size: 14px;
+    color: var(--font-color);
+    font-weight: 600;
+    text-align: center;
+    appearance: none;
+    cursor: pointer;
+    outline: none;
+}
+#writeSelect:hover{
+    outline: none;
+}
+#writeSelect:focus{
+    border: 1px solid var(--theme-color);
+}
+
+#writeTitleLabel{
+    box-sizing: border-box;
+    padding: 5px;
+    font-size: 14px;
+    font-weight: 600;
+}
+#writeTitle{
+    box-sizing: border-box;
+    margin: 10px;
+    padding: 5px 10px;
+    width: 90%;
+    font-size: 14px;
+    outline: none;
+}
+#writeTitle:hover{
+    outline: none;
+}
+
+.ck-rounded-corners .ck.ck-editor__top .ck-sticky-panel .ck-toolbar, .ck.ck-editor__top .ck-sticky-panel .ck-toolbar.ck-rounded-corners{
+    /* 툴바 */
+    background: var(--bg-color);
+    border-color: var(--theme-color);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    color: var(--font-color);
+}
+
+.ck.ck-editor__main>.ck-editor__editable:not(.ck-focused) {
+    /* 에디터 논포커스 */
+    min-height: 500px;
+    background: var(--bg-color);
+    border-color: var(--theme-color);
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    color: var(--font-color);
+}
+
+.ck-rounded-corners .ck.ck-editor__main>.ck-editor__editable, .ck.ck-editor__main>.ck-editor__editable.ck-rounded-corners{
+    /* 에디터 포커스 */
+    min-height: 500px;
+    background: var(--bg-color);
+    border-color: var(--theme-color);
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    color: var(--font-color);
+}
+
+#submit-btn{
+    margin: 10px 20px;
+    width: 200px;
+    height: 40px;
+    font-size: 18px;
+}
+
+#cancel-btn{
+    margin: 10px 20px;
+    width: 200px;
+    height: 40px;
+    font-size: 18px;
+    color: var(--bg-color);
+    border-color: var(--theme-color);
+    background-color: var(--theme-color);
+}
+
+#cancel-btn:hover{
+    background-color: var(--dark-color);
+}

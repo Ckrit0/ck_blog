@@ -312,6 +312,29 @@ def writeBoard():
         recentlyTitleList=recentlyTitleList,
     )
 
+@app.route('/writeBoard', methods=['POST'])
+def saveBoard():
+    # 템플릿 정보
+    clientUser, categoryList, recentlyTitleList = getTemplateData(req=request)
+
+    resp = make_response(redirect(request.referrer or url_for('main')))
+
+    selectCategory = request.form.get('selectCategory')
+    title = request.form.get('title')
+    content = request.form.get('content')
+    result = boardDAO.setBoard(
+        uno=clientUser.getNo(),
+        cno=selectCategory,
+        ip=clientUser.getIp(),
+        title=title,
+        contents=content
+    )
+    if result:
+        flash(store.USER_MESSAGE[store.USER_RESULT_CODE['글작성성공']])
+    else:
+        flash(store.USER_MESSAGE[store.USER_RESULT_CODE['실패-unknown']])
+    return resp
+
 #############################
 ######### 글 핸들러 #########
 #############################
@@ -344,19 +367,6 @@ def getChildCommentHanler():
     commentList = commentDAO.getChildCommentListByBnoAndCono(bno=bno, cono=upperNo)
     return jsonify(commentList)
 
-
-
-@app.route('/writeBoard', methods=['POST'])
-def saveBoardHandler():
-    # 에디터에서 보낸 HTML 데이터 받기
-    content = request.form.get('content')
-    print(content)
-    # DB 저장 로직 (예: SQLAlchemy)
-    # db.session.add(Post(content=content))
-    # db.session.commit()
-    
-    return jsonify(content)
-
 @app.route('/upload', methods=['POST'])
 def uploadImageHandler():
     file = request.files.get('upload')
@@ -367,8 +377,6 @@ def uploadImageHandler():
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         # 클라이언트가 이미지에 접근할 수 있는 URL 생성
         file_url = url_for('static', filename=f'uploads/{filename}')
-        print(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        print(file_url)
         
         # CKEditor 5가 요구하는 응답 형식
         return jsonify({
