@@ -64,11 +64,8 @@
     padding: 30px;
     text-align: left;
 }
-#boardContentsDiv>figure>img{
+img{
     width: 90%;
-}
-#boardContentsDiv>figure{
-    text-align: center;
 }
 
 /* 댓글 */
