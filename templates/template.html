@@ -59,7 +59,7 @@
                 <button id="searchBtn">search</button>
             </div>
             <div id="categoryDiv">
-                <span class="subTitle">category</span>
+                <span class="subTitle">Category</span>
                 <ul>
                     {% for category in categoryList %}
                     <li class="mainCategory">{{category[0].getName()}}</li>
@@ -72,7 +72,7 @@
                 </ul>
             </div>
             <div id="recentDiv">
-                <span class="subTitle">lastest</span>
+                <span class="subTitle">Lastest View</span>
                 <ul>
                     {% for recentlyTitle in recentlyTitleList %}
                     <li class="recentlyLi" onclick="window.location.href='/board/{{recentlyTitle[0]}}'">{{recentlyTitle[1]}}</li>

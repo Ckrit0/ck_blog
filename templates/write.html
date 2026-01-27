@@ -1,0 +1,25 @@
+{% extends 'template.html' %}
+
+{% block content %}
+<form action="/writeBoard" method="POST">
+    <div id="editor"></div> <input type="hidden" name="content" id="content"> <button type="submit" id="submit-btn">글 저장하기</button>
+</form>
+
+<script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+<script>
+    ClassicEditor
+        .create(document.querySelector('#editor'), {
+            // 이미지 업로드 설정
+            ckfinder: {
+                uploadUrl: '/upload' // 우리가 만든 Flask 엔드포인트
+            }
+        })
+        .then(editor => {
+            // 폼 제출 시 에디터 내용을 hidden input에 담음
+            document.querySelector('#submit-btn').addEventListener('click', () => {
+                document.querySelector('#content').value = editor.getData();
+            });
+        })
+        .catch(error => { console.error(error); });
+</script>
+{% endblock %}

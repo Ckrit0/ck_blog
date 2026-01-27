@@ -1,9 +1,15 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify, abort, make_response, flash
 from dao import userDAO, categoryDAO, boardDAO, commentDAO
 from service import store, validate, userService, boardService, categoryService, serachService
+import os, datetime
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = store.secret_key
+app.config["UPLOAD_FOLDER"] = store.imageUploadDirectory
+app.config['MAX_CONTENT_LENGTH'] = store.imageSize
+if not os.path.exists(store.imageUploadDirectory):
+    os.makedirs(store.imageUploadDirectory)
 
 ################################
 ##### 메인 페이지, Service #####
@@ -52,6 +58,7 @@ def main():
     notice = [
         '안녕하세요 어차피 블로그를 운영할 계획이면 내가 만들자고 시작한 블로그입니다.',
         '해당 블로그의 전체 코드는 깃허브(https://github.com/Ckrit0/ck_blog)에서 확인이 가능합니다.',
+        '서버의 정기 재부팅 시각은 월요일 오전 4시입니다. 일시적으로 접속이 불가능할 수 있습니다.',
         '현재는 제작중이라 서버가 자주 불안정할 예정입니다.',
         '아직 도메인도 없습니다.',
         '이 글도 DB랑 연결 안하고 그냥 디자인 잡기 위해 생으로 입력한 글입니다.',
@@ -295,6 +302,16 @@ def boardPage(bno):
         nowPage=nowPage
     )
 
+@app.route('/write')
+def writeBoard():
+    # 템플릿 정보
+    clientUser, categoryList, recentlyTitleList = getTemplateData(req=request)
+    return render_template('write.html',
+        clientUser=clientUser,
+        categoryList=categoryList,
+        recentlyTitleList=recentlyTitleList,
+    )
+
 #############################
 ######### 글 핸들러 #########
 #############################
@@ -328,6 +345,38 @@ def getChildCommentHanler():
     return jsonify(commentList)
 
 
+
+@app.route('/writeBoard', methods=['POST'])
+def saveBoardHandler():
+    # 에디터에서 보낸 HTML 데이터 받기
+    content = request.form.get('content')
+    print(content)
+    # DB 저장 로직 (예: SQLAlchemy)
+    # db.session.add(Post(content=content))
+    # db.session.commit()
+    
+    return jsonify(content)
+
+@app.route('/upload', methods=['POST'])
+def uploadImageHandler():
+    file = request.files.get('upload')
+    if file:
+        filename = secure_filename(file.filename)
+        now = datetime.datetime.now()
+        filename = now.strftime('%Y%d%m%H%M%S') + '_' + filename
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        # 클라이언트가 이미지에 접근할 수 있는 URL 생성
+        file_url = url_for('static', filename=f'uploads/{filename}')
+        print(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        print(file_url)
+        
+        # CKEditor 5가 요구하는 응답 형식
+        return jsonify({
+            "uploaded": True,
+            'url': file_url
+        })
+    
+    return jsonify({'error': {'message': '업로드 실패'}}), 400
 
 ###############################
 ######## 카테고리 페이지 ########

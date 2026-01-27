@@ -23,6 +23,8 @@ send_email_message = '''
 본인이 요청한 것이 아닌 경우, 답장 주시면 조치하겠습니다.
     from. CkriT 블로그 - 널리 인간을 일 없게 하라
 '''
+imageUploadDirectory = os.environ.get("uploadDir")
+imageSize = 16 * 1024 * 1024
 PAGE_COUNT = { # 한 페이지에 보여줄 목록의 갯수
     '기본값': 5,
     '메인' : 20,
