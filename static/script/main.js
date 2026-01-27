@@ -1,6 +1,6 @@
 let mainListUl = document.getElementById('mainListUl')
 let mainNowPage = document.getElementById('mainNowPage')
-let mainPagingUl = document.getElementById('mainPagingUl')
+let pagingUl = document.getElementById('mainPagingUl')
 let pageLiList = document.getElementsByClassName('pages')
 
 /**
@@ -8,10 +8,10 @@ let pageLiList = document.getElementsByClassName('pages')
  * @param setPageNum
  */
 function setMainList(setPageNum){
-    if(setPageNum < 0){
+    if(setPageNum <= 0){
         setPageNum = 1
-    }else if(setPageNum > mainPagingUl.children.length - 2){
-        setPageNum = mainPagingUl.children.length - 2
+    }else if(setPageNum > boardPagingUl.children.length - 2){
+        setPageNum = boardPagingUl.children.length - 2
     }
     mainNowPage.innerHTML = setPageNum
     
@@ -65,7 +65,7 @@ function setMainPagingList(showPage){
             ]
         }
     }
-    let totalPage = mainPagingUl.children
+    let totalPage = boardPagingUl.children
     if(totalPage.length-2 > 5){
         showList = getShowList(showPage,totalPage.length-2)
         for(let i=0; i<totalPage.length;i++){
@@ -84,13 +84,13 @@ function setMainPagingList(showPage){
             }
         }
     }
-    for(let i=0;i<mainPagingUl.children.length;i++){
-        if(mainPagingUl.children[i].innerHTML == mainNowPage.innerHTML){
-            mainPagingUl.children[i].style['font-size'] = '30px'
-            mainPagingUl.children[i].style['vertical-align'] = 'bottom'
+    for(let i=0;i<boardPagingUl.children.length;i++){
+        if(boardPagingUl.children[i].innerHTML == mainNowPage.innerHTML){
+            boardPagingUl.children[i].style['font-size'] = '30px'
+            boardPagingUl.children[i].style['vertical-align'] = 'bottom'
         }else{
-            mainPagingUl.children[i].style['font-size'] = '20px'
-            mainPagingUl.children[i].style['align-self'] = 'end'
+            boardPagingUl.children[i].style['font-size'] = '20px'
+            boardPagingUl.children[i].style['align-self'] = 'end'
         }
     }
 }

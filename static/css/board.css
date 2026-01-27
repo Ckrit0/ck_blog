@@ -19,8 +19,7 @@
     grid-row: 1;
     grid-column-start: 1;
     grid-column-end: 5;
-    padding-top: 20px;
-    padding-bottom: 20px;
+    padding: 20px 40px;
     font-family: var(--subject-font);
     font-size: var(--post-title-font-size);
 }

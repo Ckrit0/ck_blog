@@ -5,6 +5,7 @@ let nowCnoDiv = document.getElementById('nowCnoDiv')
 let nowPageDiv = document.getElementById('nowPageDiv')
 let titlesUl = document.getElementById('titlesUl')
 let titleLiList = document.getElementsByClassName('titles')
+let boardPagingUl = document.getElementById('boardPagingUl')
 let pageLiList = document.getElementsByClassName('pages')
 let commentTextarea = document.getElementById('commentTextarea')
 let commentInputBtn = document.getElementById('commentInputBtn')
@@ -41,10 +42,15 @@ function setLike(){
  * @param setPageNum
  */
 function setCateList(setPageNum){
+    setPageNum = parseInt(setPageNum)
+    if(setPageNum <= 0){
+        setPageNum = 1
+    }else if(setPageNum > boardPagingUl.children.length - 2){
+        setPageNum = boardPagingUl.children.length - 2
+    }
+    nowPageDiv.innerHTML = setPageNum
     let bno = boardNoDiv.innerHTML
     let cno = nowCnoDiv.innerHTML
-
-    nowPageDiv.innerHTML = setPageNum
     
     url = "/getTitleListOnBoardByPage/" + cno + "/" + setPageNum
     fetch(url, {
@@ -77,15 +83,70 @@ function setCateList(setPageNum){
                 }
             }
         });
-    for(let i=0;i<pageLiList.length;i++){
-        if(pageLiList[i].innerHTML == nowPageDiv.innerHTML){
-            pageLiList[i].style['font-size'] = '30px'
-            pageLiList[i].style['vertical-align'] = 'bottom'
+    setBoardPagingList(setPageNum)
+}
+
+function setBoardPagingList(showPage){
+    function getShowList(showPage, totalPage){
+        if(showPage < 3){
+            return ['1','2','3','4','5','[next]']
+        }else if(showPage > totalPage-2){
+            return [
+                '[prev]',
+                String(totalPage-4),
+                String(totalPage-3),
+                String(totalPage-2),
+                String(totalPage-1),
+                String(totalPage)
+            ]
         }else{
-            pageLiList[i].style['font-size'] = '20px'
-            pageLiList[i].style['align-self'] = 'end'
+            return [
+                '[prev]',
+                String(showPage-2),
+                String(showPage-1),
+                String(showPage),
+                String(showPage+1),
+                String(showPage+2),
+                '[next]'
+            ]
         }
     }
+    let totalPage = boardPagingUl.children
+    if(totalPage.length-2 > 5){
+        showList = getShowList(showPage,totalPage.length-2)
+        for(let i=0; i<totalPage.length;i++){
+            if(showList.indexOf(totalPage[i].innerHTML) >= 0 ){
+                totalPage[i].style['display'] = ''
+            }else{
+                totalPage[i].style['display'] = 'none'
+            }
+        }
+    }else{
+        for(let i=0; i<totalPage.length;i++){
+            if(['1','2','3','4','5'].indexOf(totalPage[i].innerHTML) >= 0 ){
+                totalPage[i].style['display'] = ''
+            }else{
+                totalPage[i].style['display'] = 'none'
+            }
+        }
+    }
+    for(let i=0;i<boardPagingUl.children.length;i++){
+        if(boardPagingUl.children[i].innerHTML == nowPageDiv.innerHTML){
+            boardPagingUl.children[i].style['font-size'] = '30px'
+            boardPagingUl.children[i].style['vertical-align'] = 'bottom'
+        }else{
+            boardPagingUl.children[i].style['font-size'] = '20px'
+            boardPagingUl.children[i].style['align-self'] = 'end'
+        }
+    }
+}
+
+function boardPrevPage(){
+    setCateList(parseInt(nowPageDiv.innerHTML)-5)
+}
+
+function boardNextPage(){
+    setCateList(parseInt(nowPageDiv.innerHTML)+5)
 }
 
 /**

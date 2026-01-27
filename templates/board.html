@@ -10,10 +10,12 @@
     <div id="boardCategoryListDiv" class="contentsList">
         <span class="subTitle">Category Post - '<span onclick="window.location.href='/category/{{targetBoard.getCategoryNo()}}'">{{cName}}'</span></span>
         <ul id="titlesUl" class="listUl"></ul><br>
-        <ul class="pagingUl">
+        <ul id="boardPagingUl" class="pagingUl">
+            <li id="boardPrev" onclick="boardPrevPage()">[prev]</li>
             {% for page in pageList %}
             <li class="pages" onclick="setCateList('{{page}}')">{{page}}</li>
             {% endfor %}
+            <li id="boardNext" onclick="boardNextPage()">[next]</li>
         </ul>
     </div>
     <div id="boardTitleDiv">
