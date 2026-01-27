@@ -65,7 +65,8 @@
     text-align: left;
 }
 img{
-    width: 90%;
+    display: block;
+    width: 100%;
 }
 
 /* 댓글 */
