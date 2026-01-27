@@ -10,8 +10,8 @@ let pageLiList = document.getElementsByClassName('pages')
 function setMainList(setPageNum){
     if(setPageNum <= 0){
         setPageNum = 1
-    }else if(setPageNum > boardPagingUl.children.length - 2){
-        setPageNum = boardPagingUl.children.length - 2
+    }else if(setPageNum > pagingUl.children.length - 2){
+        setPageNum = pagingUl.children.length - 2
     }
     mainNowPage.innerHTML = setPageNum
     
@@ -65,7 +65,7 @@ function setMainPagingList(showPage){
             ]
         }
     }
-    let totalPage = boardPagingUl.children
+    let totalPage = pagingUl.children
     if(totalPage.length-2 > 5){
         showList = getShowList(showPage,totalPage.length-2)
         for(let i=0; i<totalPage.length;i++){
@@ -84,13 +84,13 @@ function setMainPagingList(showPage){
             }
         }
     }
-    for(let i=0;i<boardPagingUl.children.length;i++){
-        if(boardPagingUl.children[i].innerHTML == mainNowPage.innerHTML){
-            boardPagingUl.children[i].style['font-size'] = '30px'
-            boardPagingUl.children[i].style['vertical-align'] = 'bottom'
+    for(let i=0;i<pagingUl.children.length;i++){
+        if(pagingUl.children[i].innerHTML == mainNowPage.innerHTML){
+            pagingUl.children[i].style['font-size'] = '30px'
+            pagingUl.children[i].style['vertical-align'] = 'bottom'
         }else{
-            boardPagingUl.children[i].style['font-size'] = '20px'
-            boardPagingUl.children[i].style['align-self'] = 'end'
+            pagingUl.children[i].style['font-size'] = '20px'
+            pagingUl.children[i].style['align-self'] = 'end'
         }
     }
 }
