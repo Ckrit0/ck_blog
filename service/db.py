@@ -47,6 +47,7 @@ def getData(sql):
             data.append(tempList)
     except Exception as e:
         print(e)
+        print(sql)
     finally:
         con.close()
     return data
@@ -65,6 +66,7 @@ def setData(sql):
         result = cur.rowcount
     except Exception as e:
         print(e)
+        print(sql)
     finally:
         con.close()
     return result
@@ -84,6 +86,7 @@ def setDatas(sqlList):
         result = cur.rowcount
     except Exception as e:
         print(e)
+        print(sql)
     finally:
         con.close()
     return result

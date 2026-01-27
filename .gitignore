@@ -3,4 +3,4 @@
 **/*.pyc
 nohup.out
 **/log/
-/uploads
+**/uploads/*

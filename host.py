@@ -317,7 +317,7 @@ def saveBoard():
     # 템플릿 정보
     clientUser, categoryList, recentlyTitleList = getTemplateData(req=request)
 
-    resp = make_response(redirect(request.referrer or url_for('main')))
+    resp = make_response(redirect(url_for('main')))
 
     selectCategory = request.form.get('selectCategory')
     title = request.form.get('title')

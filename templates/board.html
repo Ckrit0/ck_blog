@@ -36,10 +36,7 @@
         <div id="postInfo2">{{targetBoard.getDate()}}</div>
     </div>
     <div id="boardContentsDiv">
-        <!-- 임시로 for문 돌려서 내용 꽉꽉 채우기 -->
-        {% for i in range(1000) %}
-            {{targetBoard.getContents()|safe}}
-        {% endfor %}
+        {{targetBoard.getContents()|safe}}
     </div>
     <div id="boardCommentDiv">
         <span class="subTitle">comment</span>
