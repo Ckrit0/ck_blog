@@ -1,4 +1,6 @@
-from service import db
+from service import db, store
+from dao import boardDAO
+import os, shutil
 
 def shortTitle(boardTitle):
     '''
@@ -34,4 +36,30 @@ def checkIsLiked(user, board):
     result = db.getData(sql=sql)[0][0]
     if result == 0:
         return False
+    return True
+
+def deleteUpload(bno):
+    '''
+    게시글 삭제시 업로드 된 이미지 삭제
+    parameter: 글번호
+    return: 성공 True, 실패 False
+    '''
+    contents = boardDAO.getBoardByBoardNo(bno=bno).getContents()
+    splitContents = contents.split('<img src="')
+    target = []
+    if len(splitContents) == 1:
+        return True
+    for i in range(len(splitContents)):
+        if i == 0:
+            continue
+        targetPath = splitContents[i].split('">')[0].split('/')
+        targetName = targetPath[len(targetPath)-1]
+        target.append(targetName)
+    try:
+        for name in target:
+            nowPath = os.path.join(store.imageUploadDirectory, name)
+            newPath = os.path.join(store.imageDeleteDirectory, name)
+            shutil.move(nowPath, newPath)
+    except Exception as e:
+        print(e)
     return True

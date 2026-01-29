@@ -11,8 +11,7 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = store.secret_key
 app.config["UPLOAD_FOLDER"] = store.imageUploadDirectory
 app.config['MAX_CONTENT_LENGTH'] = store.imageSize
-if not os.path.exists(store.imageUploadDirectory):
-    os.makedirs(store.imageUploadDirectory)
+
 
 ################################
 ##### 메인 페이지, Service #####
@@ -291,10 +290,7 @@ def boardPage(bno):
     pageList = boardDAO.getPageList_category(targetBoard.getCategoryNo())
     nowPage = boardDAO.getPageOfCategory(board=targetBoard)
 
-    # 뷰 설정하기
-    userDAO.setView(user=clientUser, bno=targetBoard.getNo(), url=request.path)
-
-    return render_template('board.html',
+    resp = make_response(render_template('board.html',
         clientUser=clientUser,
         categoryList=categoryList,
         recentlyTitleList=recentlyTitleList,
@@ -303,7 +299,17 @@ def boardPage(bno):
         cName=cName,
         pageList=pageList,
         nowPage=nowPage
-    )
+    ))
+
+    if targetBoard.getIsDelete() == 1:
+        resp = make_response(redirect(request.referrer or url_for('main')))
+        flash(store.USER_MESSAGE[store.USER_RESULT_CODE['삭제된글']])
+        return resp
+
+    # 뷰 설정하기
+    userDAO.setView(user=clientUser, bno=targetBoard.getNo(), url=request.path)
+
+    return resp
 
 @app.route('/write')
 def writeBoard():
@@ -320,8 +326,7 @@ def saveBoard():
     # 템플릿 정보
     clientUser, categoryList, recentlyTitleList = getTemplateData(req=request)
 
-    resp = make_response(redirect(url_for('main')))
-
+    resp = ''
     selectCategory = request.form.get('selectCategory')
     title = request.form.get('title')
     content = request.form.get('content')
@@ -333,7 +338,31 @@ def saveBoard():
         contents=content
     )
     if result:
+        bno = boardDAO.getRecentlyBoardNoByUserNo(clientUser.getNo())
+        resp = make_response(redirect(url_for('boardPage', bno=bno)))
         flash(store.USER_MESSAGE[store.USER_RESULT_CODE['글작성성공']])
+    else:
+        resp = make_response(redirect(url_for('main')))
+        flash(store.USER_MESSAGE[store.USER_RESULT_CODE['실패-unknown']])
+    return resp
+
+@app.route('/deleteBoard/<bno>')
+def deleteBoard(bno):
+    # 템플릿 정보
+    clientUser, categoryList, recentlyTitleList = getTemplateData(req=request)
+
+    resp = make_response(redirect(url_for('main')))
+
+    if clientUser.getState() == store.USER_STATE_CODE['관리자']:
+        pass
+    elif clientUser.getNo() != boardDAO.getBoardByBoardNo(bno=bno).getUserNo():
+        resp = make_response(redirect(request.referrer or url_for('main')))
+        flash(store.USER_MESSAGE[store.USER_RESULT_CODE['권한없음']])
+        return resp
+    
+    result = boardDAO.deleteBoard(bno=bno)
+    if result:
+        flash(store.USER_MESSAGE[store.USER_RESULT_CODE['글삭제성공']])
     else:
         flash(store.USER_MESSAGE[store.USER_RESULT_CODE['실패-unknown']])
     return resp

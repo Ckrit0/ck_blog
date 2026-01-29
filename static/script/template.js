@@ -1,6 +1,9 @@
 let searchInput = document.getElementById('searchInput')
 let searchBtn = document.getElementById('searchBtn')
 
+/**
+ * 검색 관련
+ */
 searchInput.addEventListener('keydown',(e)=>{
     if(e.key == "Enter"){
         searchBtn.click()

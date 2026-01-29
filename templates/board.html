@@ -31,7 +31,11 @@
             {% endif %}
             &nbsp;<span id="likeCountSpan">{{targetBoard.getLike()}}</span>
         </div>
-        <div></div>
+        <div id="deleteDiv">
+            {% if clientUser.getState() == 5 or (clientUser.getNo() != 0 and targetBoard.getUserNo() == clientUser.getNo()) %}
+            <span onclick="window.location.href='/deleteBoard/{{targetBoard.getNo()}}'">(삭제)</span>
+            {% endif %}
+        </div>
         <div id="postInfo1" class="pointer" onclick="window.location.href='/user/{{targetBoard.getUserNo()}}'">{{targetBoard.getMarkingEmail()}}</div>
         <div id="postInfo2">{{targetBoard.getDate()}}</div>
     </div>

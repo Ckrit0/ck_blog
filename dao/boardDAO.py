@@ -93,7 +93,7 @@ def getBoardByBoardNo(bno):
         FROM board b \
         JOIN user u \
         ON b.u_no = u.u_no \
-        WHERE b.b_no = {bno} AND b.b_isdelete=0'''
+        WHERE b.b_no = {bno}'''
     result = db.getData(sql=sql)[0]
     board.setBoardByDbResult(dbResult=result)
     return board
@@ -127,6 +127,15 @@ def getBoardCountByUserNo(uno):
     result = db.getData(sql=sql)
     return result[0][0]
 
+def getRecentlyBoardNoByUserNo(uno):
+    '''
+    해당 유저의 마지막 게시글 가져오기
+    return: 마지막 글 번호(int)
+    '''
+    sql = f'''SELECT b_no FROM board WHERE b_isdelete=0 AND u_no = {uno} ORDER BY b_no DESC LIMIT 1'''
+    result = db.getData(sql=sql)[0][0]
+    return result
+
 def getRecentlyBoardList(uno):
     '''
     유저별 작성한 최신글 목록 가져오기
@@ -150,17 +159,6 @@ def getRecentlyBoardList(uno):
         result.append(board)
     return result
 
-
-
-'''
-이미지번호로 이미지객체 가져오기
-parameter: 이미지번호(int)
-return: 이미지객체
-'''
-def getImageByImageNo(ino):
-    image = None
-    sql = f''''''
-    return image
 
 #################################################################################################
 ####################################### Set Board Object ########################################
@@ -206,16 +204,17 @@ def changeCategory(board, newCno):
         return False
     return True
 
-def deleteBoard(board):
+def deleteBoard(bno):
     '''
     글 삭제하기 (b_isdelete를 1로 update)
-    parameter: 글객체(boardDTO)
+    parameter: 글번호(int)
     return: 성공 True, 실패 False (bool)
     '''
-    sql = f'''UPDATE board SET b_isdelete = 1 WHERE b_no = {board.getNo()}'''
+    sql = f'''UPDATE board SET b_isdelete = 1 WHERE b_no = {bno}'''
     result = db.setData(sql=sql)
     if result == 0:
         return False
+    boardService.deleteUpload(bno=bno)
     return True
 
 def setLike(user, board):

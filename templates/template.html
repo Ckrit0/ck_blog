@@ -62,7 +62,9 @@
                 <span class="subTitle">Categories</span>
                 <ul>
                     {% for category in categoryList %}
-                    <li class="mainCategory">{{category[0].getName()}}</li>
+                    <li class="mainCategory">
+                        {{category[0].getName()}}
+                    </li>
                     <ul>
                         {% for childCategory in category[1] %}
                         <li class="subCategory" onclick="window.location.href='/category/{{childCategory.getNo()}}'">

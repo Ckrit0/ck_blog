@@ -24,6 +24,11 @@ send_email_message = '''
     from. CkriT 블로그 - 널리 인간을 일 없게 하라
 '''
 imageUploadDirectory = os.environ.get("uploadDir")
+imageDeleteDirectory = os.path.join(imageUploadDirectory, 'deleted')
+if not os.path.exists(imageUploadDirectory):
+    os.makedirs(imageUploadDirectory)
+if not os.path.exists(imageDeleteDirectory):
+    os.makedirs(imageDeleteDirectory)
 imageSize = 16 * 1024 * 1024
 PAGE_COUNT = { # 한 페이지에 보여줄 목록의 갯수
     '기본값': 5,
@@ -74,6 +79,8 @@ USER_RESULT_CODE = {
     '검색어 부족':23,
     '글작성성공':24,
     '권한없음':25,
+    '글삭제성공':26,
+    '삭제된글':27,
     
     '실패-unknown':999
 }
@@ -105,6 +112,8 @@ USER_MESSAGE = { # userResultCode에 따라 사용자에게 보여줄 메시지
     23 : "검색은 최소 2글자 이상 입력해야합니다.(공백 제외)",
     24 : "글이 작성되었습니다.",
     25 : "권한이 없습니다.",
+    26 : "글이 삭제되었습니다.",
+    27 : "삭제된 글입니다.",
     999 : "알 수 없는 이유로 작업에 실패하였습니다. 잠시 후 다시 시도해주세요."
 }
 

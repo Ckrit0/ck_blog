@@ -181,7 +181,8 @@ JOIN user u
 ON b.u_no = u.u_no 
 WHERE b.u_no = 1 AND b.b_isdelete = 0
 ORDER BY b_no DESC LIMIT 5;
-
+-- 유저번호로 작성된 마지막 글 번호 가져오기
+SELECT b_no FROM board WHERE b_isdelete=0 AND u_no = "uno" ORDER BY b_no DESC LIMIT 1;
 
 
 

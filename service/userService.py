@@ -136,7 +136,7 @@ def markingEmail(email, state):
     elif state == store.USER_STATE_CODE['블랙리스트']:
         return '(차단중인 회원)'
     elif state == store.USER_STATE_CODE['관리자']:
-        return markingEmail + '(관리자)'
+        return 'CkriT'
 
 def markingIp(ip):
     '''
