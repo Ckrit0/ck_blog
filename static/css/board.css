@@ -63,10 +63,25 @@
     border-bottom: 1px dotted var(--theme-color);
     padding: 30px;
     text-align: left;
+    overflow: auto;
 }
-img{
+
+/* 이미지 */
+.image>img{
     display: block;
     width: 100%;
+}
+.image-style-side{
+    float: right;
+    max-width: 50%;
+}
+.image-style-side>img{
+    max-width: 100%;
+}
+.image>figcaption{
+    font-style: italic;
+    font-size: var(--sidebar-lil-font-size);
+    color: gray;
 }
 
 /* 댓글 */
