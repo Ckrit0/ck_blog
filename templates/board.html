@@ -8,7 +8,7 @@
 
 <div id="boardDiv">
     <div id="boardCategoryListDiv" class="contentsList">
-        <span class="subTitle">Category Post - '<span onclick="window.location.href='/category/{{targetBoard.getCategoryNo()}}'">{{cName}}'</span></span>
+        <span class="subTitle">Category Posts - '<span onclick="window.location.href='/category/{{targetBoard.getCategoryNo()}}'">{{cName}}'</span></span>
         <ul id="titlesUl" class="listUl"></ul><br>
         <ul id="boardPagingUl" class="pagingUl">
             <li id="boardPrev" onclick="boardPrevPage()">[prev]</li>
@@ -42,8 +42,8 @@
         <span class="subTitle">comment</span>
         <ul class="commentUl">
             <div>
-                <textarea id="commentTextarea"></textarea><br>
-                <button id="commentInputBtn">등록 (0/1000자)</button>
+                <textarea class="commentTextarea" id="commentTextarea"></textarea><br>
+                <button class="commentInputBtn" id="commentInputBtn" onclick="insertComment(0)">등록 (0/1000자)</button>
             </div>
             <div id="commentParentDiv"></div>
         </ul><br>

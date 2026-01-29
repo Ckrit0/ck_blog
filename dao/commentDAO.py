@@ -1,5 +1,6 @@
 from dto import commentDTO
 from service import db, store, userService
+import datetime
 
 #################################################################################################
 ###################################### Get Comment Object #######################################
@@ -36,11 +37,11 @@ def getCommentListByBoardNo(bno):
         commentList.append([pc,tempList])
     return commentList
 
-def getParentCommentListByBno(bno):
+def getParentCommentListByBno(bno, uno):
     '''
     글번호로 상위 댓글객체 리스트 가져오기
     parameter: 글번호(int)
-    return: 댓글 데이터의 이중 리스트(List)
+    return: 댓글 데이터의 이중 리스트([[cono,bno,uno,ip,comment,upper,isDelete,userEmail,userEmail,userState,boardTitle,removable]...])
     '''
     sql = f'''\
         SELECT \
@@ -55,16 +56,25 @@ def getParentCommentListByBno(bno):
     result = db.getData(sql=sql)
     for r in result:
         r[3] = userService.markingIp(ip=r[3])
+        r[5] = r[5].strftime('%Y-%m-%d')
         if r[7] == 1:
             r[4] = store.USER_MESSAGE[store.USER_RESULT_CODE['삭제된 댓글']]
         r[8] = userService.markingEmail(email=r[8],state=r[9])
+        if uno == 0:
+            r.append(False)
+        elif uno == r[2]:
+            r.append(True)
+        elif r[9] == store.USER_STATE_CODE['관리자']:
+            r.append(True)
+        else:
+            r.append(False)
     return result
 
-def getChildCommentListByBnoAndCono(bno, cono):
+def getChildCommentListByBnoAndCono(bno, cono, uno):
     '''
     글번호와 상위댓글번호로 하위댓글객체 리스트 가져오기
     parameter: 글번호(int), 상위댓글번호(int)
-    return: 댓글 데이터의 이중 리스트(List)
+    return: 댓글 데이터의 이중 리스트([[cono,bno,uno,ip,comment,upper,isDelete,userEmail,userEmail,userState,boardTitle,removable]...])
     '''
     sql = f'''\
         SELECT \
@@ -78,9 +88,16 @@ def getChildCommentListByBnoAndCono(bno, cono):
     result = db.getData(sql=sql)
     for r in result:
         r[3] = userService.markingIp(ip=r[3])
+        r[5] = r[5].strftime('%Y-%m-%d')
         if r[7] == 1:
             r[4] = store.USER_MESSAGE[store.USER_RESULT_CODE['삭제된 댓글']]
         r[8] = userService.markingEmail(email=r[8],state=r[9])
+        if uno == r[2]:
+            r.append(True)
+        elif r[9] == store.USER_STATE_CODE['관리자']:
+            r.append(True)
+        else:
+            r.append(False)
     return result
 
 
@@ -115,10 +132,22 @@ def getRecentlyCommentList(uno):
         result.append(c)
     return result
 
+def isMatch(cono, uno):
+    '''
+    해당 댓글 작성자가 맞는지 확인    
+    parameter: 댓글번호(int), 유저번호(int)
+    return: 맞음 True, 틀림 False
+    '''
+    sql = f'''SELECT u_no FROM comment WHERE co_no = {cono}'''
+    result = db.getData(sql=sql)[0][0]
+    if result == uno:
+        return True
+    return False
+
 #################################################################################################
 ###################################### Set Comment Object #######################################
 #################################################################################################
-def setComment(comment):
+def setComment(bno,uno,coIp,comment,upperNo):
     '''
     댓글 달기
     parameter: 댓글객체(commentDTO)
@@ -127,11 +156,11 @@ def setComment(comment):
     sql = f'''\
         INSERT INTO comment(b_no,u_no,co_ip,co_comment,co_upper) \
         VALUES(\
-            {comment.getBoardNo()},\
-            {comment.getUserNo()},\
-            "{comment.getIp()}",\
-            "{comment.getComment()}",\
-            {comment.getUpper()}
+            {bno},\
+            {uno},\
+            "{coIp}",\
+            "{comment}",\
+            {upperNo}
         )'''
     result = db.setData(sql=sql)
     if result == 0:

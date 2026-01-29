@@ -208,9 +208,6 @@ JOIN user u ON c.u_no = u.u_no
 JOIN board b ON c.b_no = b.b_no
 WHERE c.b_no=11 AND c.co_upper IS NULL
 ORDER BY c.co_no;
-
-
-
 -- 게시글의 하위 댓글 가져오기(오래된 순, 유저 이메일, 유저 상태, 게시글 제목 포함)
 SELECT c.*, u.u_email, u.u_state, b.b_title FROM comment c
 JOIN user u ON c.u_no = u.u_no
@@ -225,6 +222,8 @@ JOIN user u ON c.u_no = u.u_no
 JOIN board b ON c.b_no = b.b_no
 WHERE c.u_no = 1
 ORDER BY c.co_no DESC LIMIT 5 OFFSET 0;
+-- 댓글번호로 유저번호 가져오기
+SELECT u_no FROM comment WHERE co_no = "co_no";
 
 ------------------------------------------------------------------------------------------------------------
 -------------------------------------------------- INSERT --------------------------------------------------

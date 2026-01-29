@@ -7,6 +7,7 @@ class CommentDTO:
         self.uno = None
         self.ip = None
         self.comment = None
+        self.date = None
         self.upper = None
         self.isDelete = None
         self.userEmail = None

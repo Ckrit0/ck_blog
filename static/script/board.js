@@ -168,9 +168,18 @@ function getParentComment(){
         .then((result) => {
             commentParentDiv.innerHTML = ''
             for(let i=0;i<result.length;i++){
-                var liElement = document.createElement('li')
+                let liElement = document.createElement('li')
 
-                var spanElement_email = document.createElement('span')
+                let spanElement_email = document.createElement('span')
+                let spanElement_ip = document.createElement('span')
+                let spanElement_date = document.createElement('span')
+                let spanElement_contents = document.createElement('span')
+                let spanElement_getChild = document.createElement('span')
+                let spanElement_setChild = document.createElement('span')
+                let childCommentUl = document.createElement('ul')
+                let commentTextarea = document.createElement('textarea')
+                let commentInputBtn = document.createElement('button')
+                
                 spanElement_email.classList.add('commentEmail')
                 spanElement_email.onclick = function(){
                     window.location.href='/user/' + result[i][2]
@@ -178,22 +187,29 @@ function getParentComment(){
                 spanElement_email.innerHTML = result[i][8]
                 liElement.appendChild(spanElement_email)
                 
-                var spanElement_ip = document.createElement('span')
                 spanElement_ip.classList.add('commentIp')
-                spanElement_ip.innerHTML = result[i][3]
+                spanElement_ip.innerHTML = '(' + result[i][3] + ')'
                 liElement.appendChild(spanElement_ip)
                 
-                var spanElement_date = document.createElement('span')
                 spanElement_date.classList.add('commentDate')
                 spanElement_date.innerHTML = result[i][5]
                 liElement.appendChild(spanElement_date)
                 
-                var spanElement_contents = document.createElement('span')
                 spanElement_contents.classList.add('commentContents')
                 spanElement_contents.innerHTML = result[i][4]
+                if(result[i][7] == 1){
+                    spanElement_contents.classList.add('deleted')
+                }else if(result[i][12]){
+                    let removeBtn = document.createElement('span')
+                    removeBtn.classList.add('commentRemove')
+                    removeBtn.innerHTML = '삭제'
+                    removeBtn.onclick = function(){
+                        removeComment(result[i][0])
+                    }
+                    spanElement_contents.appendChild(removeBtn)
+                }
                 liElement.appendChild(spanElement_contents)
                 
-                var spanElement_getChild = document.createElement('span')
                 spanElement_getChild.id = "getChildBtn_" + result[i][0]
                 spanElement_getChild.classList.add('commentGetChild')
                 spanElement_getChild.innerHTML = '답글(' + result[i][11] + ')'
@@ -202,15 +218,36 @@ function getParentComment(){
                 }
                 liElement.appendChild(spanElement_getChild)
                 
-                var spanElement_setChild = document.createElement('span')
                 spanElement_setChild.classList.add('commentSetChild')
                 spanElement_setChild.innerHTML = '답글등록'
+                spanElement_setChild.onclick = function(){
+                    commentTextarea.style['display'] = ''
+                    commentInputBtn.style['display'] = ''
+                }
                 liElement.appendChild(spanElement_setChild)
 
-                var childCommentUl = document.createElement('ul')
                 childCommentUl.id = "childComment_" + result[i][0]
                 childCommentUl.classList.add("subCommentUl")
                 liElement.appendChild(childCommentUl)
+                
+                commentTextarea.id = "commentTextarea" + result[i][0]
+                commentTextarea.classList.add("commentTextarea")
+                commentTextarea.style['display'] = 'none'
+                commentTextarea.addEventListener('input',()=>{
+                commentInputBtn.innerHTML = '등록 (' + commentTextarea.value.length + '/1000 자)'
+                })
+                liElement.appendChild(commentTextarea)
+                
+                commentInputBtn.id = "commentInputBtn" + result[i][0]
+                commentInputBtn.classList.add("commentInputBtn")
+                commentInputBtn.innerHTML = '등록 (0/1000자)'
+                commentInputBtn.onclick = function(){
+                    insertComment(result[i][0])
+                    commentTextarea.style['display'] = 'none'
+                    commentInputBtn.style['display'] = 'none'
+                }
+                commentInputBtn.style['display'] = 'none'
+                liElement.appendChild(commentInputBtn)
                 
                 commentParentDiv.appendChild(liElement)
             }
@@ -239,10 +276,15 @@ function getChildComment(upperNo){
         })
         .then((response) => response.json())
         .then((result) => {
+            let childCommentUl = document.getElementById('childComment_' + upperNo)
+            childCommentUl.innerHTML=''
             for(let i=0;i<result.length;i++){
-                var liElement = document.createElement('li')
-
-                var spanElement_email = document.createElement('span')
+                let liElement = document.createElement('li')
+                let spanElement_email = document.createElement('span')
+                let spanElement_ip = document.createElement('span')
+                let spanElement_date = document.createElement('span')
+                let spanElement_contents = document.createElement('span')
+                
                 spanElement_email.classList.add('commentEmail')
                 spanElement_email.onclick = function(){
                     window.location.href='/user/' + result[i][2]
@@ -250,33 +292,118 @@ function getChildComment(upperNo){
                 spanElement_email.innerHTML = result[i][8]
                 liElement.appendChild(spanElement_email)
                 
-                var spanElement_ip = document.createElement('span')
                 spanElement_ip.classList.add('commentIp')
-                spanElement_ip.innerHTML = result[i][3]
+                spanElement_ip.innerHTML = '(' + result[i][3] + ')'
                 liElement.appendChild(spanElement_ip)
                 
-                var spanElement_date = document.createElement('span')
                 spanElement_date.classList.add('commentDate')
                 spanElement_date.innerHTML = result[i][5]
                 liElement.appendChild(spanElement_date)
                 
-                var spanElement_contents = document.createElement('span')
                 spanElement_contents.classList.add('commentContents')
                 spanElement_contents.innerHTML = result[i][4]
+                if(result[i][7] == 1){
+                    spanElement_contents.classList.add('deleted')
+                }else if(result[i][11]){
+                    let removeBtn = document.createElement('span')
+                    removeBtn.classList.add('commentRemove')
+                    removeBtn.innerHTML = '삭제'
+                    removeBtn.onclick = function(){
+                        removeComment(result[i][0])
+                    }
+                    spanElement_contents.appendChild(removeBtn)
+                }
                 liElement.appendChild(spanElement_contents)
                 
-                let childCommentUl = document.getElementById('childComment_' + upperNo)
                 childCommentUl.appendChild(liElement)
             }
         });
         getChildBtn.innerHTML = tempString
-        getChildBtn.onclick = ()=>{}
+}
+
+/**
+ * 댓글 작성기능(upperNo가 0이면 최상위 댓글)
+ * @param upperNo 
+ */
+function insertComment(upperNo){
+    comment = ''
+    commentTextarea = ''
+    commentInputBtn = ''
+    if(upperNo == 0){
+        commentInputBtn = document.getElementById('commentInputBtn')
+        commentTextarea = document.getElementById('commentTextarea').value.trim()
+        comment = commentTextarea.value.trim()
+    }else{
+        commentInputBtn = document.getElementById('commentInputBtn' + upperNo)
+        commentTextarea = document.getElementById('commentTextarea' + upperNo)
+        comment = commentTextarea.value.trim()
+    }
+    if(comment == ''){
+        return
+    }
+    bno = boardNoDiv.innerHTML
+    let tempString = commentInputBtn.innerHTML
+    let url = '/insertComment'
+    commentInputBtn.innerHTML = '<span class="spiner">🌀</span>'
+    fetch(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            bno: bno,
+            upperNo: upperNo,
+            comment: comment
+        }),
+        })
+        .then((response) => response.json())
+        .then((result) => {
+            if(result[0]){
+                commentTextarea.value = ''
+                commentInputBtn.innerHTML = '등록 (0/1000자)'
+                if(upperNo==0){
+                    getParentComment()
+                }else{
+                    getChildComment(upperNo)
+                }
+            }else{
+                alert(result[1])
+            }
+        });
+        commentInputBtn.innerHTML = tempString
+}
+
+/**
+ * 댓글 삭제 기능
+ * @param cono 
+ */
+function removeComment(cono){
+    let url = '/deleteComment'
+    fetch(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            cono: cono
+        }),
+        })
+        .then((response) => response.json())
+        .then((result) => {
+            if(result[0]){
+                getParentComment()
+            }else{
+                alert(result[1])
+            }
+        });
 }
 
 
+// 이벤트 리스너
 commentTextarea.addEventListener('input',()=>{
     commentInputBtn.innerHTML = '등록 (' + commentTextarea.value.length + '/1000 자)'
 })
 
+// 초기 실행
 setCateList(nowPageDiv.innerHTML)
 getParentComment()

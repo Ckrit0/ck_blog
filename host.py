@@ -4,6 +4,9 @@ from service import store, validate, userService, boardService, categoryService,
 import os, datetime
 from werkzeug.utils import secure_filename
 
+###########################
+##### Flask 기본 설정 #####
+###########################
 app = Flask(__name__)
 app.config["SECRET_KEY"] = store.secret_key
 app.config["UPLOAD_FOLDER"] = store.imageUploadDirectory
@@ -354,37 +357,65 @@ def getTitleListOnBoardByPageHandler(cno,page):
     titleList = boardDAO.getTitleList_cathgory(cno=cno,page=page)
     return jsonify(titleList)
 
-@app.route("/getParentComment", methods=["POST"])
-def getParentCommentHanler():
-    bno = request.json['bno']
-    commentList = commentDAO.getParentCommentListByBno(bno=bno)
-    return jsonify(commentList)
-
-@app.route("/getChildComment", methods=["POST"])
-def getChildCommentHanler():
-    bno = request.json['bno']
-    upperNo = request.json['upperNo']
-    commentList = commentDAO.getChildCommentListByBnoAndCono(bno=bno, cono=upperNo)
-    return jsonify(commentList)
-
 @app.route('/upload', methods=['POST'])
 def uploadImageHandler():
     file = request.files.get('upload')
     if file:
         filename = secure_filename(file.filename)
         now = datetime.datetime.now()
-        filename = now.strftime('%Y%d%m%H%M%S') + '_' + filename
+        filename = now.strftime('%Y%m%d%H%M%S') + '_' + filename
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        # 클라이언트가 이미지에 접근할 수 있는 URL 생성
         file_url = url_for('static', filename=f'uploads/{filename}')
-        
-        # CKEditor 5가 요구하는 응답 형식
-        return jsonify({
-            "uploaded": True,
-            'url': file_url
-        })
-    
+        return jsonify({"uploaded": True, 'url': file_url})
     return jsonify({'error': {'message': '업로드 실패'}}), 400
+
+@app.route("/getParentComment", methods=["POST"])
+def getParentCommentHanler():
+    clientUser = userDAO.getUserBySessionKey(cookieKey=request.cookies.get('sessionKey'),ip=request.remote_addr)
+    bno = request.json['bno']
+    commentList = commentDAO.getParentCommentListByBno(bno=bno, uno=clientUser.getNo())
+    return jsonify(commentList)
+
+@app.route("/getChildComment", methods=["POST"])
+def getChildCommentHanler():
+    clientUser = userDAO.getUserBySessionKey(cookieKey=request.cookies.get('sessionKey'),ip=request.remote_addr)
+    bno = request.json['bno']
+    upperNo = request.json['upperNo']
+    commentList = commentDAO.getChildCommentListByBnoAndCono(bno=bno, cono=upperNo, uno=clientUser.getNo())
+    return jsonify(commentList)
+
+@app.route("/insertComment", methods=["POST"])
+def insertCommentHanler():
+    clientUser = userDAO.getUserBySessionKey(cookieKey=request.cookies.get('sessionKey'),ip=request.remote_addr)
+    bno = request.json['bno']
+    upperNo = request.json['upperNo']
+    comment = request.json['comment']
+    if upperNo == 0:
+        upperNo = "NULL"
+    result = commentDAO.setComment(bno=bno,uno=clientUser.getNo(),coIp=clientUser.getIp(),comment=comment,upperNo=upperNo)
+    if result:
+        return jsonify([result])
+    return jsonify([result,store.USER_MESSAGE[store.USER_RESULT_CODE['실패-unknown']]])
+
+@app.route("/deleteComment", methods=["POST"])
+def deleteCommentHanler():
+    clientUser = userDAO.getUserBySessionKey(cookieKey=request.cookies.get('sessionKey'),ip=request.remote_addr)
+    cono = request.json['cono']
+    result = False
+    if clientUser.getState() == store.USER_STATE_CODE['관리자']:
+        dbResult = commentDAO.deleteComment(cono=cono)
+        if dbResult != 0:
+            result = True
+    elif commentDAO.isMatch(cono=cono,uno=clientUser.getNo()):
+        dbResult = commentDAO.deleteComment(cono=cono)
+        if dbResult != 0:
+            result = True
+    else:
+        return jsonify([result,store.USER_MESSAGE[store.USER_RESULT_CODE['권한없음']]])
+    return jsonify([result,store.USER_MESSAGE[store.USER_RESULT_CODE['실패-unknown']]])
+
+
+
 
 ###############################
 ######## 카테고리 페이지 ########
