@@ -331,7 +331,7 @@ function insertComment(upperNo){
     commentInputBtn = ''
     if(upperNo == 0){
         commentInputBtn = document.getElementById('commentInputBtn')
-        commentTextarea = document.getElementById('commentTextarea').value.trim()
+        commentTextarea = document.getElementById('commentTextarea')
         comment = commentTextarea.value.trim()
     }else{
         commentInputBtn = document.getElementById('commentInputBtn' + upperNo)
