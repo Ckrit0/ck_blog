@@ -99,7 +99,6 @@ class BoardDTO:
         return self.uEmail
     
     def getMarkingEmail(self):
-        print(self.uState)
         return userService.markingEmail(self.uEmail, self.uState)
     
     def getUserState(self):

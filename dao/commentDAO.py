@@ -37,7 +37,7 @@ def getCommentListByBoardNo(bno):
         commentList.append([pc,tempList])
     return commentList
 
-def getParentCommentListByBno(bno, uno):
+def getParentCommentListByBno(bno, uno, ustate):
     '''
     글번호로 상위 댓글객체 리스트 가져오기
     parameter: 글번호(int)
@@ -64,13 +64,13 @@ def getParentCommentListByBno(bno, uno):
             r.append(False)
         elif uno == r[2]:
             r.append(True)
-        elif r[9] == store.USER_STATE_CODE['관리자']:
+        elif ustate == store.USER_STATE_CODE['관리자']:
             r.append(True)
         else:
             r.append(False)
     return result
 
-def getChildCommentListByBnoAndCono(bno, cono, uno):
+def getChildCommentListByBnoAndCono(bno, cono, uno, ustate):
     '''
     글번호와 상위댓글번호로 하위댓글객체 리스트 가져오기
     parameter: 글번호(int), 상위댓글번호(int)
@@ -94,7 +94,7 @@ def getChildCommentListByBnoAndCono(bno, cono, uno):
         r[8] = userService.markingEmail(email=r[8],state=r[9])
         if uno == r[2]:
             r.append(True)
-        elif r[9] == store.USER_STATE_CODE['관리자']:
+        elif ustate == store.USER_STATE_CODE['관리자']:
             r.append(True)
         else:
             r.append(False)

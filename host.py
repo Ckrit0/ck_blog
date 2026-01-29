@@ -373,7 +373,7 @@ def uploadImageHandler():
 def getParentCommentHanler():
     clientUser = userDAO.getUserBySessionKey(cookieKey=request.cookies.get('sessionKey'),ip=request.remote_addr)
     bno = request.json['bno']
-    commentList = commentDAO.getParentCommentListByBno(bno=bno, uno=clientUser.getNo())
+    commentList = commentDAO.getParentCommentListByBno(bno=bno, uno=clientUser.getNo(), ustate=clientUser.getState())
     return jsonify(commentList)
 
 @app.route("/getChildComment", methods=["POST"])
@@ -381,7 +381,7 @@ def getChildCommentHanler():
     clientUser = userDAO.getUserBySessionKey(cookieKey=request.cookies.get('sessionKey'),ip=request.remote_addr)
     bno = request.json['bno']
     upperNo = request.json['upperNo']
-    commentList = commentDAO.getChildCommentListByBnoAndCono(bno=bno, cono=upperNo, uno=clientUser.getNo())
+    commentList = commentDAO.getChildCommentListByBnoAndCono(bno=bno, cono=upperNo, uno=clientUser.getNo(), ustate=clientUser.getState())
     return jsonify(commentList)
 
 @app.route("/insertComment", methods=["POST"])

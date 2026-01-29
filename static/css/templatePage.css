@@ -143,6 +143,10 @@ main{
     padding-left: 20px;
     cursor: pointer;
 }
+.subCategory::before{
+    content: '└ ';
+    color: var(--font-color);
+}
 
 /* 사이드바 - 최근 글 */
 #recentDiv{
