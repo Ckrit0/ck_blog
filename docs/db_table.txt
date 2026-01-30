@@ -23,10 +23,6 @@ b_contents  	글 내용
 b_isdelete      삭제여부(0: 미삭제, 1: 삭제)
 b_ip            IP
 
-< IMAGE >
-i_no	        이미지번호
-i_path      	이미지경로
-
 < VIEWS >
 b_no            글번호
 u_no            유저번호

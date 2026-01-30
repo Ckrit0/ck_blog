@@ -182,7 +182,6 @@ def loginHandler():
                 samesite='Lax',
                 httponly=True)
     except Exception as e:
-        # alert 메시지 생성
         flash(store.USER_MESSAGE[store.USER_RESULT_CODE['실패-unknown']])
         log = logger.Logger()
         log.setLog(store.LOG_NAME['유저'],f"login error: {e}")
@@ -368,7 +367,6 @@ def saveBoard():
     if result:
         bno = boardDAO.getRecentlyBoardNoByUserNo(clientUser.getNo())
         resp = make_response(redirect(url_for('boardPage', bno=bno)))
-        flash(store.USER_MESSAGE[store.USER_RESULT_CODE['글작성성공']])
     else:
         resp = make_response(redirect(url_for('main')))
         flash(store.USER_MESSAGE[store.USER_RESULT_CODE['실패-unknown']])
@@ -482,17 +480,31 @@ def categoryPage(categoryNo):
     # 템플릿 정보
     clientUser, categoryList, recentlyTitleList = getTemplateData(req=request)
 
+    # 데이터 가져오기
+    cName = categoryService.getCategoryNameByCnoInCategoryList(cList=categoryList,cno=int(categoryNo))
+    pageList = boardDAO.getPageList_category(int(categoryNo))
+    isWritable = validate.checkWritableCategory(user=clientUser,cno=categoryNo)
+
     # 뷰 설정하기
     userDAO.setView(user=clientUser, url=request.path)
+
     return render_template('category.html',
         clientUser=clientUser,
         categoryList=categoryList,
-        recentlyTitleList=recentlyTitleList
+        recentlyTitleList=recentlyTitleList,
+        categoryNo=categoryNo,
+        cName=cName,
+        pageList=pageList,
+        isWritable=isWritable
     )
 
 ###############################
 ######## 카테고리 핸들러 ########
 ###############################
+@app.route("/getTitleListOnCategoryByPage/<cno>/<page>", methods=["POST"])
+def getTitleListOnCategoryByPageHandler(cno,page):
+    titleList = categoryDAO.getTitleList_cathgoryInCategoryPage(cno=cno,page=page)
+    return jsonify(titleList)
 
 #############################
 ######## 검색 페이지 ########

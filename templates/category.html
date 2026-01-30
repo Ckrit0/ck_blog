@@ -1,13 +1,22 @@
 {% extends 'template.html' %}
 
 {% block content %}
-<div id="categoryDiv">
-    categoryPage
-    <div id="categoryRecentlyContentsListDiv" class="contentsList">
-        recentlyContentsList
-    </div>
+<link rel="stylesheet" href="{{url_for('static',filename='./css/category.css')}}">
+<div id="categoryPageDiv">
+    <div id="nowCategoryPageDiv" style="display: none;">1</div>
+    <div id="nowCategoryNoDiv" style="display: none;">{{categoryNo}}</div>
+    <span class="subTitle">Category Posts - '{{cName}}'</span>
+    <ul id="categoryTitlesListUl" class="listUl"></ul><br>
+    <ul id="categoryPagingUl" class="pagingUl">
+        <li id="categoryPrev" onclick="categoryPrevPage()">[prev]</li>
+        {% for page in pageList %}
+        <li class="pages" onclick="setCategoryList('{{page}}')">{{page}}</li>
+        {% endfor %}
+        <li id="categoryNext" onclick="categoryNextPage()">[next]</li>
+    </ul>
+    {% if isWritable %}
+    <div id="writeBtn" onclick="window.location.href='/write/{{categoryNo}}'">+</div>
+    {% endif %}
 </div>
-<script>
-    
-</script>
+<script src="{{url_for('static',filename='./script/category.js')}}"></script>
 {% endblock %}

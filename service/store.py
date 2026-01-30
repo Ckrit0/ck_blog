@@ -23,21 +23,26 @@ send_email_message = '''
 본인이 요청한 것이 아닌 경우, 답장 주시면 조치하겠습니다.
     from. CkriT 블로그 - 널리 인간을 일 없게 하라
 '''
-imageUploadDirectory = os.environ.get("uploadDir")
-imageDeleteDirectory = os.path.join(imageUploadDirectory, 'deleted')
+imageUploadDirectory = os.environ.get("uploadDir") # 이미지 저장경로
+imageDeleteDirectory = os.path.join(imageUploadDirectory, 'deleted') # 이미지 삭제경로
+# 두개의 경로가 없다면 만들고 시작
 if not os.path.exists(imageUploadDirectory):
     os.makedirs(imageUploadDirectory)
 if not os.path.exists(imageDeleteDirectory):
     os.makedirs(imageDeleteDirectory)
-imageSize = 16 * 1024 * 1024
+imageSize = 16 * 1024 * 1024 # 이미지 최대 크기
 PAGE_COUNT = { # 한 페이지에 보여줄 목록의 갯수
     '기본값': 5,
     '메인' : 20,
     '유저' : 5,
     '카테고리' : 5,
-    '검색' : 10,
+    '카테고리페이지' : 15,
+    '검색' : 15,
     '댓글' : 5
 }
+shortTitleCount = 12 # 짧은 제목 글자수
+middleTitleCount = 40 # 중간 제목 글자수
+shortWordCount = 100 # 짧은 글 내용 글자수
 
 ###############
 ## 유저 관련 ##

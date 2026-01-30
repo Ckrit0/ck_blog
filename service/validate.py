@@ -57,6 +57,7 @@ def checkWritableCategory(user,cno):
     parameter: 유저객체(userDTO), 카테고리번호(int)
     return: 가능 True, 불가능 False
     '''
+    cno = int(cno)
     writableCategoryList = categoryDAO.getWritableCategoryList(user=user)
     for category in writableCategoryList:
         if category.getNo() == cno:

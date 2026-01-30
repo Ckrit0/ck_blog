@@ -125,6 +125,16 @@ SELECT bl_ip FROM blacklist WHERE bl_expire >= NOW() AND bl_ip != "";
 SELECT * FROM category WHERE c_upper IS NULL ORDER BY c_no;
 -- 하위 카테고리 가져오기
 SELECT * FROM category WHERE c_upper=1 ORDER BY c_no;
+-- 카테고리별 글 제목의 목록 가져오기(최신순, 페이지별)
+SELECT
+    b_no, b_title,
+    (SELECT count(DISTINCT u_no) + count(DISTINCT v_ip) FROM views WHERE b_no=b.b_no),
+    (SELECT count(DISTINCT u_no) + count(DISTINCT l_ip) FROM likes WHERE b_no=b.b_no),
+    b.b_contents
+FROM board WHERE c_no="c_no" AND b_isdelete=0
+ORDER BY b_no DESC LIMIT 5 OFFSET 0;
+-- 카테고리별 글 갯수 가져오기
+SELECT count(*) FROM board WHERE c_no=1 AND b_isdelete=0;
 
 ----------------
 -- Board DAO  --

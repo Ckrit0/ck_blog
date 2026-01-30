@@ -3,7 +3,7 @@ let likeCountSpan = document.getElementById('likeCountSpan')
 let boardNoDiv = document.getElementById('boardNoDiv')
 let nowCnoDiv = document.getElementById('nowCnoDiv')
 let nowPageDiv = document.getElementById('nowPageDiv')
-let titlesUl = document.getElementById('titlesUl')
+let categoryTitlesListUl = document.getElementById('titlesUl')
 let titleLiList = document.getElementsByClassName('titles')
 let boardPagingUl = document.getElementById('boardPagingUl')
 let pageLiList = document.getElementsByClassName('pages')
@@ -64,13 +64,13 @@ function setCateList(setPageNum){
         })
         .then((response) => response.json())
         .then((result) => {
-            titlesUl.innerHTML = ''
+            categoryTitlesListUl.innerHTML = ''
             for(let i in result){
                 if(result[i][0] == bno){
                     var item = document.createElement('li')
                     item.classList.add("boardTitles")
                     item.innerHTML = result[i][1] + ' 👁️ ' + result[i][2] + ' ❤️ ' + result[i][3] + ' (현재글)' 
-                    titlesUl.appendChild(item)                    
+                    categoryTitlesListUl.appendChild(item)                    
                 }else{
                     var item = document.createElement('li')
                     item.classList.add("boardTitles")
@@ -79,13 +79,17 @@ function setCateList(setPageNum){
                         window.location.href="/board/" + result[i][0]
                     }
                     item.innerHTML = result[i][1] + ' 👁️ ' + result[i][2] + ' ❤️ ' + result[i][3]
-                    titlesUl.appendChild(item)                    
+                    categoryTitlesListUl.appendChild(item)                    
                 }
             }
         });
     setBoardPagingList(setPageNum)
 }
 
+/**
+ * 페이징리스트 설정하기
+ * @param showPage 
+ */
 function setBoardPagingList(showPage){
     function getShowList(showPage, totalPage){
         if(showPage < 3){
@@ -141,10 +145,16 @@ function setBoardPagingList(showPage){
     }
 }
 
+/**
+ * 이전 페이지 버튼 눌렀을 때 동작
+ */
 function boardPrevPage(){
     setCateList(parseInt(nowPageDiv.innerHTML)-5)
 }
 
+/**
+ * 다음 페이지 눌렀을 때 동작
+ */
 function boardNextPage(){
     setCateList(parseInt(nowPageDiv.innerHTML)+5)
 }
