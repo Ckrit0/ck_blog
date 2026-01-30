@@ -1,4 +1,4 @@
-from service import store, loger
+from service import logger, store
 from datetime import datetime, timedelta
 import string, random, smtplib
 from email.mime.text import MIMEText
@@ -72,12 +72,12 @@ def sendMail(email):
         server.login(user=store.send_email_addr, password=store.send_email_key)
         server.sendmail(store.send_email_addr, email, message.as_string())
         __setVerify(email=email,code=code)
-        log = loger.Loger()
-        log.setLog(store.LOG_NAME['유저'], f"이메일 전송 완료: {email}")
+        log = logger.Logger()
+        log.setLog(store.LOG_NAME['유저'], f"send email complate: {email}")
         return store.USER_RESULT_CODE['메일 발송 완료']
     except Exception as e:
-        log = loger.Loger()
-        log.setLog(store.LOG_NAME['유저'], f"이메일 전송 실패: {email}, 에러메시지: {e}")
+        log = logger.Logger()
+        log.setLog(store.LOG_NAME['유저'], f"send email fail: {email}, error: {e}")
         return store.USER_RESULT_CODE['실패-unknown']
     finally:
         server.quit() # 서버 연결 종료

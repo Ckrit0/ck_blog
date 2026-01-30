@@ -1,4 +1,4 @@
-from service import db, store
+from service import db, store, logger
 from dao import boardDAO
 import os, shutil
 
@@ -61,5 +61,6 @@ def deleteUpload(bno):
             newPath = os.path.join(store.imageDeleteDirectory, name)
             shutil.move(nowPath, newPath)
     except Exception as e:
-        print(e)
+        log = logger.Logger()
+        log.setLog(store.LOG_NAME['시스템'],f"delete image error: {e}")
     return True

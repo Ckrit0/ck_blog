@@ -1,4 +1,3 @@
-import copy
 
 def getFormattedKeyword(keyword):
     '''

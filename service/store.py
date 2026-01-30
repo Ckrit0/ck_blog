@@ -138,7 +138,9 @@ def getUserMessage(userResultCode):
 
 logPath = './log' # 로그 저장 경로
 LOG_NAME = { # 로그 파일 이름
-    '유저' : 'user'
+    '유저' : 'user',
+    '시스템' : 'system',
+    '데이터베이스' : 'database'
 }
 
 

@@ -1,4 +1,4 @@
-from dao import userDAO
+from dao import userDAO, categoryDAO
 from service import store
 from datetime import datetime
 
@@ -50,3 +50,29 @@ def checkSessionTimeOver(user):
             # timeover가 아니라면 세션시간 갱신
             userDAO.updateSessionTime(user=user)
     return result
+
+def checkWritableCategory(user,cno):
+    '''
+    해당 카테고리에 글 작성이 가능한 유저인지 확인
+    parameter: 유저객체(userDTO), 카테고리번호(int)
+    return: 가능 True, 불가능 False
+    '''
+    writableCategoryList = categoryDAO.getWritableCategoryList(user=user)
+    for category in writableCategoryList:
+        if category.getNo() == cno:
+            return True
+    return False
+
+def checkWritePagePermission(user):
+    '''
+    글작성 페이지의 권한 확인
+    parameter: 유저객체(userDTO)
+    return: 가능 True, 불가능 False
+    '''
+    if user.getState() == store.USER_STATE_CODE['비회원']:
+        return False
+    elif user.getState() == store.USER_STATE_CODE['탈퇴']:
+        return False
+    elif user.getState() == store.USER_STATE_CODE['블랙리스트']:
+        return False
+    return True

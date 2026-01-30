@@ -1,6 +1,6 @@
-import pymysql
-import os
+import pymysql, os
 from dotenv import load_dotenv
+from service import store, logger
 
 load_dotenv()
 dbInfo = {
@@ -25,7 +25,7 @@ def __getCursor():
         )
         cur = con.cursor()
     except Exception as e:
-        print('Connect Error:',e)
+        logger.setLog(store.LOG_NAME['데이터베이스'], f'Connect Error: {e}')
     return con, cur
 
 '''
@@ -34,7 +34,6 @@ parameter: SQL문(String)
 return: DATA List(List)
 '''
 def getData(sql):
-    # print('db.getData sql:',sql)
     data = []
     con, cur = __getCursor()
     try:
@@ -46,8 +45,8 @@ def getData(sql):
                 tempList.append(r)
             data.append(tempList)
     except Exception as e:
-        print(e)
-        print(sql)
+        log = logger.Logger()
+        log.setLog(store.LOG_NAME['데이터베이스'], f'getData Error: {e}')
     finally:
         con.close()
     return data
@@ -65,8 +64,8 @@ def setData(sql):
         con.commit()
         result = cur.rowcount
     except Exception as e:
-        print(e)
-        print(sql)
+        log = logger.Logger()
+        log.setLog(store.LOG_NAME['데이터베이스'], f'setData Error: {e}')
     finally:
         con.close()
     return result
@@ -85,8 +84,8 @@ def setDatas(sqlList):
         con.commit()
         result = cur.rowcount
     except Exception as e:
-        print(e)
-        print(sql)
+        log = logger.Logger()
+        log.setLog(store.LOG_NAME['데이터베이스'], f'setDatas Error: {e}')
     finally:
         con.close()
     return result

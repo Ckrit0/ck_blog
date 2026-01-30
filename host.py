@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify, abort, make_response, flash
 from dao import userDAO, categoryDAO, boardDAO, commentDAO
-from service import store, validate, userService, boardService, categoryService, serachService
+from service import store, validate, logger, userService, boardService, categoryService, serachService
 import os, datetime
 from werkzeug.utils import secure_filename
 
@@ -181,14 +181,16 @@ def loginHandler():
                 secure=False,
                 samesite='Lax',
                 httponly=True)
-    except:
+    except Exception as e:
         # alert 메시지 생성
         flash(store.USER_MESSAGE[store.USER_RESULT_CODE['실패-unknown']])
+        log = logger.Logger()
+        log.setLog(store.LOG_NAME['유저'],f"login error: {e}")
     return resp
 
 @app.route("/logout", methods=["POST"])
 def logoutHandler():
-    resp = make_response(redirect(request.referrer or url_for('main')))
+    resp = make_response(redirect(url_for('main')))
     
     # 쿠키 삭제
     resp.delete_cookie('sessionKey')
@@ -311,25 +313,49 @@ def boardPage(bno):
 
     return resp
 
-@app.route('/write')
-def writeBoard():
+@app.route('/write/<nowCate>')
+def writeBoardPage(nowCate):
     # 템플릿 정보
     clientUser, categoryList, recentlyTitleList = getTemplateData(req=request)
+    if not validate.checkWritePagePermission(user=clientUser):
+        resp = make_response(redirect(url_for('main')))
+        flash(store.USER_MESSAGE[store.USER_RESULT_CODE['권한없음']])
+        return resp
+    
+    # 글 작성 가능한 카테고리 리스트로 변경
+    writableCategoryList = categoryDAO.getWritableCategoryList(user=clientUser)
+    if len(writableCategoryList) == 0:
+        resp = make_response(redirect(request.referrer or url_for('main')))
+        flash(store.USER_MESSAGE[store.USER_RESULT_CODE['권한없음']])
+        return resp
+    
+    # 뷰 설정하기
+    userDAO.setView(user=clientUser,url=request.path)
+
     return render_template('write.html',
         clientUser=clientUser,
         categoryList=categoryList,
         recentlyTitleList=recentlyTitleList,
+        nowCate=int(nowCate),
+        writableCategoryList=writableCategoryList
     )
 
 @app.route('/writeBoard', methods=['POST'])
 def saveBoard():
     # 템플릿 정보
-    clientUser, categoryList, recentlyTitleList = getTemplateData(req=request)
+    clientUser = userDAO.getUserBySessionKey(cookieKey=request.cookies.get('sessionKey'),ip=request.remote_addr)
 
-    resp = ''
+    # 데이터 수집
     selectCategory = request.form.get('selectCategory')
     title = request.form.get('title')
     content = request.form.get('content')
+
+    # 글 작성 가능여부 확인
+    if not validate.checkWritableCategory(user=clientUser,cno=int(selectCategory)):
+        resp = make_response(redirect(url_for('main')))
+        flash(store.USER_MESSAGE[store.USER_RESULT_CODE['권한없음']])
+        return resp
+    
     result = boardDAO.setBoard(
         uno=clientUser.getNo(),
         cno=selectCategory,
@@ -337,6 +363,8 @@ def saveBoard():
         title=title,
         contents=content
     )
+
+    resp = ''
     if result:
         bno = boardDAO.getRecentlyBoardNoByUserNo(clientUser.getNo())
         resp = make_response(redirect(url_for('boardPage', bno=bno)))
@@ -349,7 +377,7 @@ def saveBoard():
 @app.route('/deleteBoard/<bno>')
 def deleteBoard(bno):
     # 템플릿 정보
-    clientUser, categoryList, recentlyTitleList = getTemplateData(req=request)
+    clientUser = userDAO.getUserBySessionKey(cookieKey=request.cookies.get('sessionKey'),ip=request.remote_addr)
 
     resp = make_response(redirect(url_for('main')))
 

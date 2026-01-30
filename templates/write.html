@@ -9,17 +9,12 @@
         <input name="title" id="writeTitle">
         <div id="writeSelectLabel">CATEGORY</div>
         <select id="writeSelect" name="selectCategory">
-            {% for category in categoryList %}
-                {% for childCategory in category[1] %}
-                    <!-- 작성이 불가한 카테고리의 경우 무시-->
-                    {% if 1==0 %}
-                    <!-- 현재 카테고리 기본값으로 지정해야함 -->
-                    {% elif 1==0 %}
-                    <option value="{{childCategory.getNo()}}" selected>{{childCategory.getName()}}</option>
-                    {% else %}
-                    <option value="{{childCategory.getNo()}}">{{childCategory.getName()}}</option>
-                    {% endif %}
-                {% endfor %}
+            {% for category in writableCategoryList %}
+                {% if category.getNo() == nowCate %}
+                <option value="{{category.getNo()}}" selected>{{category.getName()}}</option>
+                {% else %}
+                <option value="{{category.getNo()}}">{{category.getName()}}</option>
+                {% endif %}
             {% endfor %}
         </select>
     </div>

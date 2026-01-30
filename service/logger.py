@@ -3,7 +3,7 @@ import pytz
 import os
 from service import store
 
-class Loger:
+class Logger:
     def __init__(self):
         self.logPath = store.logPath
         if self.logPath.endswith('/'):

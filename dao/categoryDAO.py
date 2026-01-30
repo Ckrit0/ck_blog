@@ -1,5 +1,5 @@
 from dto import categoryDTO
-from service import db
+from service import db, store
 
 ####################################################################################################
 ####################################### Get Category Object ########################################
@@ -34,6 +34,34 @@ def getCategoryList():
             if categoryList[j][0].getOrder() == i+1:
                 result.append(categoryList[j])
     return result
+
+def getWritableCategoryList(user):
+    '''
+    유저별 글 작성이 가능한 카테고리 목록 가져오기
+    parameter: 유저객체(userDTO)
+    return: 작성가능 카테고리 리스트([categoryDTO,...]])
+    '''
+    '''
+    지금은 그냥 하드코딩으로 함. 권한용 DB 테이블 만들어야할듯
+    '''
+    wholeCategoryList = getCategoryList()
+    writableCategoryList = []
+    if user.getState() == store.USER_STATE_CODE['관리자']:
+        for Pcategory in wholeCategoryList:
+            for category in Pcategory[1]:
+                writableCategoryList.append(category)
+    elif user.getState() == store.USER_STATE_CODE['비회원']:
+        writableCategoryList = []
+    elif user.getState() == store.USER_STATE_CODE['탈퇴']:
+        writableCategoryList = []
+    elif user.getState() == store.USER_STATE_CODE['블랙리스트']:
+        writableCategoryList = []
+    else:
+        for Pcategory in wholeCategoryList:
+            for category in Pcategory[1]:
+                if category.getNo() == 5:
+                    writableCategoryList.append(category)
+    return writableCategoryList
 
 ####################################################################################################
 ####################################### Set Category Object ########################################
