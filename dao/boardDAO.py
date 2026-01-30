@@ -170,6 +170,8 @@ def setBoard(uno,cno,title,contents,ip):
     parameter: 글객체(boardDTO)
     return: 성공 True, 실패 False (bool)
     '''
+    if title.strip() == '':
+        title = 'untitled'
     contents = contents.replace('"','\\"')
     sql = f'''INSERT INTO board(u_no,c_no,b_title,b_contents,b_ip) VALUES({uno},{cno},"{title}","{contents}","{ip}")'''
     result = db.setData(sql=sql)
