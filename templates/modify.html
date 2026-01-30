@@ -1,0 +1,51 @@
+{% extends 'template.html' %}
+
+{% block content %}
+<link rel="stylesheet" href="{{url_for('static',filename='./css/write.css')}}">
+<div class="subTitle">Modify</div>
+<form id="editorForm" action="/modifyBoard/{{board.getNo()}}" method="POST">
+    <div>
+        <div id="writeTitleLabel">TITLE</div>
+        <input name="title" id="writeTitle" value="{{board.getTitle()}}">
+        <div id="writeSelectLabel">CATEGORY</div>
+        <select id="writeSelect" name="selectCategory">
+            {% for category in writableCategoryList %}
+                {% if category.getNo() == nowCate %}
+                <option value="{{category.getNo()}}" selected>{{category.getName()}}</option>
+                {% else %}
+                <option value="{{category.getNo()}}">{{category.getName()}}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+    </div>
+    <div id="editor"></div>
+    <input type="hidden" name="content" id="content">
+    <button type="submit" id="submit-btn">저장</button>
+    <button type="button" id="cancel-btn">취소</button>
+</form>
+
+<script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+<script>
+    function decodeHtml(html) {
+        const txt = document.createElement("textarea");
+        txt.innerHTML = html;
+        return txt.value;
+    }
+    ClassicEditor
+    .create(document.querySelector('#editor'), {
+        ckfinder: {
+            uploadUrl: '/upload'
+        }
+    })
+    .then(editor => {
+        editor.setData(decodeHtml('{{board.getContents()}}'))
+        document.querySelector('#submit-btn').addEventListener('click', () => {
+            document.querySelector('#content').value = editor.getData();
+        });
+        document.querySelector('#cancel-btn').addEventListener('click', () => {
+            window.history.back()
+        });
+    })
+    .catch(error => { console.error(error); });
+</script>
+{% endblock %}

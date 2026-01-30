@@ -33,6 +33,7 @@
         </div>
         <div id="deleteDiv">
             {% if clientUser.getState() == 5 or (clientUser.getNo() != 0 and targetBoard.getUserNo() == clientUser.getNo()) %}
+            <span onclick="window.location.href='/modify/{{targetBoard.getNo()}}'">(수정)</span>
             <span onclick="window.location.href='/deleteBoard/{{targetBoard.getNo()}}'">(삭제)</span>
             {% endif %}
         </div>

@@ -187,8 +187,9 @@ def updateBoard(board):
     '''
     cno = board.getCategoryNo()
     bTitle = board.getTitle()
-    bContents = board.getContents()
-    sql = f'''UPDATE board SET c_no={cno}, b_title="{bTitle}", b_contents="{bContents}" WHERE b_no={board.getNo()}'''
+    bContents = board.getContents().replace('"','\\"')
+    bip = board.getIp()
+    sql = f'''UPDATE board SET c_no={cno}, b_title="{bTitle}", b_contents="{bContents}", b_ip="{bip}" WHERE b_no={board.getNo()}'''
     result = db.setData(sql=sql)
     if result == 0:
         return False

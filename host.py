@@ -372,6 +372,70 @@ def saveBoard():
         flash(store.USER_MESSAGE[store.USER_RESULT_CODE['실패-unknown']])
     return resp
 
+@app.route('/modify/<bno>')
+def modifyBoardPage(bno):
+    # 템플릿 정보
+    clientUser, categoryList, recentlyTitleList = getTemplateData(req=request)
+    board = boardDAO.getBoardByBoardNo(bno=bno)
+    
+    # 작성자 확인 (관리자는 삭제 권한은 있지만 수정 권한은 없음)
+    if clientUser.getNo() != board.getUserNo():
+        resp = make_response(redirect(request.referrer or url_for('main')))
+        flash(store.USER_MESSAGE[store.USER_RESULT_CODE['권한없음']])
+        return resp
+    
+    # 글 작성 가능한 카테고리 리스트로 변경
+    writableCategoryList = categoryDAO.getWritableCategoryList(user=clientUser)
+    if len(writableCategoryList) == 0:
+        resp = make_response(redirect(request.referrer or url_for('main')))
+        flash(store.USER_MESSAGE[store.USER_RESULT_CODE['권한없음']])
+        return resp
+    
+    # 뷰 설정하기
+    userDAO.setView(user=clientUser,url=request.path)
+
+    return render_template('modify.html',
+        clientUser=clientUser,
+        categoryList=categoryList,
+        recentlyTitleList=recentlyTitleList,
+        nowCate=board.getCategoryNo(),
+        writableCategoryList=writableCategoryList,
+        board=board
+    )
+
+@app.route('/modifyBoard/<bno>', methods=['POST'])
+def modifyBoard(bno):
+    # 템플릿 정보
+    clientUser = userDAO.getUserBySessionKey(cookieKey=request.cookies.get('sessionKey'),ip=request.remote_addr)
+
+    # 데이터 수집
+    bno = int(bno)
+    selectCategory = request.form.get('selectCategory')
+    title = request.form.get('title')
+    content = request.form.get('content')
+
+    # 글 작성 가능여부 확인
+    if not validate.checkWritableCategory(user=clientUser,cno=int(selectCategory)):
+        resp = make_response(redirect(url_for('main')))
+        flash(store.USER_MESSAGE[store.USER_RESULT_CODE['권한없음']])
+        return resp
+    
+    # board 객체 셋팅
+    board = boardDAO.getBoardByBoardNo(bno=bno)
+    board.setCategoryNo(cno=int(selectCategory))
+    board.setTitle(title=title)
+    board.setContent(content=content)
+    board.setIp(clientUser.getIp())
+
+    result = boardDAO.updateBoard(board=board)
+    resp = ''
+    if result:
+        resp = make_response(redirect(url_for('boardPage', bno=bno)))
+    else:
+        resp = make_response(redirect(url_for('main')))
+        flash(store.USER_MESSAGE[store.USER_RESULT_CODE['실패-unknown']])
+    return resp
+
 @app.route('/deleteBoard/<bno>')
 def deleteBoard(bno):
     # 템플릿 정보
