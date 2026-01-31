@@ -56,7 +56,7 @@ def sendMail(email):
     
     updateVerifyList() # 만료된 인증코드 삭제
     code = __getCode()
-
+    
     # 이메일 발송 설정
     message = MIMEMultipart()
     message["From"] = store.send_email_addr
@@ -110,11 +110,19 @@ def matchVerify(email,code):
                 if verifyDict['expire'] > datetime.now():
                     # 확인 성공시점에서 1시간 유지
                     verifyDict['expire'] = datetime.now() + timedelta(hours=store.sessionTime)
+                    log = logger.Logger()
+                    log.setLog(store.LOG_NAME['유저'], f"verify success: {email}")
                     return store.USER_RESULT_CODE['인증 성공']
                 else:
+                    log = logger.Logger()
+                    log.setLog(store.LOG_NAME['유저'], f"verify fail - time over: {email}")
                     return store.USER_RESULT_CODE['시간 종료']
             else:
+                log = logger.Logger()
+                log.setLog(store.LOG_NAME['유저'], f"verify fail - not match: {email}")
                 return store.USER_RESULT_CODE['코드 불일치']
+    log = logger.Logger()
+    log.setLog(store.LOG_NAME['유저'], f"verify fail - not code: {email}")
     return store.USER_RESULT_CODE['발급된 코드 없음']
 
 def markingEmail(email, state):

@@ -1,0 +1,153 @@
+#findInfoDiv{
+    display: block;
+    margin: 20px auto;
+    padding: 20px;
+    padding-top: 0px;
+    width: 80%;
+    border: 2px solid var(--theme-color);
+    border-radius: 30px;
+}
+
+
+#findForm{
+    display: grid;
+    grid-template-columns: 40% 40% 20%;
+    width: 80%;
+    margin: 10px auto;
+}
+.findElement{
+    box-sizing: border-box;
+    display: block;
+    margin: 10px auto;
+    width: 50%;
+}
+.findLeft{
+    grid-column: 1;
+}
+.findRight{
+    grid-column: 2;
+}
+.findAssist{
+    grid-column: 3;
+}
+#findEmailLabel{
+    grid-row: 1;
+}
+#findEmailInput{
+    grid-row: 1;
+    width: 90%;
+}
+#findCodeLabel{
+    grid-row: 2;
+}
+#findCodeInput{
+    grid-row: 2;
+    width: 90%;
+}
+#findCodeInput:disabled{
+    border-color: gray;
+    background-color: gray;
+    cursor: auto;
+}
+#findSendBtn{
+    grid-row: 3;
+    width: 90%;
+}
+#findSendBtn:disabled{
+    border-color: gray;
+    color: gray;
+    cursor: auto;
+}
+#findSendBtn:disabled:hover{
+    background-color: var(--bg-color);
+    cursor: auto;
+}
+#findCheckBtn{
+    grid-row: 3;
+    width: 90%;
+}
+#findCheckBtn:disabled{
+    border-color: gray;
+    color: gray;
+    cursor: auto;
+}
+#findCheckBtn:disabled:hover{
+    background-color: var(--bg-color);
+    cursor: auto;
+}
+#findPwLabel{
+    grid-row: 4;
+}
+#findPwInput{
+    grid-row: 4;
+    width: 90%;
+}
+#findPwInput:disabled{
+    border-color: gray;
+    background-color: gray;
+    cursor: auto;
+}
+#findPwDiv{
+    width: 90%;
+    text-align: left;
+    font-size: var(--comment-ip-font-size);
+    color: red;
+}
+#findConfirmLabel{
+    grid-row: 5;
+}
+#findConfirmInput{
+    grid-row: 5;
+    width: 90%;
+}
+#findConfirmInput:disabled{
+    border-color: gray;
+    background-color: gray;
+    cursor: auto;
+}
+#findConfirmDiv{
+    width: 90%;
+    text-align: left;
+    font-size: var(--comment-ip-font-size);
+    color: red;
+}
+#findSubmitBtn{
+    grid-row: 6;
+    box-sizing: border-box;
+    margin-top: 30px;
+    width: 200px;
+    height: 50px;
+    font-size: var(--post-info-font-size);
+    font-weight: 600;
+}
+#findSubmitBtn:disabled{
+    border-color: gray;
+    font-weight: 400;
+    color: gray;
+    cursor: auto;
+}
+#findSubmitBtn:disabled:hover{
+    font-weight: 400;
+    background-color: var(--bg-color);
+    cursor: auto;
+}
+#findCancelBtn{
+    grid-row: 6;
+    box-sizing: border-box;
+    margin-top: 30px;
+    width: 200px;
+    height: 50px;
+    font-size: var(--post-info-font-size);
+    font-weight: 600;
+    color: var(--bg-color);
+    border-color: var(--theme-color);
+    background-color: var(--theme-color);
+}
+#findCancelBtn:hover{
+    background-color: var(--dark-color);
+}
+
+
+
+
+

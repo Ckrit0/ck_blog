@@ -183,7 +183,7 @@ def updateUserState(uno, u_state):
         log.setLog(store.LOG_NAME['유저'], f"상태변경: {email}, State: {u_state}")
         return store.USER_RESULT_CODE['유저 상태 변경']
 
-def updateUserPassword(user, nowPw, newPw, newConfirm):
+def updateUserPassword(email, newPw, newConfirm):
     '''
     비밀번호 수정하기
     parameter: user객체(userDTO), 현재비번(String), 새비번(String), 비번확인(String)
@@ -201,21 +201,22 @@ def updateUserPassword(user, nowPw, newPw, newConfirm):
         if re.match(pwPtn, pw):
             result = True
         return result
-    
+    # 기존 유저 받아오기
+    user = getUserByEmailAddress(email=email)
     # 변경할 비밀번호와 확인이 다를 때
     if newPw != newConfirm:
         return store.USER_RESULT_CODE['Confirm 오류']
     # 사용중인 비밀번호와 변경하고자 하는 비밀번호가 같을 때
-    if nowPw == newPw:
+    if user.getPw() == userService.encryptPw(newPw):
         return store.USER_RESULT_CODE['nowPw=newPw']
     # 비밀번호의 형식이 틀렸을 때
     elif not __checkPwRegex(newPw):
         return store.USER_RESULT_CODE['Pw 형식 오류']
-    # 현재 비밀번호가 틀렸을 때
-    elif user.getPw() != userService.encryptPw(nowPw):
-        return store.USER_RESULT_CODE['비밀번호 틀림']
     else:
-        sql = f'''UPDATE user SET u_pw = "{userService.encryptPw(newPw)}" WHERE u_no = {user.getNo()}'''
+        sql = f'''UPDATE user SET u_pw = "{userService.encryptPw(newPw)}"'''
+        if user.getState() == 1: # 인증 후 수정이기에 인증까지
+            sql += f''', u_state = 2'''
+        sql += f''' WHERE u_no = {user.getNo()}'''
         result = db.setData(sql=sql)
         log = logger.Logger()
         if result == 0:

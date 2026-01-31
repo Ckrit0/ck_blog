@@ -196,7 +196,7 @@ joinVerifySendBtn.addEventListener('click',()=>{
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            joinEmail: joinEmailInput.value
+            email: joinEmailInput.value
         }),
         })
         .then((response) => response.json())
@@ -223,8 +223,8 @@ joinVerifyCheckBtn.addEventListener('click',()=>{
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                joinEmail: joinEmailInput.value,
-                joinVerify: joinVerifyInput.value
+                email: joinEmailInput.value,
+                verify: joinVerifyInput.value
             }),
             })
             .then((response) => response.json())

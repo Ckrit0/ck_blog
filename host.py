@@ -232,30 +232,17 @@ def checkMailHandler():
 
 @app.route("/sendMail", methods=["POST"])
 def sendMailHandler():
-    email = request.json["joinEmail"]
+    email = request.json["email"]
     result = userService.sendMail(email=email)
     return jsonify([result, store.USER_MESSAGE[result]])
 
 @app.route("/matchVerify", methods=["POST"])
 def matchVerifyHandler():
-    email = request.json["joinEmail"]
-    verify = request.json["joinVerify"]
+    email = request.json["email"]
+    verify = request.json["verify"]
     result = userService.matchVerify(email=email, code=verify)
-    return jsonify(result)
-    
-@app.route("/changePw", methods=["POST"])
-def changePwHandler():
-    # 클라이언트 정보 가져오기
-    clientUser = userDAO.getUserBySessionKey(cookieKey=request.cookies.get('sessionKey'),ip=request.remote_addr)
-    
-    # form data 가져오기
-    userNowPw = request.json["userNowPw"]
-    userNewPw = request.json["userNewPw"]
-    userNewConfirm = request.json["userNewConfirm"]
-
-    result = userDAO.updateUserPassword(user=clientUser, nowPw=userNowPw, newPw=userNewPw, newConfirm=userNewConfirm)
     return jsonify([result, store.USER_MESSAGE[result]])
-
+    
 @app.route("/getVerify", methods=["POST"])
 def getVerifyHandler():
     email = request.json["userEmail"]
@@ -268,6 +255,36 @@ def getVerifyHandler():
             return jsonify(store.USER_RESULT_CODE['실패-unknown'])
     return jsonify([result, store.USER_MESSAGE[result]])
 
+@app.route("/changePw", methods=["POST"])
+def changePwHandler():
+    # 클라이언트 정보 가져오기
+    clientUser = userDAO.getUserBySessionKey(cookieKey=request.cookies.get('sessionKey'),ip=request.remote_addr)
+    
+    resp = make_response(redirect(url_for('main')))
+    
+    # 이미 로그인 되어있는 경우
+    if clientUser.getNo() != 0:
+        flash(store.USER_MESSAGE[store.USER_RESULT_CODE['기로그인']])
+        return resp
+    
+    # form data 가져오기
+    email = request.form["findEmail"]
+    pw = request.form["findPw"]
+    confirm = request.form["findConfirm"]
+    verify = request.form["findCode"]
+    verifyResult = userService.matchVerify(email=email, code=verify)
+    if verifyResult == store.USER_RESULT_CODE['인증 성공']:
+        result = userDAO.updateUserPassword(email=email,newPw=pw,newConfirm=confirm)
+        flash(store.getUserResult(result))
+    elif verifyResult == store.USER_RESULT_CODE['시간 종료']:
+        flash(store.getUserResult(verifyResult))
+    elif verifyResult == store.USER_RESULT_CODE['코드 불일치']:
+        flash(store.getUserResult(verifyResult))
+    elif verifyResult == store.USER_RESULT_CODE['발급된 코드 없음']:
+        flash(store.getUserResult(verifyResult))
+
+    return resp
+
 @app.route("/leave", methods=["POST"])
 def leaveHandler():
     email = request.json["userEmail"]
@@ -279,6 +296,7 @@ def leaveHandler():
         # 쿠키 삭제
         resp.delete_cookie('sessionKey')
     return resp
+
 
 #############################
 ######### 글 페이지 #########
