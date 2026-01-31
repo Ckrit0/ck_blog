@@ -4,12 +4,14 @@ class CategoryDTO:
         self.name = None
         self.upper = None
         self.order = None
+        self.count = None
     
-    def setCategory(self,no,name,upper,order):
+    def setCategory(self,no,name,upper,order,count=0):
         self.no = no
         self.name = name
         self.upper = upper
         self.order = order
+        self.count = count
     
     def setNo(self,no):
         self.no = no
@@ -23,6 +25,9 @@ class CategoryDTO:
     def setOrder(self,order):
         self.order = order
     
+    def setCount(self,count):
+        self.count = count
+    
     def getNo(self):
         return self.no
     
@@ -34,3 +39,6 @@ class CategoryDTO:
     
     def getOrder(self):
         return self.order
+    
+    def getCount(self):
+        return self.count

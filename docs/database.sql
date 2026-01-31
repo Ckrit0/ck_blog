@@ -137,6 +137,8 @@ ORDER BY b_no DESC LIMIT 5 OFFSET 0;
 SELECT count(*) FROM board WHERE c_no=1 AND b_isdelete=0;
 -- 카테고리번호로 카테고리명 가져오기
 SELECT c_name FROM category WHERE c_no=1;
+-- 해당 카테고리에 몇개의 글이 작성되었는지 가져오기
+SELECT count(*) FROM board WHERE c_no=1;
 
 ----------------
 -- Board DAO  --

@@ -68,7 +68,7 @@
                     <ul>
                         {% for childCategory in category[1] %}
                         <li class="subCategory" onclick="window.location.href='/category/{{childCategory.getNo()}}'">
-                            {{childCategory.getName()}}
+                            {{childCategory.getName()}} ({{childCategory.getCount()}})
                         </li>
                         {% endfor %}
                     </ul>
