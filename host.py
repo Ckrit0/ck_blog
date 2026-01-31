@@ -157,7 +157,11 @@ def findPage():
     clientUser, categoryList, recentlyTitleList = getTemplateData(req=request)
     # 뷰 설정하기
     userDAO.setView(user=clientUser,url=request.path)
-    return render_template('find.html')
+    return render_template('find.html',
+        clientUser=clientUser,
+        categoryList=categoryList,
+        recentlyTitleList=recentlyTitleList
+    )
 
 #############################
 ######## 유저 핸들러 ########
