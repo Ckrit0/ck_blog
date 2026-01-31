@@ -43,6 +43,8 @@ PAGE_COUNT = { # 한 페이지에 보여줄 목록의 갯수
 shortTitleCount = 12 # 짧은 제목 글자수
 middleTitleCount = 40 # 중간 제목 글자수
 shortWordCount = 100 # 짧은 글 내용 글자수
+searchWordCount = 400 # 검색 글 내용 글자수
+searchWeight = [10,5,1] # 검색어 가중치. [전체,단어,글자]
 
 ###############
 ## 유저 관련 ##

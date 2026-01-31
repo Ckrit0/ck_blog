@@ -1,22 +1,23 @@
-let nowCategoryPageDiv = document.getElementById('nowCategoryPageDiv')
-let categoryPagingUl = document.getElementById('categoryPagingUl')
-let nowCategoryNoDiv = document.getElementById('nowCategoryNoDiv')
+let nowSearchPageDiv = document.getElementById('nowSearchPageDiv')
+let searchPagingUl = document.getElementById('searchPagingUl')
+let searchKeywordDiv = document.getElementById('searchKeywordDiv')
+let searchListUl = document.getElementById('searchListUl')
 
 /**
- * 카테고리 최근목록 가져와서 element 추가
+ * 검색목록 가져와서 element 추가
  * @param setPageNum
  */
 function setSearchList(setPageNum){
     setPageNum = parseInt(setPageNum)
     if(setPageNum <= 0){
         setPageNum = 1
-    }else if(setPageNum > categoryPagingUl.children.length - 2){
-        setPageNum = categoryPagingUl.children.length - 2
+    }else if(setPageNum > searchPagingUl.children.length - 2){
+        setPageNum = searchPagingUl.children.length - 2
     }
-    nowCategoryPageDiv.innerHTML = setPageNum
-    let cno = nowCategoryNoDiv.innerHTML
+    nowSearchPageDiv.innerHTML = setPageNum
+    let keyword = searchKeywordDiv.innerHTML
     
-    url = "/getTitleListOnCategoryByPage/" + cno + "/" + setPageNum
+    url = "/getSearchListByPage/" + keyword + "/" + setPageNum
     fetch(url, {
         method: "POST",
         headers: {
@@ -28,29 +29,30 @@ function setSearchList(setPageNum){
         })
         .then((response) => response.json())
         .then((result) => {
-            categoryTitlesListUl.innerHTML = ''
+            searchListUl.innerHTML = ''
+            console.log(result)
             for(let i in result){
                 let item = document.createElement('li')
                 item.classList.add("pointer")
                 item.onclick = function(){
                     window.location.href="/board/" + result[i][0]
                 }
-                item.innerHTML = '<span class="bolder">' + result[i][1] + '</span> 👁️ ' + result[i][2] + ' ❤️ ' + result[i][3]
+                item.innerHTML = '[' + result[i][5] + ']' + result[i][1] + ' 👁️ ' + result[i][2] + ' ❤️ ' + result[i][3]
                 let contentsItem = document.createElement('div')
                 contentsItem.classList.add("shortContents")
                 contentsItem.innerHTML = result[i][4]
                 item.appendChild(contentsItem)
-                categoryTitlesListUl.appendChild(item)
+                searchListUl.appendChild(item)
             }
         });
-    setBoardPagingList(setPageNum)
+    setSearchPagingList(setPageNum)
 }
 
 /**
  * 페이징리스트 설정하기
  * @param showPage 
  */
-function setBoardPagingList(showPage){
+function setSearchPagingList(showPage){
     function getShowList(showPage, totalPage){
         if(showPage < 3){
             return ['1','2','3','4','5','[next]']
@@ -75,7 +77,7 @@ function setBoardPagingList(showPage){
             ]
         }
     }
-    let totalPage = categoryPagingUl.children
+    let totalPage = searchPagingUl.children
     if(totalPage.length-2 > 5){
         showList = getShowList(showPage,totalPage.length-2)
         for(let i=0; i<totalPage.length;i++){
@@ -94,13 +96,13 @@ function setBoardPagingList(showPage){
             }
         }
     }
-    for(let i=0;i<categoryPagingUl.children.length;i++){
-        if(categoryPagingUl.children[i].innerHTML == nowCategoryPageDiv.innerHTML){
-            categoryPagingUl.children[i].style['font-size'] = '30px'
-            categoryPagingUl.children[i].style['vertical-align'] = 'bottom'
+    for(let i=0;i<searchPagingUl.children.length;i++){
+        if(searchPagingUl.children[i].innerHTML == nowSearchPageDiv.innerHTML){
+            searchPagingUl.children[i].style['font-size'] = '30px'
+            searchPagingUl.children[i].style['vertical-align'] = 'bottom'
         }else{
-            categoryPagingUl.children[i].style['font-size'] = '20px'
-            categoryPagingUl.children[i].style['align-self'] = 'end'
+            searchPagingUl.children[i].style['font-size'] = '20px'
+            searchPagingUl.children[i].style['align-self'] = 'end'
         }
     }
 }
@@ -108,16 +110,16 @@ function setBoardPagingList(showPage){
 /**
  * 이전 페이지 버튼 눌렀을 때 동작
  */
-function categoryPrevPage(){
-    setCateList(parseInt(nowCategoryPageDiv.innerHTML)-5)
+function searchPrevPage(){
+    setSearchList(parseInt(nowSearchPageDiv.innerHTML)-5)
 }
 
 /**
  * 다음 페이지 눌렀을 때 동작
  */
-function categoryNextPage(){
-    setCateList(parseInt(nowCategoryPageDiv.innerHTML)+5)
+function searchNextPage(){
+    setSearchList(parseInt(nowSearchPageDiv.innerHTML)+5)
 }
 
 // 초기 실행
-setSearchList(nowCategoryPageDiv.innerHTML)
+setSearchList(nowSearchPageDiv.innerHTML)

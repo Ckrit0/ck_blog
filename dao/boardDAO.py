@@ -68,6 +68,28 @@ def getPageList_category(cno):
         pageList.append(i+1)
     return pageList
 
+def getPageList_search(keywordList):
+    '''
+    검색화면 페이지 리스트 가져오기
+    parameter: 키워드리스트(list)
+    return: 페이지 리스트(list)
+    '''
+    pageList = []
+    sql = f'''\
+        SELECT count(*) \
+        FROM board \
+        WHERE \
+            b_isdelete=0 AND \
+            ('''
+    for keyword in keywordList:
+        sql += f'''\
+            b_title LIKE "%{keyword[0]}%" OR b_contents LIKE "%{keyword[0]}%" OR'''
+    sql = sql[:-2] + ')'
+    result = math.ceil(db.getData(sql=sql)[0][0]/store.PAGE_COUNT['검색'])
+    for i in range(result):
+        pageList.append(i+1)
+    return pageList
+
 def getPageOfCategory(board):
     '''
     카테고리 내에서 해당 글의 페이지 번호 가져오기
@@ -158,6 +180,45 @@ def getRecentlyBoardList(uno):
         board.setBoardByDbResult(dbResult=b)
         result.append(board)
     return result
+
+def getSearchResult(keywordList, page):
+    '''
+    검색어로 검색 결과를 찾아옴
+    parameter: 검색단어 리스트(list)
+    return: 검색된 글객체 리스트([boardDTO,...])
+    '''
+    page = int(page)
+    limit = store.PAGE_COUNT['검색']
+    offset = limit * (page-1)
+    sql = f'''\
+        SELECT b.*, u.u_email, u.u_state, \
+        (SELECT count(DISTINCT u_no) + count(DISTINCT v_ip) FROM views WHERE b_no=b.b_no),
+        (SELECT count(DISTINCT u_no) + count(DISTINCT l_ip) FROM likes WHERE b_no=b.b_no),
+        ('''
+    for keyword in keywordList:
+        sql += f'''\
+            ((b.b_title LIKE "%{keyword[0]}%")*{keyword[1]}) + ((b.b_contents LIKE "%{keyword[0]}%")*{keyword[1]}) +'''
+    sql = sql[:-1]
+    sql += f'''\
+        ) AS score \
+        FROM board b \
+        JOIN user u \
+        ON b.u_no = u.u_no \
+        WHERE
+            b.b_isdelete=0 AND ('''
+    for keyword in keywordList:
+        sql += f'''\
+            b.b_title LIKE "%{keyword[0]}%" OR b.b_contents LIKE "%{keyword[0]}%" OR'''
+    sql = sql[:-2]
+    sql += f'''\
+        ) ORDER BY score DESC LIMIT {limit} OFFSET {offset}'''
+    dbResult = db.getData(sql=sql)
+    searchBoardList = []
+    for data in dbResult:
+        board = boardDTO.BoardDTO()
+        board.setBoardByDbResult(dbResult=data)
+        searchBoardList.append(board)
+    return searchBoardList
 
 
 #################################################################################################

@@ -578,29 +578,37 @@ def searchPage(keyword):
     # 템플릿 정보
     clientUser, categoryList, recentlyTitleList = getTemplateData(req=request)
 
-    # 키워드 가공
-    formattedKeyword, keywordLength = serachService.getFormattedKeyword(keyword=keyword)
+    # 키워드 가공 및 키워드 리스트화
+    keywordList, keywordLength = serachService.getFormattedKeyword(keyword=keyword)
     
-    if keywordLength < 2: # 검색어 부족
+    if keywordLength < 2: # 검색어 부족시
         resp = make_response(redirect(request.referrer or url_for('main')))
         flash(store.USER_MESSAGE[store.USER_RESULT_CODE['검색어 부족']])
         return resp
     
+    # 데이터 받아오기
     
-
+    pageList = boardDAO.getPageList_search(keywordList=keywordList)
+    
     # 뷰 설정하기
     userDAO.setView(user=clientUser, url=request.path)
     return render_template('search.html',
         clientUser=clientUser,
         categoryList=categoryList,
         recentlyTitleList=recentlyTitleList,
-        keyword=keyword
+        keyword=keyword,
+        pageList=pageList
     )
 
 #############################
 ######## 검색 핸들러 ########
 #############################
-
+@app.route("/getSearchListByPage/<keyword>/<page>", methods=["POST"])
+def getSearchListByPageHandler(keyword,page):
+    keywordList, keywordLength = serachService.getFormattedKeyword(keyword=keyword)
+    searchBoardList = boardDAO.getSearchResult(keywordList=keywordList, page=page)
+    searchDataList = serachService.setSearchStandard(searchBoardList=searchBoardList, keywordList=keywordList)
+    return jsonify(searchDataList)
 
 
 

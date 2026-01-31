@@ -1,13 +1,20 @@
 {% extends 'template.html' %}
 
 {% block content %}
-<div id="searchDiv">
-    searchPage({{keyword}})
+<div id="searchPageDiv">
+    <div></div>
     <div id="searchResultListDiv" class="contentsList">
-        recentlyContentsList
+        <div id="nowSearchPageDiv" style="display: none;">1</div>
+        <div id="searchKeywordDiv" style="display: none;">{{keyword}}</div>
+        <ul id="searchListUl" class="listUl"></ul><br>
+        <ul id="searchPagingUl" class="pagingUl">
+        <li id="searchPrev" onclick="searchPrevPage()">[prev]</li>
+        {% for page in pageList %}
+        <li class="pages" onclick="setSearchList('{{page}}')">{{page}}</li>
+        {% endfor %}
+        <li id="searchNext" onclick="searchNextPage()">[next]</li>
+    </ul>
     </div>
 </div>
-<script>
-    
-</script>
+<script src="{{url_for('static',filename='./script/search.js')}}"></script>
 {% endblock %}

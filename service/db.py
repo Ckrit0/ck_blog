@@ -25,7 +25,8 @@ def __getCursor():
         )
         cur = con.cursor()
     except Exception as e:
-        logger.setLog(store.LOG_NAME['데이터베이스'], f'Connect Error: {e}')
+        log = logger.Logger()
+        log.setLog(store.LOG_NAME['데이터베이스'], f'Connect Error: {e}')
     return con, cur
 
 '''

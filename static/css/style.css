@@ -169,6 +169,12 @@ a{
     padding-left: 20px;
 }
 
+.shortContents{
+    padding: 2px;
+    padding-left: 20px;
+    color: gray;
+}
+
 /* 개발용도 */
 .findBorder{
     border: 2px solid var(--theme-color);

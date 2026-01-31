@@ -99,6 +99,16 @@ def getPageList_category(cno):
         pageList.append(i+1)
     return pageList
 
+def getCategoryNameByCno(cno):
+    '''
+    카테고리 번호로 카테고리 명 가져오기
+    parameter: 카테고리번호(cono)
+    return: 카테고리명(String)
+    '''
+    sql = f'''SELECT c_name FROM category WHERE c_no={cno}'''
+    result = db.getData(sql=sql)[0][0]
+    return result
+
 ####################################################################################################
 ####################################### Set Category Object ########################################
 ####################################################################################################

@@ -1,11 +1,6 @@
 #categoryTitlesListUl{
     width: 80%;
 }
-.shortContents{
-    padding: 2px;
-    padding-left: 20px;
-    color: gray;
-}
 #writeBtn{
     position: fixed;
     bottom: 30px;
