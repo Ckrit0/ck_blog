@@ -82,7 +82,7 @@ function userModalInit(){
             return
         }
 
-        fetch("/changePw", {
+        fetch("/changePwByNowPw", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

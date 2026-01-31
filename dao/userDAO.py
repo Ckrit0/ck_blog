@@ -226,6 +226,47 @@ def updateUserPassword(email, newPw, newConfirm):
             log.setLog(store.LOG_NAME['유저'], f"비번변경: {user.getEmail()}")
             return store.USER_RESULT_CODE['비밀번호 변경 성공']
 
+def updatePwByNowPw(user, nowPw, newPw, newConfirm):
+    '''
+    비밀번호 수정하기
+    parameter: user객체(userDTO), 현재비번(String), 새비번(String), 비번확인(String)
+    return: (int)
+        store.USER_RESULT_CODE['Confirm 오류']
+        store.USER_RESULT_CODE['nowPw=newPw']
+        store.USER_RESULT_CODE['Pw 형식 오류']
+        store.USER_RESULT_CODE['비밀번호 틀림']
+        store.USER_RESULT_CODE['비밀번호 변경 성공']
+        store.USER_RESULT_CODE['실패-unknown']
+    '''
+    def __checkPwRegex(pw): # 비밀번호 형식 체크
+        result = False
+        pwPtn = r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,16}$'
+        if re.match(pwPtn, pw):
+            result = True
+        return result
+    # 변경할 비밀번호와 확인이 다를 때
+    if newPw != newConfirm:
+        return store.USER_RESULT_CODE['Confirm 오류']
+    # 사용중인 비밀번호와 변경하고자 하는 비밀번호가 같을 때
+    if nowPw == newPw:
+        return store.USER_RESULT_CODE['nowPw=newPw']
+    # 비밀번호의 형식이 틀렸을 때
+    elif not __checkPwRegex(newPw):
+        return store.USER_RESULT_CODE['Pw 형식 오류']
+    # 현재 비밀번호가 틀렸을 때
+    elif user.getPw() != userService.encryptPw(nowPw):
+        return store.USER_RESULT_CODE['비밀번호 틀림']
+    else:
+        sql = f'''UPDATE user SET u_pw = "{userService.encryptPw(newPw)}" WHERE u_no = {user.getNo()}'''
+        result = db.setData(sql=sql)
+        log = logger.Logger()
+        if result == 0:
+            log.setLog(store.LOG_NAME['유저'], f"비번변경 실패: {user.getEmail()}")
+            return store.USER_RESULT_CODE['실패-unknown']
+        else:
+            log.setLog(store.LOG_NAME['유저'], f"비번변경: {user.getEmail()}")
+            return store.USER_RESULT_CODE['비밀번호 변경 성공']
+
 def leaveUser(uno, pw):
     '''
     유저 탈퇴

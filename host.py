@@ -275,15 +275,27 @@ def changePwHandler():
     verifyResult = userService.matchVerify(email=email, code=verify)
     if verifyResult == store.USER_RESULT_CODE['인증 성공']:
         result = userDAO.updateUserPassword(email=email,newPw=pw,newConfirm=confirm)
-        flash(store.getUserResult(result))
+        flash(store.getUserMessage(result))
     elif verifyResult == store.USER_RESULT_CODE['시간 종료']:
-        flash(store.getUserResult(verifyResult))
+        flash(store.getUserMessage(verifyResult))
     elif verifyResult == store.USER_RESULT_CODE['코드 불일치']:
-        flash(store.getUserResult(verifyResult))
+        flash(store.getUserMessage(verifyResult))
     elif verifyResult == store.USER_RESULT_CODE['발급된 코드 없음']:
-        flash(store.getUserResult(verifyResult))
-
+        flash(store.getUserMessage(verifyResult))
     return resp
+
+@app.route("/changePwByNowPw", methods=["POST"])
+def changePwByNowPwHandler():
+    # 클라이언트 정보 가져오기
+    clientUser = userDAO.getUserBySessionKey(cookieKey=request.cookies.get('sessionKey'),ip=request.remote_addr)
+    
+    # form data 가져오기
+    nowPw = request.json["userNowPw"]
+    newPw = request.json["userNewPw"]
+    newConfirm = request.json["userNewConfirm"]
+
+    result = userDAO.updatePwByNowPw(user=clientUser,nowPw=nowPw,newPw=newPw,newConfirm=newConfirm)
+    return jsonify([result,store.getUserMessage(result)])
 
 @app.route("/leave", methods=["POST"])
 def leaveHandler():
