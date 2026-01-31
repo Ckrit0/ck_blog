@@ -16,8 +16,10 @@ def getTitleList_all(page):
     offset = limit * (page-1)
     sql = f'''SELECT b.b_no, b.b_title, \
             (SELECT count(DISTINCT u_no) + count(DISTINCT v_ip) FROM views v WHERE v.b_no=b.b_no), \
-            (SELECT count(DISTINCT u_no) + count(DISTINCT l_ip) FROM likes l WHERE l.b_no=b.b_no) \
-            FROM board b WHERE b_isdelete=0 ORDER BY b_no DESC LIMIT {limit} OFFSET {offset}'''
+            (SELECT count(DISTINCT u_no) + count(DISTINCT l_ip) FROM likes l WHERE l.b_no=b.b_no), \
+            c.c_name
+            FROM board b JOIN category c ON b.c_no = c.c_no \
+            WHERE b.b_isdelete=0 ORDER BY b.b_date DESC LIMIT {limit} OFFSET {offset}'''
     result = db.getData(sql=sql)
     for data in result:
         data[1] = boardService.middleTitle(data[1])

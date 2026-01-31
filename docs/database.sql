@@ -145,10 +145,13 @@ SELECT c_name FROM category WHERE c_no=1;
 SELECT
     b.b_no, b.b_title,
     (SELECT count(DISTINCT u_no) + count(DISTINCT v_ip) FROM views v WHERE v.b_no=b.b_no),
-    (SELECT count(DISTINCT u_no) + count(DISTINCT l_ip) FROM likes l WHERE l.b_no=b.b_no)
+    (SELECT count(DISTINCT u_no) + count(DISTINCT l_ip) FROM likes l WHERE l.b_no=b.b_no),
+    c.c_name
 FROM board b
-WHERE b_isdelete=0
-ORDER BY b_no DESC
+JOIN category c
+ON b.c_no = c.c_no
+WHERE b.b_isdelete=0
+ORDER BY b.b_date DESC
 LIMIT 5 OFFSET 0;
 -- 전체 글 갯수 가져오기
 SELECT count(*) FROM board WHERE b_isdelete=0;
