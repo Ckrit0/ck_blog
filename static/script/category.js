@@ -6,7 +6,7 @@ let nowCategoryNoDiv = document.getElementById('nowCategoryNoDiv')
  * 카테고리 최근목록 가져와서 element 추가
  * @param setPageNum
  */
-function setSearchList(setPageNum){
+function setCateList(setPageNum){
     setPageNum = parseInt(setPageNum)
     if(setPageNum <= 0){
         setPageNum = 1
@@ -43,14 +43,14 @@ function setSearchList(setPageNum){
                 categoryTitlesListUl.appendChild(item)
             }
         });
-    setBoardPagingList(setPageNum)
+    setCatePagingList(setPageNum)
 }
 
 /**
  * 페이징리스트 설정하기
  * @param showPage 
  */
-function setBoardPagingList(showPage){
+function setCatePagingList(showPage){
     function getShowList(showPage, totalPage){
         if(showPage < 3){
             return ['1','2','3','4','5','[next]']
@@ -120,4 +120,4 @@ function categoryNextPage(){
 }
 
 // 초기 실행
-setSearchList(nowCategoryPageDiv.innerHTML)
+setCateList(nowCategoryPageDiv.innerHTML)
