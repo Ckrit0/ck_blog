@@ -22,7 +22,7 @@ def getCategoryList():
         for childCategory in childCategoryList:
             cc = categoryDTO.CategoryDTO()
             cc.setCategory(childCategory[0],childCategory[1],childCategory[2],childCategory[3])
-            cc.setCount(db.getData(sql=f"SELECT count(*) FROM board WHERE c_no={cc.getNo()}")[0][0])
+            cc.setCount(db.getData(sql=f"SELECT count(*) FROM board WHERE b_isdelete = 0 AND c_no={cc.getNo()}")[0][0])
             tempList.append(cc)
         childList = []
         for i in range(len(tempList)):

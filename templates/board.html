@@ -58,6 +58,9 @@
             {% endfor %}
         </ul>
     </div>
+    {% if isWritable %}
+    <div id="writeBtn" onclick="window.location.href='/write/{{targetBoard.getCategoryNo()}}'">+</div>
+    {% endif %}
 </div>
 <script src="{{url_for('static',filename='./script/board.js')}}"></script>
 {% endblock %}

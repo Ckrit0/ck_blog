@@ -290,6 +290,7 @@ def boardPage(bno):
     cName = categoryService.getCategoryNameByCnoInCategoryList(cList=categoryList,cno=targetBoard.getCategoryNo())
     pageList = boardDAO.getPageList_category(targetBoard.getCategoryNo())
     nowPage = boardDAO.getPageOfCategory(board=targetBoard)
+    isWritable = validate.checkWritableCategory(user=clientUser,cno=targetBoard.getCategoryNo())
 
     resp = make_response(render_template('board.html',
         clientUser=clientUser,
@@ -299,7 +300,8 @@ def boardPage(bno):
         isLiked=isLiked,
         cName=cName,
         pageList=pageList,
-        nowPage=nowPage
+        nowPage=nowPage,
+        isWritable=isWritable
     ))
 
     if targetBoard.getIsDelete() == 1:
