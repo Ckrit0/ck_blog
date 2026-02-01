@@ -75,16 +75,16 @@ def getTitleList_cathgoryInCategoryPage(cno, page=1):
     page = int(page)
     limit = store.PAGE_COUNT['카테고리페이지']
     offset = limit * (page-1)
-    sql = f'''SELECT b.b_no, b.b_title, \
+    sql = f'''SELECT b.b_no, b.b_title, b.b_contents, \
             (SELECT count(DISTINCT u_no) + count(DISTINCT v_ip) FROM views v WHERE v.b_no=b.b_no), \
             (SELECT count(DISTINCT u_no) + count(DISTINCT l_ip) FROM likes l WHERE l.b_no=b.b_no), \
-            b.b_contents
+            (SELECT count(*) FROM comment WHERE b_no=b.b_no) \
             FROM board b WHERE b.c_no={cno} AND b.b_isdelete=0 \
             ORDER BY b.b_no DESC LIMIT {limit} OFFSET {offset}'''
     result = db.getData(sql=sql)
     for titleData in result:
         titleData[1] = boardService.middleTitle(titleData[1])
-        titleData[4] = boardService.shortContents(titleData[4])
+        titleData[2] = boardService.shortContents(titleData[2])
     return result
 
 def getPageList_category(cno):

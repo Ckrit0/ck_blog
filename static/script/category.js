@@ -35,10 +35,10 @@ function setCateList(setPageNum){
                 item.onclick = function(){
                     window.location.href="/board/" + result[i][0]
                 }
-                item.innerHTML = '<span class="bolder">' + result[i][1] + '</span> 👁️ ' + result[i][2] + ' ❤️ ' + result[i][3]
+                item.innerHTML = '<span class="bolder">' + result[i][1] + '</span> 👁️ ' + result[i][3] + ' ❤️ ' + result[i][4] + ' 📝 ' + result[i][5]
                 let contentsItem = document.createElement('div')
                 contentsItem.classList.add("shortContents")
-                contentsItem.innerHTML = result[i][4]
+                contentsItem.innerHTML = result[i][2]
                 item.appendChild(contentsItem)
                 categoryTitlesListUl.appendChild(item)
             }

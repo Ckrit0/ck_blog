@@ -30,6 +30,7 @@
             <span id="likeMarkSpan" onclick="setLike()">🤍</span>
             {% endif %}
             &nbsp;<span id="likeCountSpan">{{targetBoard.getLike()}}</span>
+            &nbsp;&nbsp;📝&nbsp;{{targetBoard.getCommentCount()}}
         </div>
         <div id="deleteDiv">
             {% if clientUser.getState() == 5 or (clientUser.getNo() != 0 and targetBoard.getUserNo() == clientUser.getNo()) %}
@@ -58,8 +59,8 @@
             {% endfor %}
         </ul>
     </div>
-    {% if isWritable %}
     <div id="topBtn" onclick="">top</div>
+    {% if isWritable %}
     <div id="writeBtn" onclick="window.location.href='/write/{{targetBoard.getCategoryNo()}}'">+</div>
     {% endif %}
 </div>

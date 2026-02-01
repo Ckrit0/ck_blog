@@ -19,6 +19,7 @@ def getTitleList_all(page):
     sql = f'''SELECT b.b_no, b.b_title, \
             (SELECT count(DISTINCT u_no) + count(DISTINCT v_ip) FROM views v WHERE v.b_no=b.b_no), \
             (SELECT count(DISTINCT u_no) + count(DISTINCT l_ip) FROM likes l WHERE l.b_no=b.b_no), \
+            (SELECT count(*) FROM comment WHERE b_no=b.b_no), \
             c.c_name
             FROM board b JOIN category c ON b.c_no = c.c_no \
             WHERE b.b_isdelete=0 ORDER BY b.b_date DESC LIMIT {limit} OFFSET {offset}'''
@@ -38,30 +39,12 @@ def getBoardByBoardNo(bno):
         SELECT \
             b.*, u.u_email, u.u_state, \
             (SELECT count(DISTINCT u_no) + count(DISTINCT v_ip) FROM views WHERE b_no=b.b_no), \
-            (SELECT count(DISTINCT u_no) + count(DISTINCT l_ip) FROM likes WHERE b_no=b.b_no) \
+            (SELECT count(DISTINCT u_no) + count(DISTINCT l_ip) FROM likes WHERE b_no=b.b_no), \
+            (SELECT count(*) FROM comment WHERE b_no=b.b_no) \
         FROM board b \
         JOIN user u \
         ON b.u_no = u.u_no \
         WHERE b.b_no = {bno}'''
-    result = db.getData(sql=sql)[0]
-    board.setBoardByDbResult(dbResult=result)
-    return board
-
-def getRecentlyBoard():
-    '''
-    마지막 게시글 가져오기
-    return: 마지막 글 객체(boardDTO)
-    '''
-    board = boardDTO.BoardDTO()
-    sql = f'''
-        SELECT b.*, u.u_email, u.u_state, \
-            (SELECT count(DISTINCT u_no) + count(DISTINCT v_ip) FROM views WHERE b_no=b.b_no), \
-            (SELECT count(DISTINCT u_no) + count(DISTINCT l_ip) FROM likes WHERE b_no=b.b_no) \
-        FROM board b \
-        JOIN user u \
-        ON b.u_no = u.u_no \
-        WHERE b.b_isdelete=0 \
-        ORDER BY b.b_no DESC LIMIT 1'''
     result = db.getData(sql=sql)[0]
     board.setBoardByDbResult(dbResult=result)
     return board
@@ -77,8 +60,9 @@ def getSearchResult(keywordList, page):
     offset = limit * (page-1)
     sql = f'''\
         SELECT b.*, u.u_email, u.u_state, \
-        (SELECT count(DISTINCT u_no) + count(DISTINCT v_ip) FROM views WHERE b_no=b.b_no),
-        (SELECT count(DISTINCT u_no) + count(DISTINCT l_ip) FROM likes WHERE b_no=b.b_no),
+        (SELECT count(DISTINCT u_no) + count(DISTINCT v_ip) FROM views WHERE b_no=b.b_no), \
+        (SELECT count(DISTINCT u_no) + count(DISTINCT l_ip) FROM likes WHERE b_no=b.b_no), \
+        (SELECT count(*) FROM comment WHERE b_no=b.b_no), \
         ('''
     for keyword in keywordList:
         sql += f'''\
@@ -110,7 +94,7 @@ def getTitleList_cathgory(cno, page=1):
     '''
     카테고리별 글목록 가져오기
     parameter: 카테고리번호(cono), 페이지(int)
-    return: 해당 페이지의 [글 번호(int), 제목(String), 조회수(int), 좋아요수(int)]의 리스트
+    return: 해당 페이지의 [글 번호(int), 제목(String), 조회수(int), 좋아요수(int), 댓글갯수(int)]의 리스트
     '''
     cno = int(cno)
     page = int(page)
@@ -118,7 +102,8 @@ def getTitleList_cathgory(cno, page=1):
     offset = limit * (page-1)
     sql = f'''SELECT b.b_no, b.b_title, \
             (SELECT count(DISTINCT u_no) + count(DISTINCT v_ip) FROM views v WHERE v.b_no=b.b_no), \
-            (SELECT count(DISTINCT u_no) + count(DISTINCT l_ip) FROM likes l WHERE l.b_no=b.b_no) \
+            (SELECT count(DISTINCT u_no) + count(DISTINCT l_ip) FROM likes l WHERE l.b_no=b.b_no), \
+            (SELECT count(*) FROM comment WHERE b_no=b.b_no) \
             FROM board b WHERE b.c_no={cno} AND b.b_isdelete=0 \
             ORDER BY b.b_no DESC LIMIT {limit} OFFSET {offset}'''
     result = db.getData(sql=sql)
@@ -156,7 +141,8 @@ def getRecentlyBoardList(uno):
     sql = f'''
         SELECT b.*, u.u_email, u.u_state, \
             (SELECT count(DISTINCT u_no) + count(DISTINCT v_ip) FROM views WHERE b_no=b.b_no), \
-            (SELECT count(DISTINCT u_no) + count(DISTINCT l_ip) FROM likes WHERE b_no=b.b_no) \
+            (SELECT count(DISTINCT u_no) + count(DISTINCT l_ip) FROM likes WHERE b_no=b.b_no), \
+            (SELECT count(*) FROM comment WHERE b_no=b.b_no) \
         FROM board b \
         JOIN user u \
         ON b.u_no = u.u_no \

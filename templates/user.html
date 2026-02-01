@@ -40,6 +40,7 @@
                 {% for board in targetUserBoardList %}
                 <li>
                     <span class="pointer bolder" onclick="window.location.href='/board/{{board.getNo()}}'">{{board.getTitle()}}</span>
+                    <span>👁️ {{board.getView()}} ❤️ {{board.getLike()}} 📝 {{board.getCommentCount()}}</span>
                 </li>
                 {% endfor %}
             </ul>

@@ -33,7 +33,7 @@ function setMainList(setPageNum){
                 item.onclick = function(){
                     window.location.href="/board/" + result[i][0]
                 }
-                item.innerHTML = '[' + result[i][4] + '] ' + result[i][1] + ' 👁️ ' + result[i][2] + ' ❤️ ' + result[i][3]
+                item.innerHTML = '[' + result[i][5] + '] ' + result[i][1] + ' 👁️ ' + result[i][2] + ' ❤️ ' + result[i][3] + ' 📝 ' + result[i][4]
                 mainListUl.appendChild(item)
             }
         });

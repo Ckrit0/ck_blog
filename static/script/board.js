@@ -31,7 +31,8 @@ function setLike(){
             likeCountSpan.innerHTML = result[2]
             if(result[0]){
                 likeMarkSpan.innerHTML = '❤️'
-                boardNoDiv.outerHTML = ''
+                likeMarkSpan.onclick = ()=>{}
+                likeCountSpan.innerHTML = parseInt(likeCountSpan.innerHTML) + 1
             }else{
                 alert(result[1])
             }
@@ -70,7 +71,7 @@ function setCateList(setPageNum){
                 if(result[i][0] == bno){
                     var item = document.createElement('li')
                     item.classList.add("boardTitles")
-                    item.innerHTML = result[i][1] + ' 👁️ ' + result[i][2] + ' ❤️ ' + result[i][3] + ' (현재글)' 
+                    item.innerHTML = '<span class="bolder" style="color:var(--theme-color);">[현재글] </span>' + result[i][1] + ' 👁️ ' + result[i][2] + ' ❤️ ' + result[i][3]
                     categoryTitlesListUl.appendChild(item)                    
                 }else{
                     var item = document.createElement('li')
@@ -79,7 +80,7 @@ function setCateList(setPageNum){
                     item.onclick = function(){
                         window.location.href="/board/" + result[i][0]
                     }
-                    item.innerHTML = result[i][1] + ' 👁️ ' + result[i][2] + ' ❤️ ' + result[i][3]
+                    item.innerHTML = result[i][1] + ' 👁️ ' + result[i][2] + ' ❤️ ' + result[i][3] + ' 📝 ' + result[i][4]
                     categoryTitlesListUl.appendChild(item)                    
                 }
             }

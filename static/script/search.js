@@ -37,7 +37,7 @@ function setSearchList(setPageNum){
                 item.onclick = function(){
                     window.location.href="/board/" + result[i][0]
                 }
-                item.innerHTML = '[' + result[i][5] + '] ' + result[i][1] + ' 👁️ ' + result[i][2] + ' ❤️ ' + result[i][3]
+                item.innerHTML = '[' + result[i][5] + '] ' + result[i][1] + ' 👁️ ' + result[i][2] + ' ❤️ ' + result[i][3] + ' 📝 ' + result[i][6]
                 let contentsItem = document.createElement('div')
                 contentsItem.classList.add("shortContents")
                 contentsItem.innerHTML = result[i][4]

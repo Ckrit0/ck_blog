@@ -111,5 +111,6 @@ def setSearchStandard(searchBoardList, keywordList):
         tempList.append(searchBoardList[i].getLike())
         tempList.append(searchBoardList[i].getContents())
         tempList.append(categoryDAO.getCategoryNameByCno(searchBoardList[i].getCategoryNo()))
+        tempList.append(searchBoardList[i].getCommentCount())
         result.append(tempList)
     return result

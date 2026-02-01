@@ -14,6 +14,7 @@ class BoardDTO:
         self.uState = 0
         self.view = None
         self.like = None
+        self.commentCount = 0
     
     def setBoardByDbResult(self,dbResult):
         self.no = dbResult[0]
@@ -28,6 +29,7 @@ class BoardDTO:
         self.uState = dbResult[9]
         self.view = dbResult[10]
         self.like = dbResult[11]
+        self.commentCount = dbResult[12]
 
     def setNo(self,no):
         self.no = no
@@ -64,6 +66,9 @@ class BoardDTO:
     
     def setView(self,view):
         self.view = view
+    
+    def setCommentCount(self,commentCount):
+        self.commentCount = commentCount
         
     def getNo(self):
         return self.no
@@ -109,3 +114,6 @@ class BoardDTO:
     
     def getLike(self):
         return self.like
+    
+    def getCommentCount(self):
+        return self.commentCount
