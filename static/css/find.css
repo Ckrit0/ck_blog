@@ -90,7 +90,7 @@
 #findPwDiv{
     width: 90%;
     text-align: left;
-    font-size: var(--comment-ip-font-size);
+    font-size: var(--font-size-7);
     color: red;
 }
 #findConfirmLabel{
@@ -108,7 +108,7 @@
 #findConfirmDiv{
     width: 90%;
     text-align: left;
-    font-size: var(--comment-ip-font-size);
+    font-size: var(--font-size-7);
     color: red;
 }
 #findSubmitBtn{
@@ -117,7 +117,7 @@
     margin-top: 30px;
     width: 200px;
     height: 50px;
-    font-size: var(--post-info-font-size);
+    font-size: var(--font-size-4);
     font-weight: 600;
 }
 #findSubmitBtn:disabled{
@@ -137,7 +137,7 @@
     margin-top: 30px;
     width: 200px;
     height: 50px;
-    font-size: var(--post-info-font-size);
+    font-size: var(--font-size-4);
     font-weight: 600;
     color: var(--bg-color);
     border-color: var(--theme-color);

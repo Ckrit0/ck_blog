@@ -17,7 +17,7 @@
 
 #mainNoticeContents{
     box-sizing: border-box;
-    font-size: var(--contents-font-size);
+    font-size: var(--font-size-5);
     color: var(--font-color);
 }
 

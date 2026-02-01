@@ -19,16 +19,14 @@
     --logo-size-width : 200px;
     --logo-size-height : 125px;
     --list-width : 80%;
-    --subtitle-font-size : 30px;
-    --paging-font-size : 20px;
-    --post-title-font-size : 40px;
-    --post-info-font-size : 18px;
-    --contents-font-size : 16px;
-    --comment-font-size : 16px;
-    --comment-email-font-size : 16px;
-    --comment-ip-font-size : 12px;
-    --sidebar-font-size : 14px;
-    --sidebar-lil-font-size : 14px;
+    
+    --font-size-1 : 40px;
+    --font-size-2 : 30px;
+    --font-size-3 : 20px;
+    --font-size-4 : 18px;
+    --font-size-5 : 16px;
+    --font-size-6: 14px;
+    --font-size-7: 12px;
 }
 
 /* 태그 */
@@ -48,7 +46,7 @@ input{
     border: 1px solid var(--theme-color);
     padding: 2px 10px;
     background-color: var(--bg-color);
-    font-size: 12px;
+    font-size: var(--font-size-7);
     font-family: var(--subject-font);
     color: var(--font-color);
 }
@@ -61,7 +59,7 @@ button{
     border-radius: 10px;
     border: 1px solid var(--theme-color);
     background-color: var(--bg-color);
-    font-size: 12px;
+    font-size: var(--font-size-7);
     font-family: var(--subject-font);
     color: var(--font-color);
     cursor: pointer;
@@ -93,7 +91,7 @@ a{
     width: 100%;
     text-align: center;
     font-family: var(--title-font);
-    font-size: var(--subtitle-font-size);
+    font-size: var(--font-size-2);
     font-weight: 600;
     color: var(--theme-color);
 }
@@ -126,12 +124,14 @@ a{
     box-sizing: border-box;
     padding: 2px 5px;
     background: var(--theme-color);
+    font-size: var(--font-size-5);
     color: var(--bg-color);
 }
 
 .tableBodyItem{
     box-sizing: border-box;
     padding: 2px 20px;
+    font-size: var(--font-size-5);
 }
 
 .tableSubject{
@@ -174,7 +174,7 @@ a{
     box-sizing: border-box;
     margin: 5px 5px;
     font-family: var(--title-font);
-    font-size: var(--paging-font-size);
+    font-size: var(--font-size-3);
     color: var(--theme-color);
     font-weight: 600;
     cursor: pointer;
@@ -205,11 +205,11 @@ a{
 }
 
 .font20{
-    font-size: 20px;
+    font-size: var(--font-size-3);
 }
 
 .font30{
-    font-size: 30px;
+    font-size: var(--font-size-2);
 }
 
 .bolder{
@@ -241,14 +241,12 @@ a{
         --sidebar-width : 200px;
         --title-height : 40px;
         --list-width : 100%;
-        --subtitle-font-size : 20px;
-        --comment-font-size : 14px;
-        --comment-email-font-size : 12px;
-        --comment-ip-font-size : 12px;
-        --sidebar-font-size: 12px;
-        --post-title-font-size: 41px;
-        --post-info-font-size: 14px;
-        --contents-font-size: 14px;
+        --font-size-1: 30px;
+        --font-size-2 : 25px;
+        --font-size-3 : 18px;
+        --font-size-4: 16px;
+        --font-size-5 : 14px;
+        --font-size-6: 12px;
     }
     .commentUl>li{
         padding: 0;
@@ -262,7 +260,7 @@ a{
 
 @media screen and (max-width:805px){
     :root{
-        --comment-font-size : 12px;
+        --font-size-5 : 12px
     }
     .commentIp{
         display: none;

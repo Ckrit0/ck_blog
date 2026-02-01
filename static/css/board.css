@@ -21,7 +21,7 @@
     grid-column-end: 5;
     padding: 20px 40px;
     font-family: var(--subject-font);
-    font-size: var(--post-title-font-size);
+    font-size: var(--font-size-1);
 }
 #postView{
     box-sizing: border-box;
@@ -29,7 +29,7 @@
     grid-column: 1;
     padding-top: 20px;
     padding-bottom: 20px;
-    font-size: var(--post-info-font-size);
+    font-size: var(--font-size-4);
     text-shadow: 3px 3px 2px var(--dark-color);
 }
 #likeMarkSpan{
@@ -49,21 +49,21 @@
     grid-row: 2;
     grid-column: 3;
     padding: 20px;
-    font-size: var(--post-info-font-size);
+    font-size: var(--font-size-4);
 }
 #postInfo2{
     box-sizing: border-box;
     grid-row: 2;
     grid-column: 4;
     padding: 20px;
-    font-size: var(--post-info-font-size);
+    font-size: var(--font-size-4);
 }
 #postContents{
     box-sizing: border-box;
     border: 1px solid var(--theme-color);
     padding: 20px;
     text-align: left;
-    font-size: var(--contents-font-size);
+    font-size: var(--font-size-5);
 }
 
 /* 본문 */
@@ -89,7 +89,7 @@
 }
 .image>figcaption{
     font-style: italic;
-    font-size: var(--sidebar-lil-font-size);
+    font-size: var(--font-size-7);
     color: gray;
 }
 
@@ -151,7 +151,7 @@
 .commentEmail{
     box-sizing: border-box;
     font-family: var(--category-font);
-    font-size: var(--comment-email-font-size);
+    font-size: var(--font-size-5);
     font-weight: 600;
     color: var(--theme-color);
     cursor: pointer;
@@ -160,14 +160,14 @@
 .commentIp{
     box-sizing: border-box;
     margin-left: 2px;
-    font-size: var(--comment-ip-font-size);
+    font-size: var(--font-size-7);
     color: var(--font-color);
 }
 
 .commentDate{
     box-sizing: border-box;
     margin: 0 5px;
-    font-size: var(--comment-ip-font-size);
+    font-size: var(--font-size-7);
     color: var(--font-color);
 }
 
@@ -175,7 +175,7 @@
     box-sizing: border-box;
     display: block;
     padding-left: 10px;
-    font-size: var(--comment-font-size);
+    font-size: var(--font-size-5);
 }
 
 .deleted{
@@ -186,19 +186,19 @@
 .commentGetChild{
     margin: 0 5px;
     color: gray;
-    font-size: var(--comment-ip-font-size);
+    font-size: var(--font-size-7);
     cursor: pointer;
 }
 .commentSetChild{
     margin: 0 5px;
     color: gray;
-    font-size: var(--comment-ip-font-size);
+    font-size: var(--font-size-7);
     cursor: pointer;
 }
 .commentRemove{
     margin: 0 5px;
     color: gray;
-    font-size: var(--comment-ip-font-size);
+    font-size: var(--font-size-7);
     cursor: pointer;
 }
 
