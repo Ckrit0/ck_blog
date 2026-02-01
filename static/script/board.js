@@ -10,6 +10,7 @@ let pageLiList = document.getElementsByClassName('pages')
 let commentTextarea = document.getElementById('commentTextarea')
 let commentInputBtn = document.getElementById('commentInputBtn')
 let commentParentDiv = document.getElementById('commentParentDiv')
+let topBtn = document.getElementById('topBtn')
 
 
 /**
@@ -412,6 +413,11 @@ function removeComment(cono){
 // 이벤트 리스너
 commentTextarea.addEventListener('input',()=>{
     commentInputBtn.innerHTML = '등록 (' + commentTextarea.value.length + '/1000 자)'
+})
+
+// 탑 버튼
+topBtn.addEventListener('click',()=>{
+    window.scrollTo({top: 0, behavior: "smooth"})
 })
 
 // 초기 실행
