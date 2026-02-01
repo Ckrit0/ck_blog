@@ -1,6 +1,5 @@
 from datetime import datetime
-import pytz
-import os
+import pytz, os, sys
 from service import store
 
 class Logger:
@@ -61,4 +60,5 @@ class Logger:
         fileName = logDate + '_' + logName
         logLine = logDate + '_' + logTime + ' ' + log
         self.__appendLine(dirPath=dirPath,fileName=fileName,line=logLine)
+        print(f"{fileName} 로그: {logLine}", file=sys.stderr)
         return
