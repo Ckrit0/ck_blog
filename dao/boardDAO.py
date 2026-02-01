@@ -5,6 +5,8 @@ import math
 #################################################################################################
 ####################################### Get Board Object ########################################
 #################################################################################################
+
+########### 글 관련 - 전체 ############
 def getTitleList_all(page):
     '''
     전체 글제목 목록 가져오기
@@ -24,83 +26,6 @@ def getTitleList_all(page):
     for data in result:
         data[1] = boardService.middleTitle(data[1])
     return result
-
-def getPageList_all():
-    '''
-    전체 페이지 리스트 가져오기
-    return: 페이지 리스트(list)
-    '''
-    pageList = []
-    sql = f'''SELECT count(*) FROM board WHERE b_isdelete=0'''
-    result = math.ceil(db.getData(sql=sql)[0][0]/store.PAGE_COUNT['메인'])
-    for i in range(result):
-        pageList.append(i+1)
-    return pageList
-
-def getTitleList_cathgory(cno, page=1):
-    '''
-    카테고리별 글목록 가져오기
-    parameter: 카테고리번호(cono), 페이지(int)
-    return: 해당 페이지의 [글 번호(int), 제목(String), 조회수(int), 좋아요수(int)]의 리스트
-    '''
-    cno = int(cno)
-    page = int(page)
-    limit = store.PAGE_COUNT['카테고리']
-    offset = limit * (page-1)
-    sql = f'''SELECT b.b_no, b.b_title, \
-            (SELECT count(DISTINCT u_no) + count(DISTINCT v_ip) FROM views v WHERE v.b_no=b.b_no), \
-            (SELECT count(DISTINCT u_no) + count(DISTINCT l_ip) FROM likes l WHERE l.b_no=b.b_no) \
-            FROM board b WHERE b.c_no={cno} AND b.b_isdelete=0 \
-            ORDER BY b.b_no DESC LIMIT {limit} OFFSET {offset}'''
-    result = db.getData(sql=sql)
-    for titleData in result:
-        titleData[1] = boardService.middleTitle(titleData[1])
-    return result
-
-def getPageList_category(cno):
-    '''
-    카테고리별 페이지 리스트 가져오기
-    parameter: 카테고리번호(cono)
-    return: 페이지 리스트(list)
-    '''
-    pageList = []
-    sql = f'''SELECT count(*) FROM board WHERE c_no={cno} AND b_isdelete=0'''
-    result = math.ceil(db.getData(sql=sql)[0][0]/store.PAGE_COUNT['카테고리'])
-    for i in range(result):
-        pageList.append(i+1)
-    return pageList
-
-def getPageList_search(keywordList):
-    '''
-    검색화면 페이지 리스트 가져오기
-    parameter: 키워드리스트(list)
-    return: 페이지 리스트(list)
-    '''
-    pageList = []
-    sql = f'''\
-        SELECT count(*) \
-        FROM board \
-        WHERE \
-            b_isdelete=0 AND \
-            ('''
-    for keyword in keywordList:
-        sql += f'''\
-            b_title LIKE "%{keyword[0]}%" OR b_contents LIKE "%{keyword[0]}%" OR'''
-    sql = sql[:-2] + ')'
-    result = math.ceil(db.getData(sql=sql)[0][0]/store.PAGE_COUNT['검색'])
-    for i in range(result):
-        pageList.append(i+1)
-    return pageList
-
-def getPageOfCategory(board):
-    '''
-    카테고리 내에서 해당 글의 페이지 번호 가져오기
-    parameter: 글객체(boardDTO)
-    return: 해당 글이 속한 페이지 번호(int)
-    '''
-    sql = f'''SELECT count(*) FROM board WHERE c_no={board.getCategoryNo()} AND b_isdelete=0 AND b_no > {board.getNo()}'''
-    page = math.ceil(db.getData(sql=sql)[0][0]/store.PAGE_COUNT['카테고리']) + 1
-    return page
 
 def getBoardByBoardNo(bno):
     '''
@@ -141,6 +66,67 @@ def getRecentlyBoard():
     board.setBoardByDbResult(dbResult=result)
     return board
 
+def getSearchResult(keywordList, page):
+    '''
+    검색어로 검색 결과를 찾아옴
+    parameter: 검색단어 리스트(list)
+    return: 검색된 글객체 리스트([boardDTO,...])
+    '''
+    page = int(page)
+    limit = store.PAGE_COUNT['검색']
+    offset = limit * (page-1)
+    sql = f'''\
+        SELECT b.*, u.u_email, u.u_state, \
+        (SELECT count(DISTINCT u_no) + count(DISTINCT v_ip) FROM views WHERE b_no=b.b_no),
+        (SELECT count(DISTINCT u_no) + count(DISTINCT l_ip) FROM likes WHERE b_no=b.b_no),
+        ('''
+    for keyword in keywordList:
+        sql += f'''\
+            ((b.b_title LIKE "%{keyword[0]}%")*{keyword[1]}) + ((b.b_contents LIKE "%{keyword[0]}%")*{keyword[1]}) +'''
+    sql = sql[:-1]
+    sql += f'''\
+        ) AS score \
+        FROM board b \
+        JOIN user u \
+        ON b.u_no = u.u_no \
+        WHERE
+            b.b_isdelete=0 AND ('''
+    for keyword in keywordList:
+        sql += f'''\
+            b.b_title LIKE "%{keyword[0]}%" OR b.b_contents LIKE "%{keyword[0]}%" OR'''
+    sql = sql[:-2]
+    sql += f'''\
+        ) ORDER BY score DESC LIMIT {limit} OFFSET {offset}'''
+    dbResult = db.getData(sql=sql)
+    searchBoardList = []
+    for data in dbResult:
+        board = boardDTO.BoardDTO()
+        board.setBoardByDbResult(dbResult=data)
+        searchBoardList.append(board)
+    return searchBoardList
+
+########### 글 관련 - 카테고리 ############
+def getTitleList_cathgory(cno, page=1):
+    '''
+    카테고리별 글목록 가져오기
+    parameter: 카테고리번호(cono), 페이지(int)
+    return: 해당 페이지의 [글 번호(int), 제목(String), 조회수(int), 좋아요수(int)]의 리스트
+    '''
+    cno = int(cno)
+    page = int(page)
+    limit = store.PAGE_COUNT['카테고리']
+    offset = limit * (page-1)
+    sql = f'''SELECT b.b_no, b.b_title, \
+            (SELECT count(DISTINCT u_no) + count(DISTINCT v_ip) FROM views v WHERE v.b_no=b.b_no), \
+            (SELECT count(DISTINCT u_no) + count(DISTINCT l_ip) FROM likes l WHERE l.b_no=b.b_no) \
+            FROM board b WHERE b.c_no={cno} AND b.b_isdelete=0 \
+            ORDER BY b.b_no DESC LIMIT {limit} OFFSET {offset}'''
+    result = db.getData(sql=sql)
+    for titleData in result:
+        titleData[1] = boardService.middleTitle(titleData[1])
+    return result
+
+########### 글 관련 - 유저 ############
 def getBoardCountByUserNo(uno):
     '''
     유저별 작성한 글 갯수 가져오기
@@ -183,44 +169,50 @@ def getRecentlyBoardList(uno):
         result.append(board)
     return result
 
-def getSearchResult(keywordList, page):
+######### 페이징 관련 ###########
+def getPageList_all():
     '''
-    검색어로 검색 결과를 찾아옴
-    parameter: 검색단어 리스트(list)
-    return: 검색된 글객체 리스트([boardDTO,...])
+    전체 페이지 리스트 가져오기
+    return: 페이지 리스트(list)
     '''
-    page = int(page)
-    limit = store.PAGE_COUNT['검색']
-    offset = limit * (page-1)
-    sql = f'''\
-        SELECT b.*, u.u_email, u.u_state, \
-        (SELECT count(DISTINCT u_no) + count(DISTINCT v_ip) FROM views WHERE b_no=b.b_no),
-        (SELECT count(DISTINCT u_no) + count(DISTINCT l_ip) FROM likes WHERE b_no=b.b_no),
-        ('''
+    pageList = []
+    sql = f'''SELECT count(*) FROM board WHERE b_isdelete=0'''
+    result = math.ceil(db.getData(sql=sql)[0][0]/store.PAGE_COUNT['메인'])
+    for i in range(result):
+        pageList.append(i+1)
+    return pageList
+
+def getPageList_search(keywordList):
+    '''
+    검색화면 페이지 리스트 가져오기
+    parameter: 키워드리스트(list)
+    return: 페이지 리스트(list)
+    '''
+    pageList = []
+    sql = f'''SELECT count(*) FROM board \
+        WHERE \
+            b_isdelete=0 AND \
+            ('''
     for keyword in keywordList:
         sql += f'''\
-            ((b.b_title LIKE "%{keyword[0]}%")*{keyword[1]}) + ((b.b_contents LIKE "%{keyword[0]}%")*{keyword[1]}) +'''
-    sql = sql[:-1]
-    sql += f'''\
-        ) AS score \
-        FROM board b \
-        JOIN user u \
-        ON b.u_no = u.u_no \
-        WHERE
-            b.b_isdelete=0 AND ('''
-    for keyword in keywordList:
-        sql += f'''\
-            b.b_title LIKE "%{keyword[0]}%" OR b.b_contents LIKE "%{keyword[0]}%" OR'''
-    sql = sql[:-2]
-    sql += f'''\
-        ) ORDER BY score DESC LIMIT {limit} OFFSET {offset}'''
-    dbResult = db.getData(sql=sql)
-    searchBoardList = []
-    for data in dbResult:
-        board = boardDTO.BoardDTO()
-        board.setBoardByDbResult(dbResult=data)
-        searchBoardList.append(board)
-    return searchBoardList
+            b_title LIKE "%{keyword[0]}%" OR b_contents LIKE "%{keyword[0]}%" OR'''
+    sql = sql[:-2] + ')'
+    result = math.ceil(db.getData(sql=sql)[0][0]/store.PAGE_COUNT['검색'])
+    for i in range(result):
+        pageList.append(i+1)
+    return pageList
+
+def getPageOfCategory(board):
+    '''
+    카테고리 내에서 해당 글의 페이지 번호 가져오기
+    parameter: 글객체(boardDTO)
+    return: 해당 글이 속한 페이지 번호(int)
+    '''
+    sql = f'''SELECT count(*) FROM board WHERE c_no={board.getCategoryNo()} AND b_isdelete=0 AND b_no > {board.getNo()}'''
+    page = math.ceil(db.getData(sql=sql)[0][0]/store.PAGE_COUNT['카테고리'])
+    return page
+
+
 
 
 #################################################################################################

@@ -344,7 +344,7 @@ def boardPage(bno):
     targetBoard = boardDAO.getBoardByBoardNo(bno=bno)
     isLiked = boardService.checkIsLiked(user=clientUser, board=targetBoard)
     cName = categoryService.getCategoryNameByCnoInCategoryList(cList=categoryList,cno=targetBoard.getCategoryNo())
-    pageList = boardDAO.getPageList_category(targetBoard.getCategoryNo())
+    pageList = categoryDAO.getPageList_category(targetBoard.getCategoryNo())
     nowPage = boardDAO.getPageOfCategory(board=targetBoard)
     isWritable = validate.checkWritableCategory(user=clientUser,cno=targetBoard.getCategoryNo())
 
@@ -604,7 +604,7 @@ def categoryPage(categoryNo):
 
     # 데이터 가져오기
     cName = categoryService.getCategoryNameByCnoInCategoryList(cList=categoryList,cno=int(categoryNo))
-    pageList = boardDAO.getPageList_category(int(categoryNo))
+    pageList = categoryDAO.getPageList_category(int(categoryNo))
     isWritable = validate.checkWritableCategory(user=clientUser,cno=categoryNo)
 
     # 뷰 설정하기
