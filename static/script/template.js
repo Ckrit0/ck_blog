@@ -1,5 +1,7 @@
 let searchInput = document.getElementById('searchInput')
 let searchBtn = document.getElementById('searchBtn')
+let sidebarBtn = document.getElementById('sidebarBtn')
+let sidebar = document.getElementById('sidebar')
 
 /**
  * 검색 관련
@@ -23,3 +25,32 @@ searchBtn.onclick = function(){
     }
     window.location.href = '/search/' + keyword
 }
+
+/**
+ * 미디어쿼리 사이드바
+ */
+let isMenuOpen = false;
+function toggleMenu(){
+    isMenuOpen = !isMenuOpen
+    if(isMenuOpen){
+        sidebar.style.display = ''
+    }else{
+        sidebar.style.display = 'none'
+    }
+}
+
+sidebarBtn.addEventListener('click', toggleMenu)
+
+function checkViewport() {
+    if (window.innerWidth <= 768) {
+        sidebar.style.display = 'none'
+        sidebarBtn.style.display = ''
+        
+    } else {
+        sidebar.style.display = ''
+        sidebarBtn.style.display = 'none'
+    }
+}
+window.addEventListener('resize', checkViewport);
+
+checkViewport(); // 초기 실행

@@ -166,6 +166,22 @@ main{
     font-size: var(--font-size-6);
 }
 
+/* 사이드바 - 버튼 */
+#sidebarBtn{
+    box-sizing: border-box;
+    position: fixed;
+    top: 12px;
+    right: 20px;
+    z-index: 999;
+    padding-top: 2px;
+    width: 50px;
+    height: 22px;
+    background: var(--bg-color);
+    border-radius: 30px;
+    font-size: var(--font-size-5);
+    cursor: pointer;
+}
+
 /* 템플릿 컨텐츠 */
 #contents{
     box-sizing: border-box;
@@ -204,13 +220,12 @@ main{
 }
 
 @media screen and (max-width:805px){
-    #sidebar{ /* 버튼식으로 변경 예정 */
-        display: none;
-    }
-    header{
-        display: none;
-    }
-    #titleHorizontalLine{
-        display: none;
+    #sidebar{
+        position: fixed;
+        top: 50px;
+        right: 20px;
+        background: var(--bg-color);
+        border: 1px solid var(--theme-color);
+        border-radius: 20px;
     }
 }
