@@ -13,6 +13,28 @@ app.config["UPLOAD_FOLDER"] = store.imageUploadDirectory
 app.config['MAX_CONTENT_LENGTH'] = store.imageSize
 
 
+#######################
+##### 에러 핸들러 #####
+#######################
+
+# 403 Error: 접근 권한 없음
+@app.errorhandler(403)
+def forbidden(e):
+    return render_template('error_403.html'), 403
+
+@app.route('/test-403')
+def test_403():
+    abort(403)
+
+# 404 Error: 페이지를 찾을 수 없음
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('error_404.html'), 404
+
+@app.route('/test-404')
+def test_404():
+    abort(404)
+
 ################################
 ##### 메인 페이지, Service #####
 ################################
