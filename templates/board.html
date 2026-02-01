@@ -9,7 +9,7 @@
 <div id="boardDiv">
     <div id="boardCategoryListDiv" class="contentsList">
         <span class="subTitle">Category Posts - '<span onclick="window.location.href='/category/{{targetBoard.getCategoryNo()}}'">{{cName}}'</span></span>
-        <ul id="titlesUl" class="listUl"></ul><br>
+        <table id="titlesListTable" class="listTable"></table><br>
         <ul id="boardPagingUl" class="pagingUl">
             <li id="boardPrev" onclick="boardPrevPage()">[prev]</li>
             {% for page in pageList %}

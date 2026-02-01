@@ -47,7 +47,7 @@ def getData(sql):
             data.append(tempList)
     except Exception as e:
         log = logger.Logger()
-        log.setLog(store.LOG_NAME['데이터베이스'], f'getData Error: {e}')
+        log.setLog(store.LOG_NAME['데이터베이스'], f'getData Error: {e}, SQL: {sql}')
     finally:
         con.close()
     return data
@@ -66,7 +66,7 @@ def setData(sql):
         result = cur.rowcount
     except Exception as e:
         log = logger.Logger()
-        log.setLog(store.LOG_NAME['데이터베이스'], f'setData Error: {e}')
+        log.setLog(store.LOG_NAME['데이터베이스'], f'setData Error: {e}, SQL: {sql}')
     finally:
         con.close()
     return result
@@ -86,7 +86,7 @@ def setDatas(sqlList):
         result = cur.rowcount
     except Exception as e:
         log = logger.Logger()
-        log.setLog(store.LOG_NAME['데이터베이스'], f'setDatas Error: {e}')
+        log.setLog(store.LOG_NAME['데이터베이스'], f'setDatas Error: {e}, SQL: {sql}')
     finally:
         con.close()
     return result

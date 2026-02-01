@@ -43,9 +43,6 @@ def getWritableCategoryList(user):
     parameter: 유저객체(userDTO)
     return: 작성가능 카테고리 리스트([categoryDTO,...]])
     '''
-    '''
-    지금은 그냥 하드코딩으로 함. 권한용 DB 테이블 만들어야할듯
-    '''
     wholeCategoryList = getCategoryList()
     writableCategoryList = []
     if user.getState() == store.USER_STATE_CODE['관리자']:
@@ -73,6 +70,8 @@ def getTitleList_cathgoryInCategoryPage(cno, page=1):
     '''
     cno = int(cno)
     page = int(page)
+    if page == 0:
+        return []
     limit = store.PAGE_COUNT['카테고리페이지']
     offset = limit * (page-1)
     sql = f'''SELECT b.b_no, b.b_title, b.b_contents, \

@@ -14,6 +14,8 @@ def getTitleList_all(page):
     return: 해당 페이지의 [글 번호(int), 제목(String), 조회수(int), 좋아요수(int)]의 리스트
     '''
     page = int(page)
+    if page == 0:
+        return []
     limit = store.PAGE_COUNT['메인']
     offset = limit * (page-1)
     sql = f'''SELECT b.b_no, b.b_title, \
@@ -98,6 +100,8 @@ def getTitleList_cathgory(cno, page=1):
     '''
     cno = int(cno)
     page = int(page)
+    if page == 0:
+        return []
     limit = store.PAGE_COUNT['카테고리']
     offset = limit * (page-1)
     sql = f'''SELECT b.b_no, b.b_title, \

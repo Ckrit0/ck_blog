@@ -7,7 +7,7 @@
         <div id="nowSearchPageDiv" style="display: none;">1</div>
         <div id="searchKeywordDiv" style="display: none;">{{keyword}}</div>
         <div class="subTitle">검색 결과 - "{{keyword}}"</div>
-        <ul id="searchListUl" class="listUl" style="width: 80%;"></ul><br>
+        <table id="searchListTable" class="listTable" style="width: 80%;"></table><br>
         <ul id="searchPagingUl" class="pagingUl">
         <li id="searchPrev" onclick="searchPrevPage()">[prev]</li>
         {% for page in pageList %}

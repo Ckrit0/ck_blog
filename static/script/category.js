@@ -1,4 +1,5 @@
 let nowCategoryPageDiv = document.getElementById('nowCategoryPageDiv')
+let categoryListTable = document.getElementById('categoryListTable')
 let categoryPagingUl = document.getElementById('categoryPagingUl')
 let nowCategoryNoDiv = document.getElementById('nowCategoryNoDiv')
 
@@ -28,19 +29,69 @@ function setCateList(setPageNum){
         })
         .then((response) => response.json())
         .then((result) => {
-            categoryTitlesListUl.innerHTML = ''
-            for(let i in result){
-                let item = document.createElement('li')
-                item.classList.add("pointer")
-                item.onclick = function(){
-                    window.location.href="/board/" + result[i][0]
+            function getNewElement(tagName,classList=[],innerHTML=''){
+                let newElement = document.createElement(tagName)
+                for(let i=0;i<classList.length;i++){
+                    newElement.classList.add(classList[i])
                 }
-                item.innerHTML = '<span class="bolder">' + result[i][1] + '</span> 👁️ ' + result[i][3] + ' ❤️ ' + result[i][4] + ' 📝 ' + result[i][5]
-                let contentsItem = document.createElement('div')
-                contentsItem.classList.add("shortContents")
-                contentsItem.innerHTML = result[i][2]
-                item.appendChild(contentsItem)
-                categoryTitlesListUl.appendChild(item)
+                newElement.innerHTML = innerHTML
+                return newElement
+            }
+            function appendItemList(itemBox, itemList){
+                for(let i=0;i<itemList.length;i++){
+                    itemBox.appendChild(itemList[i])
+                }
+            }
+            /**
+             * response 데이터로 페이지에 들어갈 내용 추가하기
+             * @param {boolean} isHead 헤더인지 아닌지 여부
+             * @param {Element} boxElement 여기에 추가할거임
+             * @param {Array} contentsList 카테고리, 제목, 조회수, 공감수, 댓글수, 내용 순
+             * @param {int} bno onclick 넣기위함. undefined시 넣지 않음
+             */
+            function setTableLine(boxElement, contentsList, bno){
+                let tr1 = getNewElement('tr',['tableUpper'])
+                let subject = getNewElement('td',['tableBodyItem', 'tableSubject'],contentsList[0])
+                let view = getNewElement('td',['tableBodyItem', 'tableView'],contentsList[1])
+                view.rowSpan = 2
+                let like = getNewElement('td',['tableBodyItem', 'tableLike'],contentsList[2])
+                like.rowSpan = 2
+                let comment = getNewElement('td',['tableBodyItem', 'tableComment'],contentsList[3])
+                comment.rowSpan = 2
+                tr1.onclick = function(){
+                    window.location.href="/board/" + bno
+                }
+                appendItemList(tr1,[subject,view,like,comment])
+                let tr2 = getNewElement('tr',['tableLower'])
+                let contents = getNewElement('td',['tableBodyItem', 'tableContents'],contentsList[4])
+                tr2.appendChild(contents)
+                tr2.onclick = function(){
+                    window.location.href="/board/" + bno
+                }
+                appendItemList(boxElement,[tr1,tr2])
+            }
+            categoryListTable.innerHTML = ''
+            let tHead = getNewElement('thead')
+            let tr = getNewElement('tr',['tableUpper','tableLower'])
+            let subject = getNewElement('th',['tableHeaderItem', 'tableSubject', 'center'],'글')
+            let view = getNewElement('th',['tableHeaderItem', 'tableView'],'조회')
+            let like = getNewElement('th',['tableHeaderItem', 'tableLike'],'공감')
+            let comment = getNewElement('th',['tableHeaderItem', 'tableComment'],'댓글')
+            appendItemList(tr,[subject,view,like,comment])
+            tHead.appendChild(tr)
+            categoryListTable.appendChild(tHead)
+
+            if(result.length == 0){
+                let tr = getNewElement('tr',['tableUpper', 'tableLower'])
+                let td = getNewElement('td',['tableBodyItem'],'검색결과가 없습니다.')
+                tr.appendChild(td)
+                categoryListTable.appendChild(tr)
+            }else{
+                let tBody = document.createElement('tbody')
+                for(let i in result){
+                    setTableLine(tBody, [result[i][1],result[i][3],result[i][4],result[i][5],result[i][2]],result[i][0])
+                }
+                categoryListTable.appendChild(tBody)
             }
         });
     setCatePagingList(setPageNum)
