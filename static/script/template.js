@@ -32,6 +32,7 @@ searchBtn.onclick = function(){
 let isMenuOpen = false;
 function toggleMenu(){
     isMenuOpen = !isMenuOpen
+    console.log(isMenuOpen)
     if(isMenuOpen){
         sidebar.style.display = ''
     }else{
