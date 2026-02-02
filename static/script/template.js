@@ -43,12 +43,17 @@ sidebarBtn.addEventListener('click', toggleMenu)
 
 function checkViewport() {
     if (window.innerWidth <= 768) {
-        sidebar.style.display = 'none'
+        if(!isMenuOpen){
+            sidebar.style.display = 'none'
+        }else{
+            sidebar.style.display = ''
+        }
         sidebarBtn.style.display = ''
         
     } else {
         sidebar.style.display = ''
         sidebarBtn.style.display = 'none'
+        isMenuOpen = false
     }
 }
 window.addEventListener('resize', checkViewport);
