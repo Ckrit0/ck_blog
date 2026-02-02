@@ -8,6 +8,8 @@ load_dotenv() # .env 파일 로드
 ####################
 
 secret_key = os.environ.get("secretKey") # 플라스크 시크릿 키
+flask_port = 5000
+flask_debug = False
 sessionTime = 1 # 세션 유지 시간(hour)
 verifyExpireTime = 10 # 인증코드 유효시간(minute)
 verifyList = [] # 인증코드 저장 리스트
