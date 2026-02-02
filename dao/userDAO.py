@@ -156,12 +156,12 @@ def setUser(email, pw, confirm, verify):
     log = logger.Logger()
     if result != 0:
         if len(sqlList) >= 2:
-            log.setLog(store.LOG_NAME['유저'], f"재가입(재가입): {email}, State: {user.getState()}")
+            log.setLog(store.LOG_NAME['유저'], f"reJoin: {email}, State: {user.getState()}")
         else:
-            log.setLog(store.LOG_NAME['유저'], f"가입(신규): {email}, State: {user.getState()}")
+            log.setLog(store.LOG_NAME['유저'], f"Join: {email}, State: {user.getState()}")
         return store.USER_RESULT_CODE['정상 가입']
     else :
-        log.setLog(store.LOG_NAME['유저'], f"가입실패: {email}")
+        log.setLog(store.LOG_NAME['유저'], f"Join Fail: {email}")
         return store.USER_RESULT_CODE['실패-unknown']
 
 def updateUserState(uno, u_state):
@@ -177,10 +177,10 @@ def updateUserState(uno, u_state):
     log = logger.Logger()
     email = getUserByUserNo(uno=uno).getEmail()
     if result == 0:
-        log.setLog(store.LOG_NAME['유저'], f"상태변경 실패: {email}, State: {u_state}")
+        log.setLog(store.LOG_NAME['유저'], f"Update Status Fail: {email}, State: {u_state}")
         return store.USER_RESULT_CODE['실패-unknown']
     else :
-        log.setLog(store.LOG_NAME['유저'], f"상태변경: {email}, State: {u_state}")
+        log.setLog(store.LOG_NAME['유저'], f"Update Status: {email}, State: {u_state}")
         return store.USER_RESULT_CODE['유저 상태 변경']
 
 def updateUserPassword(email, newPw, newConfirm):
@@ -220,10 +220,10 @@ def updateUserPassword(email, newPw, newConfirm):
         result = db.setData(sql=sql)
         log = logger.Logger()
         if result == 0:
-            log.setLog(store.LOG_NAME['유저'], f"비번변경 실패: {user.getEmail()}")
+            log.setLog(store.LOG_NAME['유저'], f"Update Password Fail: {user.getEmail()}")
             return store.USER_RESULT_CODE['실패-unknown']
         else:
-            log.setLog(store.LOG_NAME['유저'], f"비번변경: {user.getEmail()}")
+            log.setLog(store.LOG_NAME['유저'], f"Update Password: {user.getEmail()}")
             return store.USER_RESULT_CODE['비밀번호 변경 성공']
 
 def updatePwByNowPw(user, nowPw, newPw, newConfirm):
@@ -261,10 +261,10 @@ def updatePwByNowPw(user, nowPw, newPw, newConfirm):
         result = db.setData(sql=sql)
         log = logger.Logger()
         if result == 0:
-            log.setLog(store.LOG_NAME['유저'], f"비번변경 실패: {user.getEmail()}")
+            log.setLog(store.LOG_NAME['유저'], f"Update Password Fail: {user.getEmail()}")
             return store.USER_RESULT_CODE['실패-unknown']
         else:
-            log.setLog(store.LOG_NAME['유저'], f"비번변경: {user.getEmail()}")
+            log.setLog(store.LOG_NAME['유저'], f"Update Password: {user.getEmail()}")
             return store.USER_RESULT_CODE['비밀번호 변경 성공']
 
 def leaveUser(uno, pw):
@@ -283,10 +283,10 @@ def leaveUser(uno, pw):
     result = db.setData(sql=sql)
     log = logger.Logger()
     if result == 0:
-        log.setLog(store.LOG_NAME['유저'],f"탈퇴 실패: {user.getEmail()}")
+        log.setLog(store.LOG_NAME['유저'],f"Leave Fail: {user.getEmail()}")
         return store.USER_RESULT_CODE['실패-unknown']
     else:
-        log.setLog(store.LOG_NAME['유저'],f"탈퇴: {user.getEmail()}")
+        log.setLog(store.LOG_NAME['유저'],f"Leave: {user.getEmail()}")
         return store.USER_RESULT_CODE['회원 탈퇴 성공']
 
 def setView(user, bno=0, url=""):
@@ -367,7 +367,7 @@ def getSessionKeyByEmailAndPw(email,pw,ip=''):
     user.setIp(ip=ip)
     sessionKey = __setSession(user=user) # 세션 등록
     log = logger.Logger()
-    log.setLog(store.LOG_NAME['유저'],f"로그인: {email}")
+    log.setLog(store.LOG_NAME['유저'],f"Login: {email}")
     return sessionKey
 
 def getUserBySessionKey(cookieKey, ip):
@@ -417,8 +417,8 @@ def setBlackList(user, code, reason=''):
     result = db.setData(sql=sql)
     log = logger.Logger()
     if result == 0:
-        log.setLog(store.LOG_NAME['유저'], f"블랙리스트 추가 실패: {user.getEmail()}, 사유: {store.getBlackReason(code)}, 상세: {reason}")
+        log.setLog(store.LOG_NAME['유저'], f"Add BlackList Fail: {user.getEmail()}, 사유: {store.getBlackReason(code)}, 상세: {reason}")
         return store.USER_RESULT_CODE['실패-unknown']
     else:
-        log.setLog(store.LOG_NAME['유저'], f"블랙리스트 추가: {user.getEmail()}, 사유: {store.getBlackReason(code)}, 상세: {reason}")
+        log.setLog(store.LOG_NAME['유저'], f"Add BlackList: {user.getEmail()}, 사유: {store.getBlackReason(code)}, 상세: {reason}")
         return store.USER_RESULT_CODE['블랙리스트 등록']

@@ -267,7 +267,7 @@ def loginHandler():
     except Exception as e:
         flash(store.USER_MESSAGE[store.USER_RESULT_CODE['실패-unknown']])
         log = logger.Logger()
-        log.setLog(store.LOG_NAME['유저'],f"login error: {e}")
+        log.setLog(store.LOG_NAME['유저'],f"loginHandler Error: {e}")
     return resp
 
 @app.route("/logout", methods=["POST"])
