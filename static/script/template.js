@@ -43,7 +43,7 @@ function toggleMenu(){
 sidebarBtn.addEventListener('click', toggleMenu)
 
 function checkViewport() {
-    if (window.innerWidth <= 768) {
+    if (window.innerWidth <= 805) {
         if(!isMenuOpen){
             sidebar.style.display = 'none'
         }else{

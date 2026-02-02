@@ -220,12 +220,72 @@ main{
 }
 
 @media screen and (max-width:805px){
+    #loginDiv{
+        padding: 0 10px;
+    }
     #sidebar{
+        display: grid;
+        grid-template-columns: 50% 50%;
         position: fixed;
         top: 50px;
-        right: 20px;
+        right: 0px;
+        width: 100%;
         background: var(--bg-color);
         border: 1px solid var(--theme-color);
         border-radius: 20px;
+    }
+    #logoDiv{
+        display: none;
+    }
+    #noticeDiv{
+        display: none;
+    }
+    #userInfoDiv{
+        grid-row: 1;
+        grid-column: 1;
+        margin: 1px;
+        width: 100%;
+    }
+    #searchDiv{
+        grid-row: 1;
+        grid-column: 2;
+        margin: 1px;
+        width: 100%;
+    }
+    #searchInput{
+        width: 70%;
+    }
+    #searchBtn{
+        width: 30%;
+    }
+    #categoryDiv{
+        grid-row: 2;
+        grid-column: 1;
+        margin: 1px;
+        width: 100%;
+    }
+    #recentDiv{
+        grid-row: 2;
+        grid-column: 2;
+        margin: 1px;
+        width: 100%;
+    }
+}
+
+@media screen and (max-width:524px){
+    #joinBtn{
+        display: none;
+    }
+    #findPwBtn{
+        display: none;
+    }
+}
+
+@media screen and (max-width:344px){
+    header{
+        min-width: 344px;
+    }
+    #loginDiv{
+        min-width: 344px;
     }
 }

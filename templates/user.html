@@ -39,8 +39,7 @@
             <ul>
                 {% for board in targetUserBoardList %}
                 <li>
-                    <span class="pointer bolder" onclick="window.location.href='/board/{{board.getNo()}}'">{{board.getTitle()}}</span>
-                    <span>👁️ {{board.getView()}} ❤️ {{board.getLike()}} 📝 {{board.getCommentCount()}}</span>
+                    <span class="pointer bolder" onclick="window.location.href='/board/{{board.getNo()}}'">▷ {{board.getTitle()}}</span>
                 </li>
                 {% endfor %}
             </ul>
@@ -50,7 +49,7 @@
             <ul>
                 {% for comment in targetUserCommentList %}
                 <li>
-                    <span class="pointer bolder" onclick="window.location.href='/board/{{comment.getBoardNo()}}'">{{comment.getBoardShortTitle()}}</span><br>
+                    <span class="pointer bolder" onclick="window.location.href='/board/{{comment.getBoardNo()}}'">▷ {{comment.getBoardShortTitle()}}</span><br>
                     <span class="pointer indentation"> ㄴ{{comment.getComment()}}</span>
                 </li>
                 {% endfor %}

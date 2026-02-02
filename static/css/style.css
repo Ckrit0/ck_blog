@@ -268,11 +268,13 @@ a{
     .commentDate{
         display: none;
     }
-    
 }
 
-@media screen and (max-width:300px){
+@media screen and (max-width:344px){
     :root{
-        --main-width : 300px;
+        --main-width : 344px;
+    }
+    #titleBar{
+        min-width: 344px;
     }
 }

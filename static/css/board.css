@@ -247,6 +247,13 @@
     #postView{
         grid-column-start: 3;
         grid-column-end: 5;
+        margin: auto;
+        padding: 0;
+    }
+    #deleteDiv{
+        grid-column-start: 1;
+        grid-column-end: 3;
+        margin: auto;
         padding: 0;
     }
     #postInfo1{
@@ -266,5 +273,16 @@
 @media screen and (max-width:805px){
     #boardTitleDiv{
         position: static;
+    }
+    figure{
+        margin: 10px 0;
+        display: block;
+        max-width: 100%;
+    }
+    img{
+        max-width: 100%;
+    }
+    .image-style-side{
+        max-width: 100%;
     }
 }
