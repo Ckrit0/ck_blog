@@ -28,10 +28,13 @@ send_email_message = '''
 hostDirectory = os.environ.get("hostDir") # 호스트 경로
 imageUploadDirectory = os.path.join(hostDirectory, 'static','uploads') # 이미지 저장경로
 imageDeleteDirectory = os.path.join(imageUploadDirectory, 'deleted') # 이미지 삭제경로
+imageDummyDirectory = os.path.join(imageUploadDirectory, 'dummy') # 더미 파일 경로
 if not os.path.exists(imageUploadDirectory): # 경로가 없다면 만들기
     os.makedirs(imageUploadDirectory)
 if not os.path.exists(imageDeleteDirectory):
     os.makedirs(imageDeleteDirectory)
+if not os.path.exists(imageDummyDirectory):
+    os.makedirs(imageDummyDirectory)
 imageSize = 16 * 1024 * 1024 # 이미지 최대 크기
 PAGE_COUNT = { # 한 페이지에 보여줄 목록의 갯수
     '기본값': 5,

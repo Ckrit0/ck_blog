@@ -49,7 +49,7 @@ def adminPage():
     #     return abort(404)
     
     # 서버 현황
-    systemInfo = adminService.get_system_info()
+    systemInfo = adminService.getSystemInfo()
 
     # 서비스 관리
     # 최신 시스템 에러로그 가져오기
@@ -63,8 +63,23 @@ def adminPage():
 #########################
 ##### 관리자 핸들러 #####
 #########################
-# storage(더미파일, 로그 관리)
+# storage - 이미지파일 정리
+@app.route("/adminCheckImage", methods=["POST"])
+def adminCheckImageHandler():
+    result = adminService.checkImage()
+    return jsonify(result)
+
+# storage - 더미파일 삭제
+@app.route("/adminDeleteDummy", methods=["POST"])
+def adminDeleteDummyHandler():
+    result = adminService.deleteDummy()
+    return jsonify(result)
+
 # reboot
+@app.route("/adminReboot", methods=["POST"])
+def adminRebootHandler():
+    #adminService.reboot()
+    return ''
 
 # 기간별 통계(그래픽, 표)
 # 방문, 가입, 탈퇴, 블랙, 새글, 새답글, 조회수, 최근 조회된 글

@@ -8,7 +8,7 @@
 </head>
 <body>
     <h1 id="adminTitle">Admin Page</h1>
-    <h2>◎ Server System Info</h2>
+    <h2>◎ Server System Info ({{systemInfo['os']}})</h2>
     <table id="adminSystemInfo">
         <thead>
             <tr>
@@ -44,12 +44,14 @@
             </tr>
             <tr>
                 <td></td>
-                <td></td>
                 <td>
-                    <button>더미파일정리</button>
+                    <button id="adminCheckImageBtn">이미지파일정리</button>
                 </td>
                 <td>
-                    <button>서버재부팅</button>
+                    <button id="adminDeleteDummyBtn">더미파일삭제</button>
+                </td>
+                <td>
+                    <button id="adminRebootBtn">서버재부팅</button>
                 </td>
             </tr>
         </tbody>
