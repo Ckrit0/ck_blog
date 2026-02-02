@@ -7,7 +7,234 @@
     <title>adminPage</title>
 </head>
 <body>
-    관리자 페이지
+    <h1 id="adminTitle">Admin Page</h1>
+    <h2>◎ Server System Info</h2>
+    <table id="adminSystemInfo">
+        <thead>
+            <tr>
+                <th>CPU</th>
+                <th>MEM</th>
+                <th>Storage</th>
+                <th>uptime</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <div class="systemGraphDiv">
+                        <span class="systemGraphText">{{systemInfo['cpuUsage']}} %</span>
+                        <div class="systemGraphBar" style="width: {{systemInfo['cpuUsage']*1.8}}px;"></div>
+                    </div>
+                </td>
+                <td>
+                    <div class="systemGraphDiv">
+                        <span class="systemGraphText">{{systemInfo['usedMem']}} / {{systemInfo['totalMem']}} GB</span>
+                        <div class="systemGraphBar" style="width: {{(systemInfo['usedMem']/systemInfo['totalMem'])*180}}px;"></div>
+                    </div>
+                </td>
+                <td>
+                    <div class="systemGraphDiv">
+                        <span class="systemGraphText">{{systemInfo['usedStorage']}} / {{systemInfo['totalStorage']}} GB</span>
+                        <div class="systemGraphBar" style="width: {{(systemInfo['usedStorage']/systemInfo['totalStorage'])*180}}px;"></div>
+                    </div>
+                </td>
+                <td>
+                    {{systemInfo['bootTime']}}<br>({{systemInfo['uptime']}})
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td>
+                    <button>더미파일정리</button>
+                </td>
+                <td>
+                    <button>서버재부팅</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <h2>◎ Analysis</h2>
+    <div id="adminAnalysis-frame">
+        <div id="adminAnalysis-X-title">
+            <div>1</div>
+            <div>2</div>
+            <div>3</div>
+            <div>4</div>
+            <div>5</div>
+            <div>6</div>
+            <div>7</div>
+            <div>8</div>
+            <div>9</div>
+            <div>10</div>
+            <div>11</div>
+        </div>
+        <div id="adminAnalysis">
+            <div class="analysisGraphCoordX">
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div>3</div>
+            </div>
+            <div class="analysisGraphCoordX">
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div>4</div>
+            </div>
+            <div class="analysisGraphCoordX">
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div>7</div>
+            </div>
+            <div class="analysisGraphCoordX">
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div>9</div>
+            </div>
+            <div class="analysisGraphCoordX">
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div>10</div>
+            </div>
+            <div class="analysisGraphCoordX">
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div>11</div>
+            </div>
+            <div class="analysisGraphCoordX">
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div>20</div>
+            </div>
+            <div class="analysisGraphCoordX">
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div>9</div>
+            </div>
+            <div class="analysisGraphCoordX">
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div>9</div>
+            </div>
+            <div class="analysisGraphCoordX">
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div>9</div>
+            </div>
+            <div class="analysisGraphCoordX">
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div>9</div>
+            </div>
+            <div class="analysisGraphCoordX">
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div class="analysisGraphColor"></div>
+                <div>9</div>
+            </div>
+        </div>
+        <div id="adminAnalysis-Y-title">
+            <div>1</div>
+            <div>2</div>
+            <div>3</div>
+            <div>4</div>
+            <div>5</div>
+            <div>6</div>
+            <div>7</div>
+            <div>8</div>
+            <div>9</div>
+            <div>10</div>
+            <div>11</div>
+            <div>12</div>
+        </div>
+    </div>
+
+
+
+
     <script src="{{url_for('static',filename='./script/admin.js')}}"></script>
 </body>
 </html>

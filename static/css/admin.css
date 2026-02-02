@@ -1,1 +1,112 @@
 /* admin CSS는 데이터 전달 목적이므로 그에 맞도록 해야함. */
+body{
+    background-color: #E1DCD9;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+#adminTitle{
+    text-align: center;
+}
+#adminSystemInfo{
+    box-sizing: border-box;
+    border: 1px solid black;
+    border-collapse: collapse;
+    text-align: center;
+    width: 800px;
+}
+#adminSystemInfo>thead>tr>th{
+    box-sizing: border-box;
+    border: 1px solid black;
+    width: 200px;
+    padding: 4px;
+}
+#adminSystemInfo>tbody>tr>td{
+    box-sizing: border-box;
+    border: 1px solid black;
+    width: 200px;
+    padding: 5px;
+}
+.systemGraphText{
+    box-sizing: border-box;
+    z-index: 90;
+    position: relative;
+    top: 5px;
+}
+.systemGraphDiv{
+    box-sizing: border-box;
+    margin: 0 auto;
+    z-index: 10;
+    width: 180px;
+    height: 30px;
+    border: 1px solid mediumpurple;
+}
+.systemGraphBar{
+    box-sizing: border-box;
+    position: relative;
+    top: -19px;
+    z-index: 10;
+    height: 30px;
+    background-color: mediumpurple;
+}
+#adminAnalysis-frame{
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: 50px 750px;
+}
+#adminAnalysis{
+    grid-row: 1;
+    grid-column: 2;
+    box-sizing: border-box;
+    display: flex;
+    width: 750px;
+    height: 200px;
+    border-left: 1px solid black;
+    border-bottom: 1px solid black;
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 0 10px;
+}
+#adminAnalysis-Y-title{
+    grid-row: 2;
+    grid-column: 2;
+    box-sizing: border-box;
+    display: flex;
+    width: 750px;
+    margin-left: 1px;
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 0 10px;
+}
+#adminAnalysis-Y-title>div{
+    box-sizing: border-box;
+    width: 30px;
+    text-align: center;
+}
+.analysisGraphCoordX{
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column-reverse;
+    width: 30px;
+    text-align: center;
+}
+.analysisGraphCoordX>div{
+    height: 18px;
+}
+#adminAnalysis-X-title{
+    box-sizing: border-box;
+    grid-row: 1;
+    grid-column: 1;
+    display: flex;
+    flex-direction: column-reverse;
+    text-align: right;
+    padding-right: 10px;
+}
+#adminAnalysis-X-title>div{
+    box-sizing: border-box;
+    height: 18px;
+}
+.analysisGraphColor{
+    box-sizing: border-box;
+    background-color: mediumpurple;
+}
+

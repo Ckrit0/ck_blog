@@ -9,7 +9,7 @@ load_dotenv() # .env 파일 로드
 
 secret_key = os.environ.get("secretKey") # 플라스크 시크릿 키
 flask_port = 5000
-flask_debug = False
+flask_debug = True
 sessionTime = 1 # 세션 유지 시간(hour)
 verifyExpireTime = 10 # 인증코드 유효시간(minute)
 verifyList = [] # 인증코드 저장 리스트
@@ -25,10 +25,10 @@ send_email_message = '''
 본인이 요청한 것이 아닌 경우, 답장 주시면 조치하겠습니다.
     from. CkriT 블로그 - 널리 인간을 일 없게 하라
 '''
-imageUploadDirectory = os.environ.get("uploadDir") # 이미지 저장경로
+hostDirectory = os.environ.get("hostDir") # 호스트 경로
+imageUploadDirectory = os.path.join(hostDirectory, 'static','uploads') # 이미지 저장경로
 imageDeleteDirectory = os.path.join(imageUploadDirectory, 'deleted') # 이미지 삭제경로
-# 두개의 경로가 없다면 만들고 시작
-if not os.path.exists(imageUploadDirectory):
+if not os.path.exists(imageUploadDirectory): # 경로가 없다면 만들기
     os.makedirs(imageUploadDirectory)
 if not os.path.exists(imageDeleteDirectory):
     os.makedirs(imageDeleteDirectory)
@@ -145,7 +145,7 @@ def getUserMessage(userResultCode):
 ## 로그 관련 ##
 ###############
 
-logPath = './log' # 로그 저장 경로
+logPath = os.path.join(hostDirectory, 'log') # 로그 저장 경로
 LOG_NAME = { # 로그 파일 이름
     '유저' : 'user',
     '시스템' : 'system',

@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify, abort, make_response, flash
 from dao import userDAO, categoryDAO, boardDAO, commentDAO
-from service import store, validate, logger, userService, boardService, categoryService, serachService
+from service import store, validate, logger, userService, boardService, categoryService, serachService, adminService
 import os, datetime
 from werkzeug.utils import secure_filename
 
@@ -45,26 +45,37 @@ def adminPage():
     clientUser = userDAO.getUserBySessionKey(cookieKey=request.cookies.get('sessionKey'),ip=request.remote_addr)
     
     # 관리자가 아니면 404페이지 띄우기
-    if clientUser.getState() != store.USER_STATE_CODE['관리자']:
-        return abort(404)
+    # if clientUser.getState() != store.USER_STATE_CODE['관리자']:
+    #     return abort(404)
     
-    # 기간별 통계(그래픽, 표)
-    # 방문, 가입, 탈퇴, 블랙, 새글, 답글
+    # 서버 현황
+    systemInfo = adminService.get_system_info()
 
-    # 유저 관리
-    # 블랙, 휴면
+    # 서비스 관리
+    # 최신 시스템 에러로그 가져오기
 
-    # 서버 관리(현재 상황, 그래픽, 표)
-    # cpu, mem, storage(더미파일, 로그 관리), uptime(reboot, hostRestart-이런거 생각하면 포트를 따로 잡고싶긴 한데..)
-    # 이상 있으면 로그 남기기
-
-    # 공지글 관리 - 수정
-    # 카테고리 관리 - CRUD (카테고리 삭제시 거기 있는 글들 어떻게 할까 생각해야 함)
-    
     
     return render_template('admin.html',
-        clientUser=clientUser
+        clientUser=clientUser,
+        systemInfo=systemInfo
     )
+
+#########################
+##### 관리자 핸들러 #####
+#########################
+# storage(더미파일, 로그 관리)
+# reboot
+
+# 기간별 통계(그래픽, 표)
+# 방문, 가입, 탈퇴, 블랙, 새글, 새답글, 조회수, 최근 조회된 글
+
+# 유저 관리
+# 블랙, 휴면
+
+# 공지글 관리 - 수정
+# 카테고리 관리 - CRUD (카테고리 삭제시 거기 있는 글들 어떻게 할까 생각해야 함)
+
+
 
 ################################
 ##### 메인 페이지, Service #####
