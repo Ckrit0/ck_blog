@@ -35,6 +35,37 @@ def page_not_found(e):
 def test_404():
     abort(404)
 
+#########################
+##### 관리자 페이지 #####
+#########################
+
+@app.route("/admin")
+def adminPage():
+    # 클라이언트 정보 가져오기
+    clientUser = userDAO.getUserBySessionKey(cookieKey=request.cookies.get('sessionKey'),ip=request.remote_addr)
+    
+    # 관리자가 아니면 404페이지 띄우기
+    if clientUser.getState() != store.USER_STATE_CODE['관리자']:
+        return abort(404)
+    
+    # 기간별 통계(그래픽, 표)
+    # 방문, 가입, 탈퇴, 블랙, 새글, 답글
+
+    # 유저 관리
+    # 블랙, 휴면
+
+    # 서버 관리(현재 상황, 그래픽, 표)
+    # cpu, mem, storage(더미파일, 로그 관리), uptime(reboot, hostRestart-이런거 생각하면 포트를 따로 잡고싶긴 한데..)
+    # 이상 있으면 로그 남기기
+
+    # 공지글 관리 - 수정
+    # 카테고리 관리 - CRUD (카테고리 삭제시 거기 있는 글들 어떻게 할까 생각해야 함)
+    
+    
+    return render_template('admin.html',
+        clientUser=clientUser
+    )
+
 ################################
 ##### 메인 페이지, Service #####
 ################################
