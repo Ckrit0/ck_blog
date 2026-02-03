@@ -55,11 +55,11 @@ def getParentCommentListByBno(bno, uno, ustate):
     f'''(SELECT count(*) FROM comment WHERE co_upper = c.cno)'''
     result = db.getData(sql=sql)
     for r in result:
-        r[3] = userService.markingIp(ip=r[3])
+        r[3] = userService.maskingIp(ip=r[3])
         r[5] = r[5].strftime('%Y-%m-%d')
         if r[7] == 1:
             r[4] = store.USER_MESSAGE[store.USER_RESULT_CODE['삭제된 댓글']]
-        r[8] = userService.markingEmail(email=r[8],state=r[9])
+        r[8] = userService.maskingEmail(email=r[8],state=r[9])
         if uno == 0:
             r.append(False)
         elif uno == r[2]:
@@ -87,11 +87,11 @@ def getChildCommentListByBnoAndCono(bno, cono, uno, ustate):
     f'''(SELECT count(*) FROM comment WHERE co_upper = c.cno)'''
     result = db.getData(sql=sql)
     for r in result:
-        r[3] = userService.markingIp(ip=r[3])
+        r[3] = userService.maskingIp(ip=r[3])
         r[5] = r[5].strftime('%Y-%m-%d')
         if r[7] == 1:
             r[4] = store.USER_MESSAGE[store.USER_RESULT_CODE['삭제된 댓글']]
-        r[8] = userService.markingEmail(email=r[8],state=r[9])
+        r[8] = userService.maskingEmail(email=r[8],state=r[9])
         if uno == r[2]:
             r.append(True)
         elif ustate == store.USER_STATE_CODE['관리자']:

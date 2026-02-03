@@ -125,20 +125,20 @@ def matchVerify(email,code):
     log.setLog(store.LOG_NAME['유저'], f"verify fail - not code: {email}")
     return store.USER_RESULT_CODE['발급된 코드 없음']
 
-def markingEmail(email, state):
+def maskingEmail(email, state):
     '''
     이메일 일부 마킹 처리
     parameter: email(String), state(int)
-    return: markingEmail(String)
+    return: maskingEmail(String)
     '''
     emailParts = email.split('@')
-    markingEmail = emailParts[0][0:3] + '*' * (len(emailParts[0]) -3) + '@' + emailParts[1]
+    maskingEmail = emailParts[0][0:3] + '*' * (len(emailParts[0]) -3) + '@' + emailParts[1]
     if state == store.USER_STATE_CODE['비회원']:
         return '(비회원)'
     elif state == store.USER_STATE_CODE['미인증']:
-        return markingEmail + "(미인증)"
+        return maskingEmail + "(미인증)"
     elif state == store.USER_STATE_CODE['인증']:
-        return markingEmail
+        return maskingEmail
     elif state == store.USER_STATE_CODE['탈퇴']:
         return '(탈퇴한 회원)'
     elif state == store.USER_STATE_CODE['블랙리스트']:
@@ -146,12 +146,12 @@ def markingEmail(email, state):
     elif state == store.USER_STATE_CODE['관리자']:
         return 'CkriT'
 
-def markingIp(ip):
+def maskingIp(ip):
     '''
     IP 일부 마킹 처리
     parameter: ip(String)
-    return: markingIp(String)
+    return: maskingIp(String)
     '''
     ipList = ip.split('.')
-    markingIp = ipList[0] + '.' + ipList[1] + '.' + '*' + '.' + '*'
-    return markingIp
+    maskingIp = ipList[0] + '.' + ipList[1] + '.' + '*' + '.' + '*'
+    return maskingIp

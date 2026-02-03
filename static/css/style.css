@@ -2,12 +2,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Orbit&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Gamja+Flower&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Dongle&display=swap');
+
 
 /* 변수 */
 :root{
-    --title-font : "East Sea Dokdo", sans-serif;
-    --category-font : "Nanum Gothic", sans-serif;
-    --subject-font : "Orbit", sans-serif;
+    --title-font : "Dongle", sans-serif;
+    /* --category-font : "Nanum Gothic", sans-serif; */
+    --category-font : "Gamja Flower", sans-serif;
+    --subject-font : "Black Han Sans", sans-serif;
+    --form-font : "Orbit", sans-serif;
     --contents-font : "Noto Sans KR", sans-serif;
     --theme-color: #A67F78;
     --bg-color : #E1DCD9;
@@ -15,6 +21,7 @@
     --font-color : #32435F;
     --main-width : 100%;
     --sidebar-width : 300px;
+    --input-width : 200px;
     --title-height : 52px;
     --logo-size-width : 200px;
     --logo-size-height : 125px;
@@ -40,14 +47,14 @@ body{
 
 input{
     box-sizing: border-box;
-    width: 100px;
+    width: var(--input-width);
     border: 0px;
     border-radius: 10px;
     border: 1px solid var(--theme-color);
     padding: 2px 10px;
     background-color: var(--bg-color);
     font-size: var(--font-size-7);
-    font-family: var(--subject-font);
+    font-family: var(--form-font);
     color: var(--font-color);
 }
 
@@ -60,7 +67,7 @@ button{
     border: 1px solid var(--theme-color);
     background-color: var(--bg-color);
     font-size: var(--font-size-7);
-    font-family: var(--subject-font);
+    font-family: var(--form-font);
     color: var(--font-color);
     cursor: pointer;
 }
@@ -92,7 +99,6 @@ a{
     text-align: center;
     font-family: var(--title-font);
     font-size: var(--font-size-2);
-    font-weight: 600;
     color: var(--theme-color);
 }
 
@@ -233,11 +239,12 @@ a{
 
 
 /* 미디어쿼리 */
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1260px) {
     :root{
         --logo-size-width : 150px;
         --logo-size-height : 90px;
         --main-width : 98%;
+        --input-width : 100px;
         --sidebar-width : 200px;
         --title-height : 40px;
         --list-width : 100%;

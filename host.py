@@ -307,7 +307,10 @@ def joinHandler():
 def checkMailHandler():
     email = request.json["joinEmail"]
     sameEmailUsers = userDAO.getUserByEmailAddress(email)
-    return jsonify(sameEmailUsers)
+    result = []
+    if sameEmailUsers.getState() != store.USER_STATE_CODE['비회원'] and sameEmailUsers.getState() != store.USER_STATE_CODE['탈퇴']:
+        result = [sameEmailUsers.getFormatJoinDate()]
+    return jsonify(result)
 
 @app.route("/sendMail", methods=["POST"])
 def sendMailHandler():

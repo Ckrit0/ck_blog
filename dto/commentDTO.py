@@ -65,8 +65,8 @@ class CommentDTO:
     def getIP(self):
         return self.ip
     
-    def getMarkingIp(self):
-        return userService.markingIp(self.ip)
+    def getMaskingIp(self):
+        return userService.maskingIp(self.ip)
     
     def getComment(self):
         if self.isDelete == 1:
@@ -85,8 +85,8 @@ class CommentDTO:
     def getEmail(self):
         return self.userEmail
     
-    def getMarkingEmail(self):
-        return userService.markingEmail(self.userEmail, self.userState)
+    def getMaskingEmail(self):
+        return userService.maskingEmail(self.userEmail, self.userState)
     
     def getBoardTitle(self):
         return self.boardTitle

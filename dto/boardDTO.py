@@ -97,14 +97,14 @@ class BoardDTO:
     def getIp(self):
         return self.ip
     
-    def getMarkingIp(self):
-        return userService.markingIp(self.ip)
+    def getMaskingIp(self):
+        return userService.maskingIp(self.ip)
             
     def getUserEmail(self):
         return self.uEmail
     
-    def getMarkingEmail(self):
-        return userService.markingEmail(self.uEmail, self.uState)
+    def getMaskingEmail(self):
+        return userService.maskingEmail(self.uEmail, self.uState)
     
     def getUserState(self):
         return self.uState

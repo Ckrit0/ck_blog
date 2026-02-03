@@ -10,7 +10,6 @@
     margin-top: 0;
     background-color: var(--theme-color);
     box-shadow: inset 0px 0px 80px 0px var(--bg-color);
-    font-weight: 600;
     color: var(--bg-color);
     text-shadow: 3px 3px 2px var(--dark-color);
 }
@@ -236,7 +235,7 @@
 }
 
 /* 미디어쿼리 */
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1260px) {
     #boardTitleDiv{
         top: 41px;
         position: relative;

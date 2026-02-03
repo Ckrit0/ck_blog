@@ -1,4 +1,5 @@
 from service import store, userService
+from datetime import datetime
 
 class UserDTO:
     def __init__(self):
@@ -50,14 +51,14 @@ class UserDTO:
     def getEmail(self):
         return self.email
 
-    def getMarkingEmail(self):
-        return userService.markingEmail(self.email, self.state)
+    def getMaskingEmail(self):
+        return userService.maskingEmail(self.email, self.state)
     
     def getIp(self):
         return self.ip
     
-    def getMarkingIp(self):
-        return userService.markingIp(self.ip)
+    def getMaskingIp(self):
+        return userService.maskingIp(self.ip)
     
     def getPw(self):
         return self.pw
@@ -70,6 +71,9 @@ class UserDTO:
     
     def getJoinDate(self):
         return self.joinDate
+    
+    def getFormatJoinDate(self):
+        return self.joinDate.strftime("%Y-%m-%d")
     
     def getLeaveDate(self):
         return self.leaveDate

@@ -133,7 +133,7 @@ joinEmailBtn.addEventListener('click',()=>{
                 joinEmailInput.focus()
             }else{
                 joinEmailBtn.innerHTML = 'check'
-                if(confirm(result[0][3] + '일에 가입한 아이디가 있습니다. 이전 아이디를 삭제하고 새로 가입하시겠습니까? (인증 필수)')){
+                if(confirm(result[0] + '일에 가입한 아이디가 있습니다. 이전 아이디를 삭제하고 새로 가입하시겠습니까? (인증 필수)')){
                     joinContinueCheckEmail()
                     joinInfoDiv.innerHTML = '강제 가입의 경우 verify(메일 인증)을 완료해야 가입이 가능합니다.'
                     turnActive(joinCommitBtn)

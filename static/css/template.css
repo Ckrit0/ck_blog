@@ -66,7 +66,7 @@ main{
     padding: 20px 10px;
     width: var(--sidebar-width);
     font-family: var(--category-font);
-    font-size: var(--font-size-6);
+    font-size: var(--font-size-5);
     color: var(--dark-color);
 }
 
@@ -194,7 +194,7 @@ main{
 }
 
 /* 미디어쿼리 */
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1260px) {
     main{
         margin: 0 auto;
     }

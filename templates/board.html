@@ -38,7 +38,7 @@
             <button class="bolder" onclick="window.location.href='/deleteBoard/{{targetBoard.getNo()}}'">삭제</button>
             {% endif %}
         </div>
-        <div id="postInfo1" class="pointer" onclick="window.location.href='/user/{{targetBoard.getUserNo()}}'">{{targetBoard.getMarkingEmail()}}</div>
+        <div id="postInfo1" class="pointer" onclick="window.location.href='/user/{{targetBoard.getUserNo()}}'">{{targetBoard.getMaskingEmail()}}</div>
         <div id="postInfo2">{{targetBoard.getDate()}}</div>
     </div>
     <div id="boardContentsDiv">
