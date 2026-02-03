@@ -12,7 +12,7 @@ CkriT (ckrit3@gmail.com)
 
 ### Domain :
 
-not yet (118.218.103.120)
+http://www.ckrit.co.kr
 
 ### Specifications used :
 
@@ -26,3 +26,4 @@ not yet (118.218.103.120)
     2026-01-07: initial framework established
     2026-01-07: create database and server git clone
     2026-02-02: client side phase1 complete
+    2026-02-03: set domain(http://www.ckrit.co.kr)
