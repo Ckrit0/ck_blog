@@ -16,7 +16,8 @@
 #title{
     box-sizing: border-box;
     font-family: var(--title-font);
-    font-size: 40px;
+    font-size: var(--font-size-1);
+    margin-top: -5px;
     color: var(--bg-color);
     text-shadow: 3px 3px 2px var(--theme-color);
 }
@@ -66,7 +67,7 @@ main{
     padding: 20px 10px;
     width: var(--sidebar-width);
     font-family: var(--category-font);
-    font-size: var(--font-size-5);
+    font-size: var(--font-size-4);
     color: var(--dark-color);
 }
 
@@ -93,7 +94,8 @@ main{
 #searchInput{
     box-sizing: border-box;
     margin-right: -6px;
-    font-family: var(--category-font);
+    width: 130px;
+    font-family: var(--form-font);
     color: var(--dark-color);
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
@@ -103,12 +105,13 @@ main{
 }
 #searchInput:focus{
     outline: none;
+    width: 200px;
 }
 
 #searchBtn{
     box-sizing: border-box;
     margin-left: 0;
-    font-family: var(--category-font);
+    font-family: var(--form-font);
     color: var(--dark-color);
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
@@ -163,7 +166,7 @@ main{
     box-sizing: border-box;
     padding: 1px 10px;
     cursor: pointer;
-    font-size: var(--font-size-6);
+    font-size: var(--font-size-5);
 }
 
 /* 사이드바 - 버튼 */
@@ -211,6 +214,16 @@ main{
     #categoryDiv{
         width: 180px;
     }
+    #searchInput{
+        width: 120px;
+    }
+    #searchInput:focus{
+        width: 120px;
+    }
+    #searchBtn{
+        width: 60px;
+        padding: 2px 5px;
+    }
     #recentDiv{
         width: 180px;
     }
@@ -253,9 +266,11 @@ main{
         width: 100%;
     }
     #searchInput{
+        font-family: var(--category-font);
         width: 70%;
     }
     #searchBtn{
+        font-family: var(--category-font);
         width: 30%;
     }
     #categoryDiv{

@@ -11,13 +11,13 @@ def checkDdos(user):
     result = False
     viewCountList = userDAO.getViewCount(user=user)
     if viewCountList[0] > store.checkDdos_min:
-        result = userDAO.setBlackList(user=user)
+        result = userDAO.setBlackList(user=user,code=store.BLACK_REASON_CODE['Ddos 주의'])
     elif viewCountList[1] > store.checkDdos_hour:
-        result = userDAO.setBlackList(user=user)
+        result = userDAO.setBlackList(user=user,code=store.BLACK_REASON_CODE['Ddos 주의'])
     elif viewCountList[2] > store.checkDdos_min:
-        result = userDAO.setBlackList(user=user)
+        result = userDAO.setBlackList(user=user,code=store.BLACK_REASON_CODE['Ddos 주의'])
     elif viewCountList[3] > store.checkDdos_hour:
-        result = userDAO.setBlackList(user=user)
+        result = userDAO.setBlackList(user=user,code=store.BLACK_REASON_CODE['Ddos 주의'])
     return result
     
 def checkBlackList(user):

@@ -33,9 +33,11 @@
             &nbsp;&nbsp;📝&nbsp;{{targetBoard.getCommentCount()}}
         </div>
         <div id="deleteDiv">
-            {% if clientUser.getState() == 5 or (clientUser.getNo() != 0 and targetBoard.getUserNo() == clientUser.getNo()) %}
+            {% if clientUser.getNo() == targetBoard.getUserNo() %}
             <button class="bolder" onclick="window.location.href='/modify/{{targetBoard.getNo()}}'">수정</button>
             <button class="bolder" onclick="window.location.href='/deleteBoard/{{targetBoard.getNo()}}'">삭제</button>
+            {% elif clientUser.getState() == 5 %}
+            <button class="bolder" onclick="window.location.href='/deleteBoard/{{targetBoard.getNo()}}'">관리자 삭제</button>
             {% endif %}
         </div>
         <div id="postInfo1" class="pointer" onclick="window.location.href='/user/{{targetBoard.getUserNo()}}'">{{targetBoard.getMaskingEmail()}}</div>

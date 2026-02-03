@@ -119,10 +119,8 @@ def validateCheck():
     elif validate.checkSessionTimeOver(clientUser): #
         if clientUser.getNo() != 0:
             resp = make_response(redirect(request.referrer or url_for('main')))
-            
             # 쿠키 삭제
             resp.delete_cookie('sessionKey')
-            
             # 메시지 생성
             flash(store.USER_MESSAGE['세션만료'])
             return resp
