@@ -149,8 +149,8 @@ SELECT b_contents from board where b_no = 0;
 -- 전체 글 제목의 목록 가져오기(최신순, 페이지별)
 SELECT
     b.b_no, b.b_title,
-    (SELECT count(DISTINCT u_no CASE WHEN u_no != 0 THEN u_no END) + count(DISTINCT v_ip) FROM views v WHERE v.b_no=b.b_no),
-    (SELECT count(DISTINCT u_no CASE WHEN u_no != 0 THEN u_no END) + count(DISTINCT l_ip) FROM likes l WHERE l.b_no=b.b_no),
+    (SELECT count(*) FROM views v WHERE v.b_no=b.b_no),
+    (SELECT count(DISTINCT CASE WHEN u_no != 0 THEN u_no END) + count(DISTINCT l_ip) FROM likes l WHERE l.b_no=b.b_no),
     (SELECT count(*) FROM comment WHERE b_no=b.b_no),
     c.c_name
 FROM board b
@@ -159,13 +159,14 @@ ON b.c_no = c.c_no
 WHERE b.b_isdelete=0
 ORDER BY b.b_date DESC
 LIMIT 5 OFFSET 0;
+
 -- 전체 글 갯수 가져오기
 SELECT count(*) FROM board WHERE b_isdelete=0;
 -- 카테고리별 글 제목의 목록 가져오기(최신순, 페이지별)
 SELECT
     b_no, b_title,
-    (SELECT count(DISTINCT u_no CASE WHEN u_no != 0 THEN u_no END) + count(DISTINCT v_ip) FROM views WHERE b_no=b.b_no),
-    (SELECT count(DISTINCT u_no CASE WHEN u_no != 0 THEN u_no END) + count(DISTINCT l_ip) FROM likes WHERE b_no=b.b_no),
+    (SELECT count(*) FROM views WHERE b_no=b.b_no),
+    (SELECT count(DISTINCT CASE WHEN u_no != 0 THEN u_no END) + count(DISTINCT l_ip) FROM likes WHERE b_no=b.b_no),
     (SELECT count(*) FROM comment WHERE b_no=b.b_no)
 FROM board WHERE c_no="c_no" AND b_isdelete=0
 ORDER BY b_no DESC LIMIT 5 OFFSET 0;
@@ -176,9 +177,16 @@ SELECT count(*) FROM board WHERE c_no=1 AND b_isdelete=0 AND b_no > 11;
 -- 글번호로 글 가져오기
 SELECT
 	b.*, u.u_email, u.u_state,
-	(SELECT count(DISTINCT u_no CASE WHEN u_no != 0 THEN u_no END) + count(DISTINCT v_ip) FROM views WHERE b_no=b.b_no),
-	(SELECT count(DISTINCT u_no CASE WHEN u_no != 0 THEN u_no END) + count(DISTINCT l_ip) FROM likes WHERE b_no=b.b_no),
+	(SELECT count(*) FROM views WHERE b_no=b.b_no),
+	(SELECT count(DISTINCT CASE WHEN u_no != 0 THEN u_no END) + count(DISTINCT l_ip) FROM likes WHERE b_no=b.b_no),
     (SELECT count(*) FROM comment WHERE b_no=b.b_no)
+FROM board b
+JOIN user u
+ON b.u_no = u.u_no 
+WHERE b.b_no = 11 AND b.b_isdelete=0;
+-- 글 번호로 좋아요 수 가져오기
+SELECT
+    (SELECT count(DISTINCT u_no CASE WHEN u_no != 0 THEN u_no END) + count(DISTINCT l_ip) FROM likes WHERE b_no=b.b_no)
 FROM board b
 JOIN user u
 ON b.u_no = u.u_no 
@@ -188,8 +196,8 @@ WHERE b.b_no = 11 AND b.b_isdelete=0;
 SELECT count(*) FROM board WHERE u_no = 1 AND b_isdelete = 0;
 -- 유저번호로 작성한 최신글 목록 가져오기
 SELECT b.*, u.u_email, u.u_state,
-	(SELECT count(DISTINCT u_no CASE WHEN u_no != 0 THEN u_no END) + count(DISTINCT v_ip) FROM views WHERE b_no=b.b_no),
-	(SELECT count(DISTINCT u_no CASE WHEN u_no != 0 THEN u_no END) + count(DISTINCT l_ip) FROM likes WHERE b_no=b.b_no),
+	(SELECT count(*) FROM views WHERE b_no=b.b_no),
+	(SELECT count(DISTINCT CASE WHEN u_no != 0 THEN u_no END) + count(DISTINCT l_ip) FROM likes WHERE b_no=b.b_no),
     (SELECT count(*) FROM comment WHERE b_no=b.b_no)
 FROM board b
 JOIN user u
@@ -200,8 +208,8 @@ ORDER BY b_no DESC LIMIT 5;
 SELECT b_no FROM board WHERE b_isdelete=0 AND u_no = "uno" ORDER BY b_no DESC LIMIT 1;
 -- 검색어가 포함된 글 데이터 목록 가져오기(최신순, 페이지별, 단어에 가까울수록 가중치를 곱함)
 SELECT b.*, u.u_email, u.u_state,
-    (SELECT count(DISTINCT u_no CASE WHEN u_no != 0 THEN u_no END) + count(DISTINCT v_ip) FROM views WHERE b_no=b.b_no),
-	(SELECT count(DISTINCT u_no CASE WHEN u_no != 0 THEN u_no END) + count(DISTINCT l_ip) FROM likes WHERE b_no=b.b_no),
+    (SELECT count(*) FROM views WHERE b_no=b.b_no),
+	(SELECT count(DISTINCT CASE WHEN u_no != 0 THEN u_no END) + count(DISTINCT l_ip) FROM likes WHERE b_no=b.b_no),
     (SELECT count(*) FROM comment WHERE b_no=b.b_no),
     (
         ((b.b_title LIKE '%검색어1%')*3) + ((b.b_contents LIKE '%검색어1%')*3) +

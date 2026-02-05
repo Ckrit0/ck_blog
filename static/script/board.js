@@ -32,7 +32,6 @@ function setLike(){
             if(result[0]){
                 likeMarkSpan.innerHTML = '❤️'
                 likeMarkSpan.onclick = ()=>{}
-                likeCountSpan.innerHTML = parseInt(likeCountSpan.innerHTML) + 1
             }else{
                 alert(result[1])
             }

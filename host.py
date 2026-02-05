@@ -586,10 +586,11 @@ def setLikeHandler():
     bno = request.json['bno']
     board = boardDAO.getBoardByBoardNo(bno=bno)
     result = boardDAO.setLike(user=clientUser, board=board)
+    newLikeCount = boardDAO.getLikeByBoardNo(bno=bno)
     if result :
-        return jsonify([result, store.USER_MESSAGE[store.USER_RESULT_CODE['좋아요 성공']], board.getLike()+1])
+        return jsonify([result, store.USER_MESSAGE[store.USER_RESULT_CODE['좋아요 성공']], newLikeCount])
     else:
-        return jsonify([result, store.USER_MESSAGE[store.USER_RESULT_CODE['실패-unknown']], board.getLike()])
+        return jsonify([result, store.USER_MESSAGE[store.USER_RESULT_CODE['실패-unknown']], newLikeCount])
 
 @app.route("/getTitleListOnBoardByPage/<cno>/<page>", methods=["POST"])
 def getTitleListOnBoardByPageHandler(cno,page):
