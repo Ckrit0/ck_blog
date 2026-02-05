@@ -144,6 +144,8 @@ SELECT count(*) FROM board WHERE b_isdelete=0 AND c_no=1;
 ----------------
 -- Board DAO  --
 ----------------
+-- 공지사항 가져오기
+SELECT b_contents from board where b_no = 0;
 -- 전체 글 제목의 목록 가져오기(최신순, 페이지별)
 SELECT
     b.b_no, b.b_title,
@@ -322,6 +324,8 @@ UPDATE category SET c_name="c_name", c_upper=Null, c_order=1 WHERE c_no=0;
 ----------------
 -- Board DAO  --
 ----------------
+-- 공지사항 수정하기
+UPDATE board SET b_contents = "b_contents" WHERE b_no = 0;
 -- 글 수정하기
 UPDATE board SET c_no={cno}, b_title="{bTitle}", b_contents="{bContents}" WHERE b_no={board.getNo()}
 -- 글 카테고리 변경

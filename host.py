@@ -50,6 +50,12 @@ def adminPage():
     
     # 서버 현황
     systemInfo = adminService.getSystemInfo()
+    
+    # 공지사항 가져오기
+    notice = boardDAO.getNotice()
+
+    # 카테고리 가져오기
+    categoryList = categoryDAO.getCategoryList()
 
     # 서비스 관리
     # 최신 시스템 에러로그 가져오기
@@ -57,7 +63,9 @@ def adminPage():
     
     return render_template('admin.html',
         clientUser=clientUser,
-        systemInfo=systemInfo
+        systemInfo=systemInfo,
+        notice=notice,
+        categoryList=categoryList
     )
 
 #########################
@@ -88,6 +96,12 @@ def adminRebootHandler():
 # 블랙, 휴면
 
 # 공지글 관리 - 수정
+@app.route("/adminModNotice", methods=["POST"])
+def adminModNoticeHandler():
+    newNotice = request.json['notice']
+    result = boardDAO.setNotice(notice=newNotice)
+    return jsonify(result)
+
 # 카테고리 관리 - CRUD (카테고리 삭제시 거기 있는 글들 어떻게 할까 생각해야 함)
 
 
@@ -133,18 +147,8 @@ def main():
     # 메인페이지 데이터 가져오기
     pageList = boardDAO.getPageList_all()
     
-    # 공지사항 가져오기. 현재 DB 연결 없이 강제로 보냄
-    notice = [
-        '안녕하세요 어차피 블로그를 운영할 계획이면 내가 만들자고 시작한 블로그입니다.',
-        '해당 블로그의 전체 코드는 깃허브(https://github.com/Ckrit0/ck_blog)에서 확인이 가능합니다.',
-        '서버의 정기 재부팅 시각은 월요일 오전 4시입니다. 일시적으로 접속이 불가능할 수 있습니다.',
-        '현재는 제작중이라 서버가 자주 불안정할 예정입니다.',
-        '아직 도메인도 없습니다.',
-        '이 글도 DB랑 연결 안하고 그냥 디자인 잡기 위해 생으로 입력한 글입니다.',
-        '대충 이정도 분량으로 디자인을 잡으면 될 것 같습니다.',
-        '기타 문의사항은 제작자(ckrit3@gmail.com)으로 부탁드립니다.',
-        '감사합니다.'
-    ]
+    # 공지사항 가져오기.
+    notice = boardDAO.getNotice().split('\n')
     
     # 뷰 설정하기
     userDAO.setView(user=clientUser, url=request.path)

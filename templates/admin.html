@@ -8,232 +8,141 @@
 </head>
 <body>
     <h1 id="adminTitle">Admin Page</h1>
-    <h2>◎ Server System Info ({{systemInfo['os']}})</h2>
-    <table id="adminSystemInfo">
-        <thead>
-            <tr>
-                <th>CPU</th>
-                <th>MEM</th>
-                <th>Storage</th>
-                <th>uptime</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>
-                    <div class="systemGraphDiv">
-                        <span class="systemGraphText">{{systemInfo['cpuUsage']}} %</span>
-                        <div class="systemGraphBar" style="width: {{systemInfo['cpuUsage']*1.8}}px;"></div>
-                    </div>
-                </td>
-                <td>
-                    <div class="systemGraphDiv">
-                        <span class="systemGraphText">{{systemInfo['usedMem']}} / {{systemInfo['totalMem']}} GB</span>
-                        <div class="systemGraphBar" style="width: {{(systemInfo['usedMem']/systemInfo['totalMem'])*180}}px;"></div>
-                    </div>
-                </td>
-                <td>
-                    <div class="systemGraphDiv">
-                        <span class="systemGraphText">{{systemInfo['usedStorage']}} / {{systemInfo['totalStorage']}} GB</span>
-                        <div class="systemGraphBar" style="width: {{(systemInfo['usedStorage']/systemInfo['totalStorage'])*180}}px;"></div>
-                    </div>
-                </td>
-                <td>
-                    {{systemInfo['bootTime']}}<br>({{systemInfo['uptime']}})
-                </td>
-            </tr>
-            <tr>
-                <td></td>
-                <td>
-                    <button id="adminCheckImageBtn">이미지파일정리</button>
-                </td>
-                <td>
-                    <button id="adminDeleteDummyBtn">더미파일삭제</button>
-                </td>
-                <td>
-                    <button id="adminRebootBtn">서버재부팅</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <h2>◎ Analysis</h2>
-    <div id="adminAnalysis-frame">
-        <div id="adminAnalysis-X-title">
-            <div>1</div>
-            <div>2</div>
-            <div>3</div>
-            <div>4</div>
-            <div>5</div>
-            <div>6</div>
-            <div>7</div>
-            <div>8</div>
-            <div>9</div>
-            <div>10</div>
-            <div>11</div>
+    <div class="adminComponent">
+        <h2>◎ Server System Info ({{systemInfo['os']}})</h2>
+        <table id="adminSystemInfo">
+            <thead>
+                <tr>
+                    <th>CPU</th>
+                    <th>MEM</th>
+                    <th>Storage</th>
+                    <th>uptime</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <div class="systemGraphDiv">
+                            <span class="systemGraphText">{{systemInfo['cpuUsage']}} %</span>
+                            <div class="systemGraphBar" style="width: {{systemInfo['cpuUsage']*1.8}}px;"></div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="systemGraphDiv">
+                            <span class="systemGraphText">{{systemInfo['usedMem']}} / {{systemInfo['totalMem']}} GB</span>
+                            <div class="systemGraphBar" style="width: {{(systemInfo['usedMem']/systemInfo['totalMem'])*180}}px;"></div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="systemGraphDiv">
+                            <span class="systemGraphText">{{systemInfo['usedStorage']}} / {{systemInfo['totalStorage']}} GB</span>
+                            <div class="systemGraphBar" style="width: {{(systemInfo['usedStorage']/systemInfo['totalStorage'])*180}}px;"></div>
+                        </div>
+                    </td>
+                    <td>
+                        {{systemInfo['bootTime']}}<br>({{systemInfo['uptime']}})
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <button id="adminCheckImageBtn">이미지파일정리</button>
+                    </td>
+                    <td>
+                        <button id="adminDeleteDummyBtn">더미파일삭제</button>
+                    </td>
+                    <td>
+                        <button id="adminRebootBtn">서버재부팅</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="adminComponent">
+        <h2>◎ Analysis</h2>
+        <div id="adminAnalysisSelectDiv">
+            <select id="adminAnalysisCategorySelect">
+                <option>조회수</option>
+                <option>새글수</option>
+                <option>새댓글수</option>
+                <option>회원수</option>
+                <option>신규가입수</option>
+                <option>차단수</option>
+            </select>
+            <select id="adminAnalysisDuringSelect">
+                <option>연간</option>
+                <option>월간</option>
+                <option>주간</option>
+                <option>일간</option>
+                <option>시별</option>
+            </select>
+            <select id="adminAnalysisYearSelect">
+                <option>2026</option>
+            </select>
+            <select id="adminAnalysisMonthSelect">
+                {% for i in range(12) %}
+                <option>{{i+1}}</option>
+                {% endfor %}
+            </select>
+            <select id="adminAnalysisDateSelect">
+                {% for i in range(31) %}
+                <option>{{i+1}}</option>
+                {% endfor %}
+            </select>
+            <button id="adminAnalysisBtn">조회</button>
         </div>
-        <div id="adminAnalysis">
-            <div class="analysisGraphCoordX">
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div>3</div>
+        <div id="adminAnalysisNowCate">현재 카테고리</div>
+        <div id="adminAnalysis-Now-Y-title">y축</div>
+        <div id="adminAnalysis-frame">
+            <div id="adminAnalysis-Y-title">
+                {% for i in range(10) %}
+                <div>{{i+1}}</div>
+                {% endfor %}
             </div>
-            <div class="analysisGraphCoordX">
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div>4</div>
+            <div id="adminAnalysis">
+                {% for i in range(12) %}
+                <div class="analysisGraphCoordX">
+                    {% for j in range(i) %}
+                    <div class="analysisGraphColor"></div>
+                    {% endfor %}
+                    <div>{{i}}</div>
+                </div>
+                {% endfor %}
             </div>
-            <div class="analysisGraphCoordX">
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div>7</div>
-            </div>
-            <div class="analysisGraphCoordX">
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div>9</div>
-            </div>
-            <div class="analysisGraphCoordX">
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div>10</div>
-            </div>
-            <div class="analysisGraphCoordX">
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div>11</div>
-            </div>
-            <div class="analysisGraphCoordX">
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div>20</div>
-            </div>
-            <div class="analysisGraphCoordX">
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div>9</div>
-            </div>
-            <div class="analysisGraphCoordX">
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div>9</div>
-            </div>
-            <div class="analysisGraphCoordX">
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div>9</div>
-            </div>
-            <div class="analysisGraphCoordX">
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div>9</div>
-            </div>
-            <div class="analysisGraphCoordX">
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div class="analysisGraphColor"></div>
-                <div>9</div>
+            <div id="adminAnalysis-X-title">
+                {% for i in range(12) %}
+                <div>{{i+1}}</div>
+                {% endfor %}
             </div>
         </div>
-        <div id="adminAnalysis-Y-title">
-            <div>1</div>
-            <div>2</div>
-            <div>3</div>
-            <div>4</div>
-            <div>5</div>
-            <div>6</div>
-            <div>7</div>
-            <div>8</div>
-            <div>9</div>
-            <div>10</div>
-            <div>11</div>
-            <div>12</div>
+        <div id="adminAnalysis-Now-X-title">x축</div>
+    </div>
+    <div class="adminComponent">
+        <h2>◎ Notice</h2>
+        <div id="adminNoticeDiv">
+            <textarea id="adminNoticeTextarea">{{notice}}</textarea>
+            <button id="adminNoticeBtn" style="box-sizing: border-box; width: 800px; padding: 3px;">내용 수정하기</button>
         </div>
     </div>
-
+    <div class="adminComponent">
+        <h2>◎ Categories</h2>
+        <div id="adminCategoryDiv">
+            {% for parentCate in categoryList %}
+            <div id="parent_{{parentCate[0].getNo()}}" class="adminParentCateDiv">
+                <div class="adminParentName">{{parentCate[0].getName()}}</div>
+                {% for childCate in parentCate[1] %}
+                <div class="adminChildName" id="child_{{parentCate[0].getNo()}}_{{childCate.getNo()}}">
+                    {{childCate.getName()}}({{childCate.getCount()}})
+                    <span class="adminChildPointerDel">-</span>
+                </div>
+                {% endfor %}
+                <div id="child_new">+</div>
+            </div>
+            {% endfor %}
+            <div id="parent_new" class="adminParentCateDiv">+</div>
+        </div>
+        <button style="box-sizing: border-box; width: 800px; padding: 3px;">변경 적용</button>
+    </div>
 
 
 

@@ -1,6 +1,8 @@
 let adminCheckImageBtn = document.getElementById('adminCheckImageBtn')
 let adminDeleteDummyBtn = document.getElementById('adminDeleteDummyBtn')
 let adminRebootBtn = document.getElementById('adminRebootBtn')
+let adminNoticeTextarea = document.getElementById('adminNoticeTextarea')
+let adminNoticeBtn = document.getElementById('adminNoticeBtn')
 
 adminCheckImageBtn.addEventListener('click',()=>{
     fetch("/adminCheckImage", {
@@ -45,4 +47,24 @@ adminRebootBtn.addEventListener('click',()=>{
         }),
         })
     alert('현재는 기능이 동작하지 않도록 설정되어 있습니다.')
+})
+
+adminNoticeBtn.addEventListener('click',()=>{
+    let newNotice = adminNoticeTextarea.value
+    fetch("/adminModNotice", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            notice: newNotice
+        }),
+        })
+        .then((response) => response.json())
+        .then((result) => {
+            if(!result){
+                adminNoticeTextarea.value = adminNoticeTextarea.innerHTML
+                alert('공지 변경 실패')
+            }
+        });
 })

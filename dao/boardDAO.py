@@ -6,6 +6,16 @@ import math
 ####################################### Get Board Object ########################################
 #################################################################################################
 
+########### 글 관련 - 공지 ############
+def getNotice():
+    '''
+    공지사항 가져오기
+    boardNo는 0으로 고정, isdelete를 1로 만들어서 다른곳에서 글 가져오는 것을 피하기
+    '''
+    sql = f'''SELECT b_contents from board where b_no = 0'''
+    notice = db.getData(sql=sql)[0][0]    
+    return notice
+
 ########### 글 관련 - 전체 ############
 def getTitleList_all(page):
     '''
@@ -208,6 +218,17 @@ def getPageOfCategory(board):
 #################################################################################################
 ####################################### Set Board Object ########################################
 #################################################################################################
+
+def setNotice(notice):
+    '''
+    공지사항 수정하기
+    return: 성공 True, 실패 False (bool)
+    '''
+    sql = f'''UPDATE board SET b_contents="{notice}" WHERE b_no=0'''
+    result = db.setData(sql=sql)
+    if result != 0:
+        return True
+    return False
 
 def setBoard(uno,cno,title,contents,ip):
     '''
