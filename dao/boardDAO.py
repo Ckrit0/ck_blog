@@ -29,8 +29,8 @@ def getTitleList_all(page):
     limit = store.PAGE_COUNT['메인']
     offset = limit * (page-1)
     sql = f'''SELECT b.b_no, b.b_title, \
-            (SELECT count(DISTINCT u_no) + count(DISTINCT v_ip) FROM views v WHERE v.b_no=b.b_no), \
-            (SELECT count(DISTINCT u_no) + count(DISTINCT l_ip) FROM likes l WHERE l.b_no=b.b_no), \
+            (SELECT count(DISTINCT u_no CASE WHEN u_no != 0 THEN u_no END) + count(DISTINCT v_ip) FROM views v WHERE v.b_no=b.b_no), \
+            (SELECT count(DISTINCT u_no CASE WHEN u_no != 0 THEN u_no END) + count(DISTINCT l_ip) FROM likes l WHERE l.b_no=b.b_no), \
             (SELECT count(*) FROM comment WHERE b_no=b.b_no), \
             c.c_name
             FROM board b JOIN category c ON b.c_no = c.c_no \
@@ -50,8 +50,8 @@ def getBoardByBoardNo(bno):
     sql = f'''
         SELECT \
             b.*, u.u_email, u.u_state, \
-            (SELECT count(DISTINCT u_no) + count(DISTINCT v_ip) FROM views WHERE b_no=b.b_no), \
-            (SELECT count(DISTINCT u_no) + count(DISTINCT l_ip) FROM likes WHERE b_no=b.b_no), \
+            (SELECT count(DISTINCT u_no CASE WHEN u_no != 0 THEN u_no END) + count(DISTINCT v_ip) FROM views WHERE b_no=b.b_no), \
+            (SELECT count(DISTINCT u_no CASE WHEN u_no != 0 THEN u_no END) + count(DISTINCT l_ip) FROM likes WHERE b_no=b.b_no), \
             (SELECT count(*) FROM comment WHERE b_no=b.b_no) \
         FROM board b \
         JOIN user u \
@@ -72,8 +72,8 @@ def getSearchResult(keywordList, page):
     offset = limit * (page-1)
     sql = f'''\
         SELECT b.*, u.u_email, u.u_state, \
-        (SELECT count(DISTINCT u_no) + count(DISTINCT v_ip) FROM views WHERE b_no=b.b_no), \
-        (SELECT count(DISTINCT u_no) + count(DISTINCT l_ip) FROM likes WHERE b_no=b.b_no), \
+        (SELECT count(DISTINCT u_no CASE WHEN u_no != 0 THEN u_no END) + count(DISTINCT v_ip) FROM views WHERE b_no=b.b_no), \
+        (SELECT count(DISTINCT u_no CASE WHEN u_no != 0 THEN u_no END) + count(DISTINCT l_ip) FROM likes WHERE b_no=b.b_no), \
         (SELECT count(*) FROM comment WHERE b_no=b.b_no), \
         ('''
     for keyword in keywordList:
@@ -115,8 +115,8 @@ def getTitleList_cathgory(cno, page=1):
     limit = store.PAGE_COUNT['카테고리']
     offset = limit * (page-1)
     sql = f'''SELECT b.b_no, b.b_title, \
-            (SELECT count(DISTINCT u_no) + count(DISTINCT v_ip) FROM views v WHERE v.b_no=b.b_no), \
-            (SELECT count(DISTINCT u_no) + count(DISTINCT l_ip) FROM likes l WHERE l.b_no=b.b_no), \
+            (SELECT count(DISTINCT u_no CASE WHEN u_no != 0 THEN u_no END) + count(DISTINCT v_ip) FROM views v WHERE v.b_no=b.b_no), \
+            (SELECT count(DISTINCT u_no CASE WHEN u_no != 0 THEN u_no END) + count(DISTINCT l_ip) FROM likes l WHERE l.b_no=b.b_no), \
             (SELECT count(*) FROM comment WHERE b_no=b.b_no) \
             FROM board b WHERE b.c_no={cno} AND b.b_isdelete=0 \
             ORDER BY b.b_no DESC LIMIT {limit} OFFSET {offset}'''
@@ -154,8 +154,8 @@ def getRecentlyBoardList(uno):
     result = []
     sql = f'''
         SELECT b.*, u.u_email, u.u_state, \
-            (SELECT count(DISTINCT u_no) + count(DISTINCT v_ip) FROM views WHERE b_no=b.b_no), \
-            (SELECT count(DISTINCT u_no) + count(DISTINCT l_ip) FROM likes WHERE b_no=b.b_no), \
+            (SELECT count(DISTINCT u_no CASE WHEN u_no != 0 THEN u_no END) + count(DISTINCT v_ip) FROM views WHERE b_no=b.b_no), \
+            (SELECT count(DISTINCT u_no CASE WHEN u_no != 0 THEN u_no END) + count(DISTINCT l_ip) FROM likes WHERE b_no=b.b_no), \
             (SELECT count(*) FROM comment WHERE b_no=b.b_no) \
         FROM board b \
         JOIN user u \
