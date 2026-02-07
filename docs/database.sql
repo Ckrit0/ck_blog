@@ -140,6 +140,8 @@ SELECT count(*) FROM board WHERE c_no=1 AND b_isdelete=0;
 SELECT c_name FROM category WHERE c_no=1;
 -- 해당 카테고리에 몇개의 글이 작성되었는지 가져오기
 SELECT count(*) FROM board WHERE b_isdelete=0 AND c_no=1;
+-- 카테고리의 마지막 c_no 가져오기
+SELECT MAX(c_no) FROM category;
 
 ----------------
 -- Board DAO  --

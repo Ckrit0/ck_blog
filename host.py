@@ -102,9 +102,12 @@ def adminModNoticeHandler():
     result = boardDAO.setNotice(notice=newNotice)
     return jsonify(result)
 
-# 카테고리 관리 - CRUD (카테고리 삭제시 거기 있는 글들 어떻게 할까 생각해야 함)
-
-
+# 카테고리 수정 적용 - CRUD.
+@app.route("/adminModCate", methods=["POST"])
+def adminModCateHandler():
+    dtoList = request.json['dtoList']
+    result = categoryDAO.modCategory(dtoList)
+    return jsonify(result)
 
 ################################
 ##### 메인 페이지, Service #####

@@ -189,7 +189,7 @@ body{
     font-weight: 600;
     color: blue;
 }
-#child_new{
+.child_new{
     font-size: 20px;
     font-weight: 600;
     color: blue;

@@ -112,48 +112,159 @@ def getCategoryNameByCno(cno):
 ####################################################################################################
 ####################################### Set Category Object ########################################
 ####################################################################################################
-def setCategory(category):
+def __setParentCategory(category):
     '''
-    카테고리 추가하기
+    상위 카테고리 추가하고 해당 cno 받기
     parameter: 카테고리객체(categoryDTO)
-    return: 
+    return: 추가된 cno(int)
     '''
     cName = category.getName()
-    cUpper = category.getUpper()
     cOrder = category.getOrder()
-    sql = f'''INSERT INTO category(c_name,c_upper,c_order) VALUES("{cName}",'''
-    if cUpper == None:
-        sql += f'''Null, {cOrder})'''
-    else:
-        sql += f'''"{cUpper}",{cOrder})'''
-    result = db.setData(sql=sql)
+    sql = f'''INSERT INTO category(c_name,c_upper,c_order) VALUES("{cName}", Null, {cOrder})'''
+    dbResult = db.setData(sql=sql)
+    result = None
+    if dbResult != 0:
+        sql = f'''SELECT MAX(c_no) FROM category'''
+        result = db.setData(sql=sql)
     return result
 
-def updateCategory(category):
+def modCategory(categoryList):
     '''
-    카테고리 수정하기
-    parameter: 카테고리객체(categoryDTO)
+    페이지에서 보내준 리스트로 카테고리 설정하기
+    parameter: [[[부모번호,부모이름,부모상위,부모정렬],[[자식번호,자식이름,자식상위,자식정렬],...]],...]
     return: 성공/실패(True/False)
     '''
-    cno = category.getNo()
-    cName = category.getName()
-    cUpper = category.getUpper()
-    cOrder = category.getOrder()
-    sql = f'''UPDATE category SET c_name="{cName}", c_upper={cUpper}, c_order={cOrder} WHERE c_no={cno}'''
-    result = db.setData(sql=sql)
-    if result == 0:
-        return False
-    return True
+    def getCategoryListByCategoryList(categoryList):
+        result = []
+        for cateList in categoryList:
+            pCateDtoList = []
+            pCateDto = categoryDTO.CategoryDTO()
+            pCateDto.setNo(cateList[0][0])
+            pCateDto.setName(cateList[0][1])
+            pCateDto.setOrder(cateList[0][3])
+            pCateDtoList.append(pCateDto)
+            cCateDtoList = []
+            for cCateList in cateList[1]:
+                cCateDto = categoryDTO.CategoryDTO()
+                cCateDto.setNo(cCateList[0])
+                cCateDto.setName(cCateList[1])
+                cCateDto.setUpper(cCateList[2])
+                cCateDto.setOrder(cCateList[3])
+                cCateDtoList.append(cCateDto)
+            pCateDtoList.append(cCateDtoList)
+            result.append(pCateDtoList)
+        return result
+    
+    def getDeleteCateNoList(nowCateList, newCateList):
+        def getCateNoList(categoryList):
+            cateNoList = []
+            for cate in categoryList:
+                try:
+                    cateNoList.append(int(cate[0].getNo()))
+                except:
+                    pass
+                for childCate in cate[1]:
+                    try:
+                        cateNoList.append(int(childCate.getNo()))
+                    except:
+                        pass
+            return cateNoList
 
-def deleteCategory(category):
-    '''
-    카테고리 삭제하기
-    parameter: 카테고리객체(categoryDTO)
-    return: 성공/실패(True/False)
-    '''
-    cno = category.getNo()
-    sql = f'''DELETE FROM category WHERE c_no={cno}'''
-    result = db.setData(sql=sql)
-    if result == 0:
-        return False
-    return True
+        result = []
+        nowCateNoList = getCateNoList(nowCateList)
+        newCateNoList = getCateNoList(newCateList)
+        nowCateNoList.sort()
+        newCateNoList.sort()
+        for nowCateNo in nowCateNoList:
+            try:
+                newCateNoList.index(nowCateNo)
+            except:
+                result.append(nowCateNo)
+        return result
+    
+    def getInsertedCateDtoList(newCateList):
+        result = []
+        for newCate in newCateList:
+            if newCate[0].getNo()[:3] == 'new':
+                parentNo = __setParentCategory(newCate[0])
+            for newChildCate in newCate[1]:
+                if newChildCate.getNo()[:3] == 'new':
+                    if newCate[0].getNo()[:3] == 'new':
+                        newChildCate.setUpper(parentNo)
+                    result.append(newChildCate)
+        return result
+    
+    def getChangedCateDtoList(nowCateList, newCateList, deletedNoList, insertedDtoList):
+        result = []
+        # nowCateList에서 deletedNoList 제외
+        targetNowCateList = []
+        for nowCate in nowCateList:
+            try:
+                deletedNoList.index(nowCate[0].getNo())
+            except:
+                targetNowCateList.append(nowCate[0])
+            for nowChildCate in nowCate[1]:
+                try:
+                    deletedNoList.index(nowChildCate.getNo())
+                except:
+                    targetNowCateList.append(nowChildCate)
+        # newCateList에서 insertedDtoList 제외
+        targetNewCateList = []
+        for newCate in newCateList:
+            try:
+                insertedDtoList.index(newCate[0])
+            except:
+                targetNewCateList.append(newCate[0])
+            for newChildCate in newCate[1]:
+                try:
+                    insertedDtoList.index(newChildCate)
+                except:
+                    targetNewCateList.append(newChildCate)
+        # 두 리스트에서 no가 같은 것끼리 비교하여 변경된 DTO 확인
+        for nowCate in targetNowCateList:
+            for newCate in targetNewCateList:
+                try:
+                    int(newCate.getNo())
+                except:
+                    continue
+                if nowCate.getNo() == int(newCate.getNo()):
+                    if nowCate.getName() == newCate.getName() and nowCate.getOrder() == int(newCate.getOrder()):
+                        pass
+                    else:
+                        result.append(newCate)
+        return result
+    
+    sqlList = []
+
+    nowCateList = getCategoryList()
+    newCateList = getCategoryListByCategoryList(categoryList)
+
+    # 지워진 카테고리 확인
+    deletedNoList = getDeleteCateNoList(nowCateList=nowCateList,newCateList=newCateList)
+    for deletedNo in deletedNoList:
+        sqlList.append(f'''DELETE FROM category WHERE c_no={deletedNo}''')
+    
+    # 추가된 카테고리 확인
+    insertedDtoList = getInsertedCateDtoList(newCateList=newCateList)
+    for insertedDto in insertedDtoList:
+        sql = f'''INSERT INTO category(c_name,c_upper,c_order) VALUES("{insertedDto.getName()}",'''
+        if insertedDto.getUpper() == None:
+            sql += f'''NULL, {insertedDto.getOrder()})'''
+        else:
+            sql += f'''{insertedDto.getUpper()},{insertedDto.getOrder()})'''
+        sqlList.append(sql)
+    
+    # 변경된 카테고리 확인
+    changedDtoList = getChangedCateDtoList(nowCateList=nowCateList,newCateList=newCateList,deletedNoList=deletedNoList,insertedDtoList=insertedDtoList)
+    for changedDto in changedDtoList:
+        sql = f'''UPDATE category SET c_name="{changedDto.getName()}", '''
+        if changedDto.getUpper() == None:
+            sql += f'''c_upper=NULL, c_order={changedDto.getOrder()} WHERE c_no={changedDto.getNo()}'''
+        else:
+            sql += f'''c_upper={changedDto.getUpper()}, c_order={changedDto.getOrder()} WHERE c_no={changedDto.getNo()}'''
+        sqlList.append(sql)
+
+    result = db.setDatas(sqlList=sqlList)
+    if result != 0:
+        return True
+    return False

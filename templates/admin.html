@@ -72,24 +72,26 @@
             <div id="parent_{{parentCate[0].getOrder()}}" class="adminParentCateDiv">
                 <div id="parentName_{{parentCate[0].getNo()}}" class="adminParentName">
                     <span>{{parentCate[0].getName()}}</span>
-                    <span class="adminChildPointer" onclick="changeCategoryName(this.parentElement)">✏️</span>
+                    <span class="adminChildPointer" onclick="changeParentCategoryName(this.parentElement)">✏️</span>
                     <span class="adminChildPointer" onclick="deleteCategory(this.parentElement.parentElement)">❌</span>
                     <span class="adminChildPointer" onclick="moveParentCategoryDiv(this.parentElement.parentElement.id,'up')">⬆️</span>
                     <span class="adminChildPointer" onclick="moveParentCategoryDiv(this.parentElement.parentElement.id,'down')">⬇️</span> 
                 </div>
-                {% for childCate in parentCate[1] %}
-                <div id="childName_{{parentCate[0].getNo()}}_{{childCate.getNo()}}_{{childCate.getOrder()}}_{{childCate.getOrder()}}" class="adminChildName">
-                    <span>{{childCate.getName()}}({{childCate.getCount()}})</span>
-                    <span class="adminChildPointer" onclick="changeCategoryName(this.parentElement)">✏️</span>
-                    <span class="adminChildPointer" onclick="deleteCategory(this.parentElement)">❌</span>
-                    <span class="adminChildPointer" onclick="moveChildCategoryDiv(this.parentElement.id,'up')">⬆️</span>
-                    <span class="adminChildPointer" onclick="moveChildCategoryDiv(this.parentElement.id,'down')">⬇️</span> 
+                <div id="child_{{parentCate[0].getOrder()}}">
+                    {% for childCate in parentCate[1] %}
+                    <div id="childName_{{parentCate[0].getNo()}}_{{childCate.getNo()}}_{{childCate.getOrder()}}" class="adminChildName">
+                        <span>{{childCate.getName()}}({{childCate.getCount()}})</span>
+                        <span class="adminChildPointer" onclick="changeChildCategoryName(this.parentElement)">✏️</span>
+                        <span class="adminChildPointer" onclick="deleteCategory(this.parentElement)">❌</span>
+                        <span class="adminChildPointer" onclick="moveChildCategoryDiv(this.parentElement.id,'up')">⬆️</span>
+                        <span class="adminChildPointer" onclick="moveChildCategoryDiv(this.parentElement.id,'down')">⬇️</span> 
+                    </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
-                <div id="child_new">+</div>
+                <div id="child_new_{{parentCate[0].getOrder()}}" class="adminChildPointer child_new" onclick="newChildCategory(this)">+</div>
             </div>
             {% endfor %}
-            <div id="parent_new" class="adminParentCateDiv">+</div>
+            <div id="parent_new" class="adminParentCateDiv adminChildPointer" onclick="newParentCategory()">+</div>
         </div>
         <button id="adminCateBtn">변경 적용</button>
     </div>
