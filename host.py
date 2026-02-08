@@ -168,7 +168,7 @@ def validateCheck():
     
     except Exception as e:
         current_func_name = sys._getframe().f_code.co_name
-        log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}:",e)
+        log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}: {e}")
         return abort(500)
 
 @app.route("/")
@@ -195,7 +195,7 @@ def main():
         )
     except Exception as e:
         current_func_name = sys._getframe().f_code.co_name
-        log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}:",e)
+        log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}: {e}")
         return abort(500)
 
 #############################
@@ -233,7 +233,7 @@ def joinPage():
         )
     except Exception as e:
         current_func_name = sys._getframe().f_code.co_name
-        log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}:",e)
+        log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}: {e}")
         return abort(500)
 
 @app.route("/user/<userNo>")
@@ -275,7 +275,7 @@ def userPage(userNo):
         )
     except Exception as e:
         current_func_name = sys._getframe().f_code.co_name
-        log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}:",e)
+        log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}: {e}")
         return abort(500)
 
 
@@ -293,7 +293,7 @@ def findPage():
         )
     except Exception as e:
         current_func_name = sys._getframe().f_code.co_name
-        log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}:",e)
+        log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}: {e}")
         return abort(500)
 
 #############################
@@ -485,7 +485,7 @@ def boardPage(bno):
         return resp
     except Exception as e:
         current_func_name = sys._getframe().f_code.co_name
-        log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}:",e)
+        log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}: {e}")
         return abort(500)
 
 @app.route('/write/<nowCate>')
@@ -517,7 +517,7 @@ def writeBoardPage(nowCate):
         )
     except Exception as e:
         current_func_name = sys._getframe().f_code.co_name
-        log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}:",e)
+        log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}: {e}")
         return abort(500)
 
 @app.route('/writeBoard', methods=['POST'])
@@ -555,7 +555,7 @@ def saveBoard():
         return resp
     except Exception as e:
         current_func_name = sys._getframe().f_code.co_name
-        log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}:",e)
+        log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}: {e}")
         return abort(500)
 
 @app.route('/modify/<bno>')
@@ -591,7 +591,7 @@ def modifyBoardPage(bno):
         )
     except Exception as e:
         current_func_name = sys._getframe().f_code.co_name
-        log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}:",e)
+        log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}: {e}")
         return abort(500)
 
 @app.route('/modifyBoard/<bno>', methods=['POST'])
@@ -629,7 +629,7 @@ def modifyBoard(bno):
         return resp
     except Exception as e:
         current_func_name = sys._getframe().f_code.co_name
-        log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}:",e)
+        log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}: {e}")
         return abort(500)
 
 @app.route('/deleteBoard/<bno>')
@@ -655,7 +655,7 @@ def deleteBoard(bno):
         return resp
     except Exception as e:
         current_func_name = sys._getframe().f_code.co_name
-        log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}:",e)
+        log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}: {e}")
         return abort(500)
 
 #############################
@@ -766,7 +766,7 @@ def categoryPage(categoryNo):
         )
     except Exception as e:
         current_func_name = sys._getframe().f_code.co_name
-        log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}:",e)
+        log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}: {e}")
         return abort(500)
 
 ###############################
@@ -809,7 +809,7 @@ def searchPage(keyword):
         )
     except Exception as e:
         current_func_name = sys._getframe().f_code.co_name
-        log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}:",e)
+        log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}: {e}")
         return abort(500)
 
 #############################
