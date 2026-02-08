@@ -8,11 +8,11 @@ def watchDog():
     while True:
         systemInfo = getSystemInfo()
         if systemInfo['cpuUsage'] > 80:
-            log.setLog(store.LOG_NAME['시스템'], f'CPU 사용율 {systemInfo['cpuUsage']}%')
+            log.setLog(store.LOG_NAME['시스템'], f"CPU 사용율 {systemInfo['cpuUsage']}%")
         if (systemInfo['usedMem'] / systemInfo['totalMem'])*100 > 80:
-            log.setLog(store.LOG_NAME['시스템'], f'MEM 사용율 {(systemInfo['usedMem'] / systemInfo['totalMem'])*100}%')
+            log.setLog(store.LOG_NAME['시스템'], f"MEM 사용율 {(systemInfo['usedMem'] / systemInfo['totalMem'])*100}%")
         if (systemInfo['usedStorage'] / systemInfo['totalStorage'])*100 > 80:
-            log.setLog(store.LOG_NAME['시스템'], f'Storage 사용율 {(systemInfo['usedStorage'] / systemInfo['totalStorage'])*100}%')
+            log.setLog(store.LOG_NAME['시스템'], f"Storage 사용율 {(systemInfo['usedStorage'] / systemInfo['totalStorage'])*100}%")
         print(f"watchDog: CPU 사용율: {systemInfo['cpuUsage']}%, MEM 사용율 {(systemInfo['usedMem'] / systemInfo['totalMem'])*100}%, Storage 사용율 {(systemInfo['usedStorage'] / systemInfo['totalStorage'])*100}%")
         time.sleep(3600)
 
