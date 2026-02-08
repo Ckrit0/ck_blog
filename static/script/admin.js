@@ -68,6 +68,7 @@ adminNoticeBtn.addEventListener('click',()=>{
                 adminNoticeTextarea.value = adminNoticeTextarea.innerHTML
                 alert('공지 변경 실패')
             }
+            alert('공지 변경 성공')
         });
 })
 
@@ -185,7 +186,7 @@ function newParentCategory(){
     let targetDiv = adminCategoryDiv
     let cateName = prompt('생성할 카테고리 명')
     let cateOrder = targetDiv.children.length
-    if(cateName == ''){
+    if(cateName == '' || cateName == null || cateName == undefined){
         return
     }
 
@@ -253,7 +254,7 @@ function newChildCategory(clickedBtn){
     let cateOrder = targetDiv.children.length + 1
     let parent_no = clickedBtn.parentElement.children[0].id.split('_')[1]
     let cateName = prompt('생성할 카테고리 명')
-    if(cateName == ''){
+    if(cateName == '' || cateName == null || cateName == undefined){
         return
     }
 
@@ -342,6 +343,7 @@ adminCateBtn.addEventListener('click',()=>{
         .then((response) => response.json())
         .then((result) => {
             if(result){
+                alert('카테고리 변경에 성공하였습니다.')
                 window.location.href = '/admin'
             }else{
                 alert('카테고리 변경에 실패하였습니다.')
