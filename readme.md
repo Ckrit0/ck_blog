@@ -27,3 +27,4 @@ http://www.ckrit.co.kr
     2026-01-07: create database and server git clone
     2026-02-02: client side phase1 complete
     2026-02-03: set domain(http://www.ckrit.co.kr)
+    2026-02-09: first posting
