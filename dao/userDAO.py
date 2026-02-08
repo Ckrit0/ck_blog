@@ -413,6 +413,8 @@ def setBlackList(user, code, reason=''):
         store.USER_RESULT_CODE['블랙리스트 등록']
         store.USER_RESULT_CODE['실패-unknown']
     '''
+    if reason == '':
+        reason = store.getBlackReason(code)
     sql = f'''INSERT INTO blacklist(u_no,bl_ip,bl_expire,bl_cause,bl_reason) VALUES({user.getNo()},"{user.getIp()}",NOW() + INTERVAL {store.ddosBlockHour} HOUR,"{code}","{reason}");'''
     result = db.setData(sql=sql)
     log = logger.Logger()

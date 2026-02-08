@@ -168,6 +168,7 @@ BLACK_REASON_CODE = {
     'Ddos 주의' : 0,
     '기타' : 999
 }
+
 def getBlackReason(blackReasonCode):
     for key, value in BLACK_REASON_CODE.items():
         if value == blackReasonCode:

@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify, abort, make_response, flash
 from dao import userDAO, categoryDAO, boardDAO, commentDAO
 from service import store, validate, logger, userService, boardService, categoryService, serachService, adminService
-import os, datetime
+import os, datetime, sys
 from werkzeug.utils import secure_filename
 
 ###########################
@@ -35,6 +35,16 @@ def page_not_found(e):
 def test_404():
     abort(404)
 
+# 500 Error: 서버 에러
+@app.errorhandler(500)
+def server_error(e):
+    return render_template('error_500.html'), 500
+
+@app.route('/test-500')
+def test_500():
+    abort(500)
+
+
 #########################
 ##### 관리자 페이지 #####
 #########################
@@ -45,8 +55,8 @@ def adminPage():
     clientUser = userDAO.getUserBySessionKey(cookieKey=request.cookies.get('sessionKey'),ip=request.remote_addr)
     
     # 관리자가 아니면 404페이지 띄우기
-    # if clientUser.getState() != store.USER_STATE_CODE['관리자']:
-    #     return abort(404)
+    if clientUser.getState() != store.USER_STATE_CODE['관리자']:
+        return abort(404)
     
     # 서버 현황
     systemInfo = adminService.getSystemInfo()
@@ -58,7 +68,7 @@ def adminPage():
     categoryList = categoryDAO.getCategoryList()
 
     # 서비스 관리
-    # 최신 시스템 에러로그 가져오기
+    # 시스템 에러로그 가져오기
 
     
     return render_template('admin.html',
@@ -121,48 +131,61 @@ def getTemplateData(req):
 
 @app.before_request
 def validateCheck():
-    # 클라이언트 정보 가져오기
-    clientUser = userDAO.getUserBySessionKey(cookieKey=request.cookies.get('sessionKey'),ip=request.remote_addr)
+    try:
+        # 클라이언트 정보 가져오기
+        clientUser = userDAO.getUserBySessionKey(cookieKey=request.cookies.get('sessionKey'),ip=request.remote_addr)
+        
+        # Ddos 여부 판단
+        if validate.checkDdos(clientUser):
+            abort(403)
+        
+        # blackList에 있는지 확인
+        elif validate.checkBlackList(clientUser):
+            abort(403)
+        
+        # 세션 만료 확인
+        elif validate.checkSessionTimeOver(clientUser): #
+            if clientUser.getNo() != 0:
+                resp = make_response(redirect(request.referrer or url_for('main')))
+                # 쿠키 삭제
+                resp.delete_cookie('sessionKey')
+                # 메시지 생성
+                flash(store.USER_MESSAGE['세션만료'])
+                return resp
     
-    # Ddos 여부 판단
-    if validate.checkDdos(clientUser):
-        abort(403)
-    
-    # blackList에 있는지 확인
-    elif validate.checkBlackList(clientUser):
-        abort(403)
-    
-    # 세션 만료 확인
-    elif validate.checkSessionTimeOver(clientUser): #
-        if clientUser.getNo() != 0:
-            resp = make_response(redirect(request.referrer or url_for('main')))
-            # 쿠키 삭제
-            resp.delete_cookie('sessionKey')
-            # 메시지 생성
-            flash(store.USER_MESSAGE['세션만료'])
-            return resp
+    except Exception as e:
+        log = logger.Logger()
+        current_func_name = sys._getframe().f_code.co_name
+        log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}:",e)
+        return abort(500)
 
 @app.route("/")
 def main():
-    # 템플릿 정보 가져오기
-    clientUser, categoryList, recentlyTitleList = getTemplateData(req=request)
-    
-    # 메인페이지 데이터 가져오기
-    pageList = boardDAO.getPageList_all()
-    
-    # 공지사항 가져오기.
-    notice = boardDAO.getNotice().split('\n')
-    
-    # 뷰 설정하기
-    userDAO.setView(user=clientUser, url=request.path)
-    
-    return render_template('main.html',
-        clientUser=clientUser,
-        categoryList=categoryList,
-        recentlyTitleList=recentlyTitleList,
-        notice=notice,
-        pageList=pageList
-    )
+    try:
+        # 템플릿 정보 가져오기
+        clientUser, categoryList, recentlyTitleList = getTemplateData(req=request)
+        
+        # 메인페이지 데이터 가져오기
+        pageList = boardDAO.getPageList_all()
+        
+        # 공지사항 가져오기.
+        notice = boardDAO.getNotice().split('\n')
+        
+        # 뷰 설정하기
+        userDAO.setView(user=clientUser, url=request.path)
+        
+        return render_template('main.html',
+            clientUser=clientUser,
+            categoryList=categoryList,
+            recentlyTitleList=recentlyTitleList,
+            notice=notice,
+            pageList=pageList
+        )
+    except Exception as e:
+        log = logger.Logger()
+        current_func_name = sys._getframe().f_code.co_name
+        log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}:",e)
+        return abort(500)
 
 #############################
 ######## 메인 핸들러 ########
@@ -179,73 +202,91 @@ def getTitleListOnMainByPageHandler(page):
 
 @app.route("/join")
 def joinPage():
-    # 템플릿 정보 가져오기
-    clientUser, categoryList, recentlyTitleList = getTemplateData(req=request)
-    
-    # 이미 로그인 되어있는 경우
-    if clientUser.getNo() != 0:
-        resp = make_response(redirect(url_for('main')))
-        flash(store.USER_MESSAGE['기로그인'])
-        return resp
-    
-    # 뷰 설정하기
-    userDAO.setView(user=clientUser,url=request.path)
+    try:
+        # 템플릿 정보 가져오기
+        clientUser, categoryList, recentlyTitleList = getTemplateData(req=request)
+        
+        # 이미 로그인 되어있는 경우
+        if clientUser.getNo() != 0:
+            resp = make_response(redirect(url_for('main')))
+            flash(store.USER_MESSAGE['기로그인'])
+            return resp
+        
+        # 뷰 설정하기
+        userDAO.setView(user=clientUser,url=request.path)
 
-    return render_template('join.html',
-        clientUser = clientUser,
-        categoryList = categoryList,
-        recentlyTitleList = recentlyTitleList
-    )
+        return render_template('join.html',
+            clientUser = clientUser,
+            categoryList = categoryList,
+            recentlyTitleList = recentlyTitleList
+        )
+    except Exception as e:
+        log = logger.Logger()
+        current_func_name = sys._getframe().f_code.co_name
+        log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}:",e)
+        return abort(500)
 
 @app.route("/user/<userNo>")
 def userPage(userNo):
-    # 템플릿 정보
-    clientUser, categoryList, recentlyTitleList = getTemplateData(req=request)
+    try:
+        # 템플릿 정보
+        clientUser, categoryList, recentlyTitleList = getTemplateData(req=request)
 
-    # 대상 유저정보
-    targetUser = userDAO.getUserByUserNo(uno=userNo)
-    if targetUser.getState() == 0:
-        resp = make_response(redirect(request.referrer or url_for('main')))
-        flash("유저를 찾을 수 없습니다.")
-        return resp
-    # 마지막 세션시간
-    targetUserLastSessionTime = userDAO.getSessionTimeByUserNo(uno=targetUser.getNo()).strftime("%Y-%m-%d")
-    # 작성한 글 갯수
-    targetUserBoardCount = boardDAO.getBoardCountByUserNo(uno=targetUser.getNo())
-    # 작성한 댓글 갯수
-    targetUserCommentCount = commentDAO.getCommentCountByUserNo(uno=targetUser.getNo())
-    # 작성한 최근글 목록
-    targetUserBoardList = boardDAO.getRecentlyBoardList(uno=targetUser.getNo())
-    # 작성한 최근댓글 목록
-    targetUserCommentList = commentDAO.getRecentlyCommentList(uno=targetUser.getNo())
+        # 대상 유저정보
+        targetUser = userDAO.getUserByUserNo(uno=userNo)
+        if targetUser.getState() == 0:
+            resp = make_response(redirect(request.referrer or url_for('main')))
+            flash("유저를 찾을 수 없습니다.")
+            return resp
+        # 마지막 세션시간
+        targetUserLastSessionTime = userDAO.getSessionTimeByUserNo(uno=targetUser.getNo()).strftime("%Y-%m-%d")
+        # 작성한 글 갯수
+        targetUserBoardCount = boardDAO.getBoardCountByUserNo(uno=targetUser.getNo())
+        # 작성한 댓글 갯수
+        targetUserCommentCount = commentDAO.getCommentCountByUserNo(uno=targetUser.getNo())
+        # 작성한 최근글 목록
+        targetUserBoardList = boardDAO.getRecentlyBoardList(uno=targetUser.getNo())
+        # 작성한 최근댓글 목록
+        targetUserCommentList = commentDAO.getRecentlyCommentList(uno=targetUser.getNo())
 
-    # 뷰 설정하기
-    userDAO.setView(user=clientUser,url=request.path)
+        # 뷰 설정하기
+        userDAO.setView(user=clientUser,url=request.path)
 
-    return render_template('user.html',
-        clientUser=clientUser,
-        categoryList=categoryList,
-        recentlyTitleList=recentlyTitleList,
-        targetUser=targetUser,
-        targetUserLastSessionTime=targetUserLastSessionTime,
-        targetUserBoardCount=targetUserBoardCount,
-        targetUserCommentCount=targetUserCommentCount,
-        targetUserBoardList=targetUserBoardList,
-        targetUserCommentList=targetUserCommentList
-    )
+        return render_template('user.html',
+            clientUser=clientUser,
+            categoryList=categoryList,
+            recentlyTitleList=recentlyTitleList,
+            targetUser=targetUser,
+            targetUserLastSessionTime=targetUserLastSessionTime,
+            targetUserBoardCount=targetUserBoardCount,
+            targetUserCommentCount=targetUserCommentCount,
+            targetUserBoardList=targetUserBoardList,
+            targetUserCommentList=targetUserCommentList
+        )
+    except Exception as e:
+        log = logger.Logger()
+        current_func_name = sys._getframe().f_code.co_name
+        log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}:",e)
+        return abort(500)
 
 
 @app.route("/find")
 def findPage():
-    # 템플릿 정보
-    clientUser, categoryList, recentlyTitleList = getTemplateData(req=request)
-    # 뷰 설정하기
-    userDAO.setView(user=clientUser,url=request.path)
-    return render_template('find.html',
-        clientUser=clientUser,
-        categoryList=categoryList,
-        recentlyTitleList=recentlyTitleList
-    )
+    try:
+        # 템플릿 정보
+        clientUser, categoryList, recentlyTitleList = getTemplateData(req=request)
+        # 뷰 설정하기
+        userDAO.setView(user=clientUser,url=request.path)
+        return render_template('find.html',
+            clientUser=clientUser,
+            categoryList=categoryList,
+            recentlyTitleList=recentlyTitleList
+        )
+    except Exception as e:
+        log = logger.Logger()
+        current_func_name = sys._getframe().f_code.co_name
+        log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}:",e)
+        return abort(500)
 
 #############################
 ######## 유저 핸들러 ########
@@ -402,183 +443,219 @@ def leaveHandler():
 #############################
 @app.route("/board/<bno>")
 def boardPage(bno):
-    # 템플릿 정보
-    clientUser, categoryList, recentlyTitleList = getTemplateData(req=request)
+    try:
+        # 템플릿 정보
+        clientUser, categoryList, recentlyTitleList = getTemplateData(req=request)
 
-    # 데이터 가져오기
-    targetBoard = boardDAO.getBoardByBoardNo(bno=bno)
-    isLiked = boardService.checkIsLiked(user=clientUser, board=targetBoard)
-    cName = categoryService.getCategoryNameByCnoInCategoryList(cList=categoryList,cno=targetBoard.getCategoryNo())
-    pageList = categoryDAO.getPageList_category(targetBoard.getCategoryNo())
-    nowPage = boardDAO.getPageOfCategory(board=targetBoard)
-    isWritable = validate.checkWritableCategory(user=clientUser,cno=targetBoard.getCategoryNo())
+        # 데이터 가져오기
+        targetBoard = boardDAO.getBoardByBoardNo(bno=bno)
+        isLiked = boardService.checkIsLiked(user=clientUser, board=targetBoard)
+        cName = categoryService.getCategoryNameByCnoInCategoryList(cList=categoryList,cno=targetBoard.getCategoryNo())
+        pageList = categoryDAO.getPageList_category(targetBoard.getCategoryNo())
+        nowPage = boardDAO.getPageOfCategory(board=targetBoard)
+        isWritable = validate.checkWritableCategory(user=clientUser,cno=targetBoard.getCategoryNo())
 
-    resp = make_response(render_template('board.html',
-        clientUser=clientUser,
-        categoryList=categoryList,
-        recentlyTitleList=recentlyTitleList,
-        targetBoard=targetBoard,
-        isLiked=isLiked,
-        cName=cName,
-        pageList=pageList,
-        nowPage=nowPage,
-        isWritable=isWritable
-    ))
+        resp = make_response(render_template('board.html',
+            clientUser=clientUser,
+            categoryList=categoryList,
+            recentlyTitleList=recentlyTitleList,
+            targetBoard=targetBoard,
+            isLiked=isLiked,
+            cName=cName,
+            pageList=pageList,
+            nowPage=nowPage,
+            isWritable=isWritable
+        ))
 
-    if targetBoard.getIsDelete() == 1:
-        resp = make_response(redirect(request.referrer or url_for('main')))
-        flash(store.USER_MESSAGE[store.USER_RESULT_CODE['삭제된글']])
+        if targetBoard.getIsDelete() == 1:
+            resp = make_response(redirect(request.referrer or url_for('main')))
+            flash(store.USER_MESSAGE[store.USER_RESULT_CODE['삭제된글']])
+            return resp
+
+        # 뷰 설정하기
+        userDAO.setView(user=clientUser, bno=targetBoard.getNo(), url=request.path)
+
         return resp
-
-    # 뷰 설정하기
-    userDAO.setView(user=clientUser, bno=targetBoard.getNo(), url=request.path)
-
-    return resp
+    except Exception as e:
+        log = logger.Logger()
+        current_func_name = sys._getframe().f_code.co_name
+        log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}:",e)
+        return abort(500)
 
 @app.route('/write/<nowCate>')
 def writeBoardPage(nowCate):
-    # 템플릿 정보
-    clientUser, categoryList, recentlyTitleList = getTemplateData(req=request)
-    if not validate.checkWritePagePermission(user=clientUser):
-        resp = make_response(redirect(url_for('main')))
-        flash(store.USER_MESSAGE[store.USER_RESULT_CODE['권한없음']])
-        return resp
-    
-    # 글 작성 가능한 카테고리 리스트로 변경
-    writableCategoryList = categoryDAO.getWritableCategoryList(user=clientUser)
-    if len(writableCategoryList) == 0:
-        resp = make_response(redirect(request.referrer or url_for('main')))
-        flash(store.USER_MESSAGE[store.USER_RESULT_CODE['권한없음']])
-        return resp
-    
-    # 뷰 설정하기
-    userDAO.setView(user=clientUser,url=request.path)
+    try:
+        # 템플릿 정보
+        clientUser, categoryList, recentlyTitleList = getTemplateData(req=request)
+        if not validate.checkWritePagePermission(user=clientUser):
+            resp = make_response(redirect(url_for('main')))
+            flash(store.USER_MESSAGE[store.USER_RESULT_CODE['권한없음']])
+            return resp
+        
+        # 글 작성 가능한 카테고리 리스트로 변경
+        writableCategoryList = categoryDAO.getWritableCategoryList(user=clientUser)
+        if len(writableCategoryList) == 0:
+            resp = make_response(redirect(request.referrer or url_for('main')))
+            flash(store.USER_MESSAGE[store.USER_RESULT_CODE['권한없음']])
+            return resp
+        
+        # 뷰 설정하기
+        userDAO.setView(user=clientUser,url=request.path)
 
-    return render_template('write.html',
-        clientUser=clientUser,
-        categoryList=categoryList,
-        recentlyTitleList=recentlyTitleList,
-        nowCate=int(nowCate),
-        writableCategoryList=writableCategoryList
-    )
+        return render_template('write.html',
+            clientUser=clientUser,
+            categoryList=categoryList,
+            recentlyTitleList=recentlyTitleList,
+            nowCate=int(nowCate),
+            writableCategoryList=writableCategoryList
+        )
+    except Exception as e:
+        log = logger.Logger()
+        current_func_name = sys._getframe().f_code.co_name
+        log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}:",e)
+        return abort(500)
 
 @app.route('/writeBoard', methods=['POST'])
 def saveBoard():
-    # 템플릿 정보
-    clientUser = userDAO.getUserBySessionKey(cookieKey=request.cookies.get('sessionKey'),ip=request.remote_addr)
+    try:
+        # 템플릿 정보
+        clientUser = userDAO.getUserBySessionKey(cookieKey=request.cookies.get('sessionKey'),ip=request.remote_addr)
 
-    # 데이터 수집
-    selectCategory = request.form.get('selectCategory')
-    title = request.form.get('title')
-    content = request.form.get('content')
+        # 데이터 수집
+        selectCategory = request.form.get('selectCategory')
+        title = request.form.get('title')
+        content = request.form.get('content')
 
-    # 글 작성 가능여부 확인
-    if not validate.checkWritableCategory(user=clientUser,cno=int(selectCategory)):
-        resp = make_response(redirect(url_for('main')))
-        flash(store.USER_MESSAGE[store.USER_RESULT_CODE['권한없음']])
+        # 글 작성 가능여부 확인
+        if not validate.checkWritableCategory(user=clientUser,cno=int(selectCategory)):
+            resp = make_response(redirect(url_for('main')))
+            flash(store.USER_MESSAGE[store.USER_RESULT_CODE['권한없음']])
+            return resp
+        
+        result = boardDAO.setBoard(
+            uno=clientUser.getNo(),
+            cno=selectCategory,
+            ip=clientUser.getIp(),
+            title=title,
+            contents=content
+        )
+
+        resp = ''
+        if result:
+            bno = boardDAO.getRecentlyBoardNoByUserNo(clientUser.getNo())
+            resp = make_response(redirect(url_for('boardPage', bno=bno)))
+        else:
+            resp = make_response(redirect(url_for('main')))
+            flash(store.USER_MESSAGE[store.USER_RESULT_CODE['실패-unknown']])
         return resp
-    
-    result = boardDAO.setBoard(
-        uno=clientUser.getNo(),
-        cno=selectCategory,
-        ip=clientUser.getIp(),
-        title=title,
-        contents=content
-    )
-
-    resp = ''
-    if result:
-        bno = boardDAO.getRecentlyBoardNoByUserNo(clientUser.getNo())
-        resp = make_response(redirect(url_for('boardPage', bno=bno)))
-    else:
-        resp = make_response(redirect(url_for('main')))
-        flash(store.USER_MESSAGE[store.USER_RESULT_CODE['실패-unknown']])
-    return resp
+    except Exception as e:
+        log = logger.Logger()
+        current_func_name = sys._getframe().f_code.co_name
+        log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}:",e)
+        return abort(500)
 
 @app.route('/modify/<bno>')
 def modifyBoardPage(bno):
-    # 템플릿 정보
-    clientUser, categoryList, recentlyTitleList = getTemplateData(req=request)
-    board = boardDAO.getBoardByBoardNo(bno=bno)
-    
-    # 작성자 확인 (관리자는 삭제 권한은 있지만 수정 권한은 없음)
-    if clientUser.getNo() != board.getUserNo():
-        resp = make_response(redirect(request.referrer or url_for('main')))
-        flash(store.USER_MESSAGE[store.USER_RESULT_CODE['권한없음']])
-        return resp
-    
-    # 글 작성 가능한 카테고리 리스트로 변경
-    writableCategoryList = categoryDAO.getWritableCategoryList(user=clientUser)
-    if len(writableCategoryList) == 0:
-        resp = make_response(redirect(request.referrer or url_for('main')))
-        flash(store.USER_MESSAGE[store.USER_RESULT_CODE['권한없음']])
-        return resp
-    
-    # 뷰 설정하기
-    userDAO.setView(user=clientUser,url=request.path)
+    try:
+        # 템플릿 정보
+        clientUser, categoryList, recentlyTitleList = getTemplateData(req=request)
+        board = boardDAO.getBoardByBoardNo(bno=bno)
+        
+        # 작성자 확인 (관리자는 삭제 권한은 있지만 수정 권한은 없음)
+        if clientUser.getNo() != board.getUserNo():
+            resp = make_response(redirect(request.referrer or url_for('main')))
+            flash(store.USER_MESSAGE[store.USER_RESULT_CODE['권한없음']])
+            return resp
+        
+        # 글 작성 가능한 카테고리 리스트로 변경
+        writableCategoryList = categoryDAO.getWritableCategoryList(user=clientUser)
+        if len(writableCategoryList) == 0:
+            resp = make_response(redirect(request.referrer or url_for('main')))
+            flash(store.USER_MESSAGE[store.USER_RESULT_CODE['권한없음']])
+            return resp
+        
+        # 뷰 설정하기
+        userDAO.setView(user=clientUser,url=request.path)
 
-    return render_template('modify.html',
-        clientUser=clientUser,
-        categoryList=categoryList,
-        recentlyTitleList=recentlyTitleList,
-        nowCate=board.getCategoryNo(),
-        writableCategoryList=writableCategoryList,
-        board=board
-    )
+        return render_template('modify.html',
+            clientUser=clientUser,
+            categoryList=categoryList,
+            recentlyTitleList=recentlyTitleList,
+            nowCate=board.getCategoryNo(),
+            writableCategoryList=writableCategoryList,
+            board=board
+        )
+    except Exception as e:
+        log = logger.Logger()
+        current_func_name = sys._getframe().f_code.co_name
+        log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}:",e)
+        return abort(500)
 
 @app.route('/modifyBoard/<bno>', methods=['POST'])
 def modifyBoard(bno):
-    # 템플릿 정보
-    clientUser = userDAO.getUserBySessionKey(cookieKey=request.cookies.get('sessionKey'),ip=request.remote_addr)
+    try:
+        # 템플릿 정보
+        clientUser = userDAO.getUserBySessionKey(cookieKey=request.cookies.get('sessionKey'),ip=request.remote_addr)
 
-    # 데이터 수집
-    bno = int(bno)
-    selectCategory = request.form.get('selectCategory')
-    title = request.form.get('title')
-    content = request.form.get('content')
+        # 데이터 수집
+        bno = int(bno)
+        selectCategory = request.form.get('selectCategory')
+        title = request.form.get('title')
+        content = request.form.get('content')
 
-    # 글 작성 가능여부 확인
-    if not validate.checkWritableCategory(user=clientUser,cno=int(selectCategory)):
-        resp = make_response(redirect(url_for('main')))
-        flash(store.USER_MESSAGE[store.USER_RESULT_CODE['권한없음']])
+        # 글 작성 가능여부 확인
+        if not validate.checkWritableCategory(user=clientUser,cno=int(selectCategory)):
+            resp = make_response(redirect(url_for('main')))
+            flash(store.USER_MESSAGE[store.USER_RESULT_CODE['권한없음']])
+            return resp
+        
+        # board 객체 셋팅
+        board = boardDAO.getBoardByBoardNo(bno=bno)
+        board.setCategoryNo(cno=int(selectCategory))
+        board.setTitle(title=title)
+        board.setContent(content=content)
+        board.setIp(clientUser.getIp())
+
+        result = boardDAO.updateBoard(board=board)
+        resp = ''
+        if result:
+            resp = make_response(redirect(url_for('boardPage', bno=bno)))
+        else:
+            resp = make_response(redirect(url_for('main')))
+            flash(store.USER_MESSAGE[store.USER_RESULT_CODE['실패-unknown']])
         return resp
-    
-    # board 객체 셋팅
-    board = boardDAO.getBoardByBoardNo(bno=bno)
-    board.setCategoryNo(cno=int(selectCategory))
-    board.setTitle(title=title)
-    board.setContent(content=content)
-    board.setIp(clientUser.getIp())
-
-    result = boardDAO.updateBoard(board=board)
-    resp = ''
-    if result:
-        resp = make_response(redirect(url_for('boardPage', bno=bno)))
-    else:
-        resp = make_response(redirect(url_for('main')))
-        flash(store.USER_MESSAGE[store.USER_RESULT_CODE['실패-unknown']])
-    return resp
+    except Exception as e:
+        log = logger.Logger()
+        current_func_name = sys._getframe().f_code.co_name
+        log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}:",e)
+        return abort(500)
 
 @app.route('/deleteBoard/<bno>')
 def deleteBoard(bno):
-    # 템플릿 정보
-    clientUser = userDAO.getUserBySessionKey(cookieKey=request.cookies.get('sessionKey'),ip=request.remote_addr)
+    try:
+        # 템플릿 정보
+        clientUser = userDAO.getUserBySessionKey(cookieKey=request.cookies.get('sessionKey'),ip=request.remote_addr)
 
-    resp = make_response(redirect(url_for('main')))
+        resp = make_response(redirect(url_for('main')))
 
-    if clientUser.getState() == store.USER_STATE_CODE['관리자']:
-        pass
-    elif clientUser.getNo() != boardDAO.getBoardByBoardNo(bno=bno).getUserNo():
-        resp = make_response(redirect(request.referrer or url_for('main')))
-        flash(store.USER_MESSAGE[store.USER_RESULT_CODE['권한없음']])
+        if clientUser.getState() == store.USER_STATE_CODE['관리자']:
+            pass
+        elif clientUser.getNo() != boardDAO.getBoardByBoardNo(bno=bno).getUserNo():
+            resp = make_response(redirect(request.referrer or url_for('main')))
+            flash(store.USER_MESSAGE[store.USER_RESULT_CODE['권한없음']])
+            return resp
+        
+        result = boardDAO.deleteBoard(bno=bno)
+        if result:
+            flash(store.USER_MESSAGE[store.USER_RESULT_CODE['글삭제성공']])
+        else:
+            flash(store.USER_MESSAGE[store.USER_RESULT_CODE['실패-unknown']])
         return resp
-    
-    result = boardDAO.deleteBoard(bno=bno)
-    if result:
-        flash(store.USER_MESSAGE[store.USER_RESULT_CODE['글삭제성공']])
-    else:
-        flash(store.USER_MESSAGE[store.USER_RESULT_CODE['실패-unknown']])
-    return resp
+    except Exception as e:
+        log = logger.Logger()
+        current_func_name = sys._getframe().f_code.co_name
+        log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}:",e)
+        return abort(500)
 
 #############################
 ######### 글 핸들러 #########
@@ -665,26 +742,32 @@ def deleteCommentHanler():
 ###############################
 @app.route("/category/<categoryNo>")
 def categoryPage(categoryNo):
-    # 템플릿 정보
-    clientUser, categoryList, recentlyTitleList = getTemplateData(req=request)
+    try:
+        # 템플릿 정보
+        clientUser, categoryList, recentlyTitleList = getTemplateData(req=request)
 
-    # 데이터 가져오기
-    cName = categoryService.getCategoryNameByCnoInCategoryList(cList=categoryList,cno=int(categoryNo))
-    pageList = categoryDAO.getPageList_category(int(categoryNo))
-    isWritable = validate.checkWritableCategory(user=clientUser,cno=categoryNo)
+        # 데이터 가져오기
+        cName = categoryService.getCategoryNameByCnoInCategoryList(cList=categoryList,cno=int(categoryNo))
+        pageList = categoryDAO.getPageList_category(int(categoryNo))
+        isWritable = validate.checkWritableCategory(user=clientUser,cno=categoryNo)
 
-    # 뷰 설정하기
-    userDAO.setView(user=clientUser, url=request.path)
+        # 뷰 설정하기
+        userDAO.setView(user=clientUser, url=request.path)
 
-    return render_template('category.html',
-        clientUser=clientUser,
-        categoryList=categoryList,
-        recentlyTitleList=recentlyTitleList,
-        categoryNo=categoryNo,
-        cName=cName,
-        pageList=pageList,
-        isWritable=isWritable
-    )
+        return render_template('category.html',
+            clientUser=clientUser,
+            categoryList=categoryList,
+            recentlyTitleList=recentlyTitleList,
+            categoryNo=categoryNo,
+            cName=cName,
+            pageList=pageList,
+            isWritable=isWritable
+        )
+    except Exception as e:
+        log = logger.Logger()
+        current_func_name = sys._getframe().f_code.co_name
+        log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}:",e)
+        return abort(500)
 
 ###############################
 ######## 카테고리 핸들러 ########
@@ -699,30 +782,36 @@ def getTitleListOnCategoryByPageHandler(cno,page):
 #############################
 @app.route("/search/<keyword>")
 def searchPage(keyword):
-    # 템플릿 정보
-    clientUser, categoryList, recentlyTitleList = getTemplateData(req=request)
+    try:
+        # 템플릿 정보
+        clientUser, categoryList, recentlyTitleList = getTemplateData(req=request)
 
-    # 키워드 가공 및 키워드 리스트화
-    keywordList, keywordLength = serachService.getFormattedKeyword(keyword=keyword)
-    
-    if keywordLength < 2: # 검색어 부족시
-        resp = make_response(redirect(request.referrer or url_for('main')))
-        flash(store.USER_MESSAGE[store.USER_RESULT_CODE['검색어 부족']])
-        return resp
-    
-    # 데이터 받아오기
-    
-    pageList = boardDAO.getPageList_search(keywordList=keywordList)
-    
-    # 뷰 설정하기
-    userDAO.setView(user=clientUser, url=request.path)
-    return render_template('search.html',
-        clientUser=clientUser,
-        categoryList=categoryList,
-        recentlyTitleList=recentlyTitleList,
-        keyword=keyword,
-        pageList=pageList
-    )
+        # 키워드 가공 및 키워드 리스트화
+        keywordList, keywordLength = serachService.getFormattedKeyword(keyword=keyword)
+        
+        if keywordLength < 2: # 검색어 부족시
+            resp = make_response(redirect(request.referrer or url_for('main')))
+            flash(store.USER_MESSAGE[store.USER_RESULT_CODE['검색어 부족']])
+            return resp
+        
+        # 데이터 받아오기
+        
+        pageList = boardDAO.getPageList_search(keywordList=keywordList)
+        
+        # 뷰 설정하기
+        userDAO.setView(user=clientUser, url=request.path)
+        return render_template('search.html',
+            clientUser=clientUser,
+            categoryList=categoryList,
+            recentlyTitleList=recentlyTitleList,
+            keyword=keyword,
+            pageList=pageList
+        )
+    except Exception as e:
+        log = logger.Logger()
+        current_func_name = sys._getframe().f_code.co_name
+        log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}:",e)
+        return abort(500)
 
 #############################
 ######## 검색 핸들러 ########
@@ -733,8 +822,6 @@ def getSearchListByPageHandler(keyword,page):
     searchBoardList = boardDAO.getSearchResult(keywordList=keywordList, page=page)
     searchDataList = serachService.setSearchStandard(searchBoardList=searchBoardList, keywordList=keywordList)
     return jsonify(searchDataList)
-
-
 
 #############################
 ######### Flask App #########
