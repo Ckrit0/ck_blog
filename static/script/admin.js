@@ -74,9 +74,12 @@ adminNoticeBtn.addEventListener('click',()=>{
 
 function setCateId(){
     target = adminCategoryDiv.children
+    passIndex = ['length','item','namedItem']
     for(let i in target){
         if(i == target.length-1){
             target[i].id = "parent_new"
+        }else if(passIndex.includes(i)){
+            continue
         }else{
             let targetIdStr = String(target[i].id)
             target[i].id = targetIdStr.slice(0,targetIdStr.lastIndexOf('_')) + '_' + (parseInt(i)+1)
@@ -85,9 +88,11 @@ function setCateId(){
             childrenCate.id = targetIdStr.slice(0,targetIdStr.lastIndexOf('_')) + '_' + (parseInt(i)+1)
             let targetChildrenDivList = childrenCate.children
             for(let j in targetChildrenDivList){
+                if(passIndex.includes(j)){
+                    continue
+                }
                 targetIdStr = String(targetChildrenDivList[j].id)
                 targetChildrenDivList[j].id = targetIdStr.slice(0,targetIdStr.lastIndexOf('_')) + '_' + (parseInt(j)+1)
-                
             }
             targetIdStr = String(target[i].children[2].id)
             target[i].children[2].id = targetIdStr.slice(0,targetIdStr.lastIndexOf('_')) + '_' + (parseInt(i)+1)
