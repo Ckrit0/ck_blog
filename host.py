@@ -7,6 +7,7 @@ from werkzeug.utils import secure_filename
 ###########################
 ##### Flask 기본 설정 #####
 ###########################
+log = logger.Logger()
 app = Flask(__name__)
 app.config["SECRET_KEY"] = store.secret_key
 app.config["UPLOAD_FOLDER"] = store.imageUploadDirectory
@@ -54,6 +55,8 @@ def adminPage():
     # 클라이언트 정보 가져오기
     clientUser = userDAO.getUserBySessionKey(cookieKey=request.cookies.get('sessionKey'),ip=request.remote_addr)
     
+    log.setLog(store.LOG_NAME['관리자'],f"관리자페이지 접근: {clientUser.getEmail()}({clientUser.getIp()})")
+
     # 관리자가 아니면 404페이지 띄우기
     if clientUser.getState() != store.USER_STATE_CODE['관리자']:
         return abort(404)
@@ -85,19 +88,22 @@ def adminPage():
 @app.route("/adminCheckImage", methods=["POST"])
 def adminCheckImageHandler():
     result = adminService.checkImage()
+    log.setLog(store.LOG_NAME['관리자'],"이미지 파일 정리")
     return jsonify(result)
 
 # storage - 더미파일 삭제
 @app.route("/adminDeleteDummy", methods=["POST"])
 def adminDeleteDummyHandler():
     result = adminService.deleteDummy()
+    log.setLog(store.LOG_NAME['관리자'],"더미 파일 삭제")
     return jsonify(result)
 
 # reboot
 @app.route("/adminReboot", methods=["POST"])
 def adminRebootHandler():
-    #adminService.reboot()
-    return ''
+    adminService.reboot()
+    log.setLog(store.LOG_NAME['관리자'],"서버재기동")
+    return
 
 # 기간별 통계(그래픽, 표)
 # 방문, 가입, 탈퇴, 블랙, 새글, 새답글, 조회수, 최근 조회된 글
@@ -154,7 +160,6 @@ def validateCheck():
                 return resp
     
     except Exception as e:
-        log = logger.Logger()
         current_func_name = sys._getframe().f_code.co_name
         log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}:",e)
         return abort(500)
@@ -182,7 +187,6 @@ def main():
             pageList=pageList
         )
     except Exception as e:
-        log = logger.Logger()
         current_func_name = sys._getframe().f_code.co_name
         log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}:",e)
         return abort(500)
@@ -221,7 +225,6 @@ def joinPage():
             recentlyTitleList = recentlyTitleList
         )
     except Exception as e:
-        log = logger.Logger()
         current_func_name = sys._getframe().f_code.co_name
         log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}:",e)
         return abort(500)
@@ -264,7 +267,6 @@ def userPage(userNo):
             targetUserCommentList=targetUserCommentList
         )
     except Exception as e:
-        log = logger.Logger()
         current_func_name = sys._getframe().f_code.co_name
         log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}:",e)
         return abort(500)
@@ -283,7 +285,6 @@ def findPage():
             recentlyTitleList=recentlyTitleList
         )
     except Exception as e:
-        log = logger.Logger()
         current_func_name = sys._getframe().f_code.co_name
         log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}:",e)
         return abort(500)
@@ -312,7 +313,6 @@ def loginHandler():
                 httponly=True)
     except Exception as e:
         flash(store.USER_MESSAGE[store.USER_RESULT_CODE['실패-unknown']])
-        log = logger.Logger()
         log.setLog(store.LOG_NAME['유저'],f"loginHandler Error: {e}")
     return resp
 
@@ -477,7 +477,6 @@ def boardPage(bno):
 
         return resp
     except Exception as e:
-        log = logger.Logger()
         current_func_name = sys._getframe().f_code.co_name
         log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}:",e)
         return abort(500)
@@ -510,7 +509,6 @@ def writeBoardPage(nowCate):
             writableCategoryList=writableCategoryList
         )
     except Exception as e:
-        log = logger.Logger()
         current_func_name = sys._getframe().f_code.co_name
         log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}:",e)
         return abort(500)
@@ -549,7 +547,6 @@ def saveBoard():
             flash(store.USER_MESSAGE[store.USER_RESULT_CODE['실패-unknown']])
         return resp
     except Exception as e:
-        log = logger.Logger()
         current_func_name = sys._getframe().f_code.co_name
         log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}:",e)
         return abort(500)
@@ -586,7 +583,6 @@ def modifyBoardPage(bno):
             board=board
         )
     except Exception as e:
-        log = logger.Logger()
         current_func_name = sys._getframe().f_code.co_name
         log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}:",e)
         return abort(500)
@@ -625,7 +621,6 @@ def modifyBoard(bno):
             flash(store.USER_MESSAGE[store.USER_RESULT_CODE['실패-unknown']])
         return resp
     except Exception as e:
-        log = logger.Logger()
         current_func_name = sys._getframe().f_code.co_name
         log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}:",e)
         return abort(500)
@@ -652,7 +647,6 @@ def deleteBoard(bno):
             flash(store.USER_MESSAGE[store.USER_RESULT_CODE['실패-unknown']])
         return resp
     except Exception as e:
-        log = logger.Logger()
         current_func_name = sys._getframe().f_code.co_name
         log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}:",e)
         return abort(500)
@@ -764,7 +758,6 @@ def categoryPage(categoryNo):
             isWritable=isWritable
         )
     except Exception as e:
-        log = logger.Logger()
         current_func_name = sys._getframe().f_code.co_name
         log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}:",e)
         return abort(500)
@@ -808,7 +801,6 @@ def searchPage(keyword):
             pageList=pageList
         )
     except Exception as e:
-        log = logger.Logger()
         current_func_name = sys._getframe().f_code.co_name
         log.setLog(store.LOG_NAME['시스템'],f"PageError {current_func_name}:",e)
         return abort(500)
