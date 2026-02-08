@@ -71,6 +71,29 @@ adminNoticeBtn.addEventListener('click',()=>{
         });
 })
 
+function setCateId(){
+    target = adminCategoryDiv.children
+    for(let i in target){
+        if(i == target.length-1){
+            target[i].id = "parent_new"
+        }else{
+            let targetIdStr = String(target[i].id)
+            target[i].id = targetIdStr.slice(0,targetIdStr.lastIndexOf('_')) + '_' + (parseInt(i)+1)
+            let childrenCate = target[i].children[1]
+            targetIdStr = String(childrenCate.id)
+            childrenCate.id = targetIdStr.slice(0,targetIdStr.lastIndexOf('_')) + '_' + (parseInt(i)+1)
+            let targetChildrenDivList = childrenCate.children
+            for(let j in targetChildrenDivList){
+                targetIdStr = String(targetChildrenDivList[j].id)
+                targetChildrenDivList[j].id = targetIdStr.slice(0,targetIdStr.lastIndexOf('_')) + '_' + (parseInt(j)+1)
+                
+            }
+            targetIdStr = String(target[i].children[2].id)
+            target[i].children[2].id = targetIdStr.slice(0,targetIdStr.lastIndexOf('_')) + '_' + (parseInt(i)+1)
+        }
+    }
+}
+
 function changeParentCategoryName(target){
     let newName = prompt("변경할 카테고리명")
     let childenList = target.cloneNode(true).children
@@ -112,21 +135,14 @@ function moveParentCategoryDiv(parentDiv_id,heading){
     adminCategoryDiv.innerHTML = ''
     for(let i=0;i<parentChildrenList.length;i++){
         if(i==toIndex){
-            parentChildrenList[fromIndex].id = "parent_" + (toIndex + 1)
-            parentChildrenList[fromIndex].children[1].id = "child_" + (toIndex + 1)
-            parentChildrenList[fromIndex].children[2].id = "child_new_" + (toIndex + 1)
             adminCategoryDiv.appendChild(parentChildrenList[fromIndex])
         }else if(i==fromIndex){
-            parentChildrenList[toIndex].id = "parent_" + (fromIndex + 1)
-            parentChildrenList[toIndex].children[1].id = "child_" + (fromIndex + 1)
-            parentChildrenList[toIndex].children[2].id = "child_new_" + (fromIndex + 1)
             adminCategoryDiv.appendChild(parentChildrenList[toIndex])
         }else{
-            parentChildrenList[i].children[1].id = "child_" + (i + 1)
-            parentChildrenList[i].children[2].id = "child_new" + (i + 1)
             adminCategoryDiv.appendChild(parentChildrenList[i])
         }
     }
+    setCateId()
 }
 
 function moveChildCategoryDiv(childDiv_id,heading){
@@ -148,25 +164,21 @@ function moveChildCategoryDiv(childDiv_id,heading){
     childDiv.innerHTML = ''
     for(let i=0;i<childChildrenList.length;i++){
         if(i==toIndex){
-            let idTextList = childChildrenList[fromIndex].id.split('_')
-            let idText = idTextList[0] + '_' + idTextList[1] + '_' + idTextList[2] + '_'
-            childChildrenList[fromIndex].id = idText + (toIndex + 1)
             childDiv.appendChild(childChildrenList[fromIndex])
         }else if(i==fromIndex){
-            let idTextList = childChildrenList[toIndex].id.split('_')
-            let idText = idTextList[0] + '_' + idTextList[1] + '_' + idTextList[2] + '_'
-            childChildrenList[toIndex].id = idText + (fromIndex + 1)
             childDiv.appendChild(childChildrenList[toIndex])
         }else{
             childDiv.appendChild(childChildrenList[i])
         }
     }
+    setCateId()
 }
 
 function deleteCategory(target){
     if(confirm("카테고리에 저장된 글이 모두 삭제됩니다.")){
         target.remove()
     }
+    setCateId()
 }
 
 function newParentCategory(){
@@ -233,7 +245,9 @@ function newParentCategory(){
     newCateDiv.appendChild(newChildNewDiv)
 
     targetDiv.insertBefore(newCateDiv,document.getElementById('parent_new'))
+    setCateId()
 }
+
 function newChildCategory(clickedBtn){
     let targetDiv = clickedBtn.parentElement.children[1]
     let cateOrder = targetDiv.children.length + 1
@@ -280,6 +294,7 @@ function newChildCategory(clickedBtn){
     newCateDiv.appendChild(newCateDownSpan)
 
     targetDiv.appendChild(newCateDiv)
+    setCateId()
 }
 
 adminCateBtn.addEventListener('click',()=>{
@@ -312,6 +327,7 @@ adminCateBtn.addEventListener('click',()=>{
         }
         return result
     }
+    setCateId()
     let parentList = adminCategoryDiv.children
     let dtoList = getDTOList(parentList)
     fetch("/adminModCate", {

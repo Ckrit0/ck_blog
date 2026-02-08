@@ -24,18 +24,10 @@ def getCategoryList():
             cc.setCategory(childCategory[0],childCategory[1],childCategory[2],childCategory[3])
             cc.setCount(db.getData(sql=f"SELECT count(*) FROM board WHERE b_isdelete = 0 AND c_no={cc.getNo()}")[0][0])
             tempList.append(cc)
-        childList = []
-        for i in range(len(tempList)):
-            for j in range(len(tempList)):
-                if tempList[j].getOrder() == i+1:
-                    childList.append(tempList[j])
-        categoryList.append([pc,childList])
-    result = []
-    for i in range(len(categoryList)):
-        for j in range(len(categoryList)):
-            if categoryList[j][0].getOrder() == i+1:
-                result.append(categoryList[j])
-    return result
+        tempList.sort(key=lambda dto:dto.getOrder())
+        categoryList.append([pc,tempList])
+    categoryList.sort(key=lambda dto:dto[0].getOrder())
+    return categoryList
 
 def getWritableCategoryList(user):
     '''

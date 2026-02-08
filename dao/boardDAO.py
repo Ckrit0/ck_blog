@@ -314,6 +314,7 @@ def setLike(user, board):
         WHERE NOT EXISTS \
         (SELECT 1 FROM likes WHERE b_no = {board.getNo()} AND (u_no = {user.getNo()} OR l_ip = "{user.getIp()}"));'''
     result = db.setData(sql=sql)
+    print(sql)
     if result == 0:
         return False
     return True
