@@ -1,13 +1,20 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify, abort, make_response, flash
 from dao import userDAO, categoryDAO, boardDAO, commentDAO
 from service import store, validate, logger, userService, boardService, categoryService, serachService, adminService
-import os, datetime, sys
+import os, datetime, sys, threading
 from werkzeug.utils import secure_filename
+
+
+#####################
+##### 기본 설정 #####
+#####################
+log = logger.Logger()
+watchDogThread = threading.Thread(target=adminService.watchDog)
+watchDogThread.start()
 
 ###########################
 ##### Flask 기본 설정 #####
 ###########################
-log = logger.Logger()
 app = Flask(__name__)
 app.config["SECRET_KEY"] = store.secret_key
 app.config["UPLOAD_FOLDER"] = store.imageUploadDirectory
