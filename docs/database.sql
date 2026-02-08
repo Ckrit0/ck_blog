@@ -289,15 +289,11 @@ INSERT INTO category(c_name,c_upper) VALUES("c_name","c_upper");
 ----------------
 -- Board DAO  --
 ----------------
-
-
 -- 글
 INSERT INTO board(u_no,c_no,b_title,b_contents,b_ip) VALUES("u_no","c_no","b_title","b_contents","b_ip");
 
 -- 좋아요 (취소불가 노빠꾸임)
-INSERT INTO likes (b_no, u_no, l_ip)
-SELECT "b_no", "u_no", "l_ip" FROM DUAL
-WHERE NOT EXISTS (SELECT 1 FROM likes WHERE b_no = "b_no" AND (u_no = "u_no" OR l_ip = "l_ip"));
+INSERT INTO likes (b_no, u_no, l_ip) VALUES("b_no", "u_no", "l_ip");
 
 -----------------
 -- Comment DAO --

@@ -308,31 +308,8 @@ def setLike(user, board):
     parameter: user객체(userDTO), 글객체(boardDTO)
     return: 성공 True, 실패 False (bool)
     '''
-    sql = f'''\
-        INSERT INTO likes (b_no, u_no, l_ip) \
-        SELECT {board.getNo()}, {user.getNo()}, "{user.getIp()}" FROM DUAL \
-        WHERE NOT EXISTS \
-        (SELECT 1 FROM likes WHERE b_no = {board.getNo()} AND (u_no = {user.getNo()} OR l_ip = "{user.getIp()}"));'''
+    sql = f'''INSERT INTO likes(b_no, u_no, l_ip) VALUES({board.getNo()}, {user.getNo()}, "{user.getIp()}")'''
     result = db.setData(sql=sql)
-    print(sql)
     if result == 0:
         return False
     return True
-
-
-'''
-이미지 저장하기
-parameter: 글객체(boardDTO), 이미지객체(타입미정)
-return: 
-'''
-def setImage(board,image):
-    sql = f''''''
-
-'''
-이미지번호로 이미지 삭제하기
-parameter: 이미지번호(int)
-return: 
-'''
-def deleteImage(ino):
-    sql = f''''''
-
