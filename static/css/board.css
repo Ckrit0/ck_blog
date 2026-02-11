@@ -85,6 +85,11 @@
 .ck-content blockquote{
     border-left: none;
 }
+
+.ck .ck-editor__main>div>blockquote>p{
+    font-style: normal;
+
+}
 #boardContentsDiv>blockquote{
     background: var(--dark-color);
     color: var(--bg-color);
