@@ -73,6 +73,20 @@
     text-align: left;
     overflow: auto;
 }
+#boardContentsDiv>figure>table{
+    border-collapse: collapse;
+}
+#boardContentsDiv>figure>table>tbody>tr>td{
+    border: 1px solid var(--theme-color);
+    padding: 3px 5px;
+    text-align: center;
+}
+blockquote{
+    background: var(--dark-color);
+    color: var(--bg-color);
+    padding: 1px 10px;
+    border-radius: 5px;
+}
 
 /* 이미지 */
 .image>img{
