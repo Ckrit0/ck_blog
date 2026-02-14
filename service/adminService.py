@@ -55,7 +55,8 @@ def getSystemInfo():
     return systemInfo
 
 def reboot():
-    os.system("sudo reboot")
+    # 이거 서버에서 비밀번호 누르지 않게끔 하는 방법 있나 찾아봐야 함
+    # os.system("sudo reboot")
     return
 
 def checkImage():
