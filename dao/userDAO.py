@@ -376,15 +376,21 @@ def getUserBySessionKey(cookieKey, ip):
     parameter: 세션키(String), IP(String)
     return: user객체(userDTO)
     '''
-    if cookieKey == "" or cookieKey == None:
+    def setGuest():
         user = userDTO.UserDTO()
         user.setIp(ip)
         return user
+
+    if cookieKey == "" or cookieKey == None:
+        return setGuest()
     sql = f'''SELECT * FROM user WHERE u_no = (SELECT u_no FROM sessionlist WHERE s_key = "{cookieKey}") AND u_state NOT IN (0, 3);'''
-    result = db.getData(sql=sql)[0]
-    user = userDTO.UserDTO()
-    user.setUserByDbResult(dbResult=result)
-    user.setIp(ip=ip)
+    result = db.getData(sql=sql)
+    if result != []:
+        user = userDTO.UserDTO()
+        user.setUserByDbResult(dbResult=result[0])
+        user.setIp(ip=ip)
+    else:
+        user = setGuest()
     return user
 
 ################################################################################################

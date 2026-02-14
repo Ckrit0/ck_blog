@@ -156,7 +156,7 @@ def validateCheck():
         elif validate.checkBlackList(clientUser):
             abort(403)
         
-        # 세션 만료 확인
+        # 세션 만료 확인 (및 세션 확인 불가)
         elif validate.checkSessionTimeOver(clientUser): #
             if clientUser.getNo() != 0:
                 resp = make_response(redirect(request.referrer or url_for('main')))
@@ -165,6 +165,7 @@ def validateCheck():
                 # 메시지 생성
                 flash(store.USER_MESSAGE['세션만료'])
                 return resp
+
     
     except Exception as e:
         current_func_name = sys._getframe().f_code.co_name

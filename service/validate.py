@@ -49,6 +49,8 @@ def checkSessionTimeOver(user):
         else:
             # timeover가 아니라면 세션시간 갱신
             userDAO.updateSessionTime(user=user)
+    else:
+        result = True
     return result
 
 def checkWritableCategory(user,cno):
