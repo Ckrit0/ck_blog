@@ -1,6 +1,6 @@
 from service import store, logger
 from dao import boardDAO
-import psutil, platform, os, time, re, shutil
+import psutil, platform, os, time, re, shutil, glob
 from datetime import datetime
 
 log = logger.Logger()
@@ -125,4 +125,15 @@ def deleteDummy():
     더미 폴더에 있는 이미지 삭제
     return: 삭제한 이미지 갯수(int)
     '''
-    return 1
+    files = glob.glob(os.path.join(store.imageDummyDirectory, '*'))
+    cnt = [0,0]
+    
+    for file in files:
+        if os.path.isfile(file): # 파일인 경우에만 삭제
+            try:
+                os.remove(file)
+                cnt = [cnt[0]+1,cnt[1]]
+            except Exception as e:
+                cnt = [cnt[0],cnt[1]+1]
+                log.setLog(store.LOG_NAME['관리자'],f"삭제 실패: {file}, 에러: {e}")
+    return cnt

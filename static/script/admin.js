@@ -43,8 +43,7 @@ adminDeleteDummyBtn.addEventListener('click',()=>{
         })
         .then((response) => response.json())
         .then((result) => {
-            alert('현재는 기능이 동작하지 않도록 설정되어 있습니다. 반환값: ' + result)
-            // alert(result + '개의 파일이 삭제되었습니다.')
+            alert('삭제성공:' + result[0] + ', 삭제실패:' + result[1])
         });
 })
 adminRebootBtn.addEventListener('click',()=>{
