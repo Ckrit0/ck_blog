@@ -17,6 +17,22 @@ def getNotice():
     return notice
 
 ########### 글 관련 - 전체 ############
+def getAllBoardForImage():
+    '''
+    삭제 포함 전체 글 목록 가져오기(글 내용과 삭제여부, 이미지파일 정리용도)
+    return: 전체 글객체 목록(list)
+    '''
+    result = []
+    sql = f'''SELECT b_no, b_contents, b_isdelete FROM board where b_no != 0'''
+    dbResult = db.getData(sql=sql)
+    for database in dbResult:
+        board = boardDTO.BoardDTO()
+        board.setNo(database[0])
+        board.setContent(database[1])
+        board.setIsDelete(database[2])
+        result.append(board)
+    return result
+
 def getTitleList_all(page):
     '''
     전체 글제목 목록 가져오기

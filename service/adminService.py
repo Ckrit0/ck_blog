@@ -1,5 +1,6 @@
 from service import store, logger
-import psutil, platform, os, time
+from dao import boardDAO
+import psutil, platform, os, time, re, shutil
 from datetime import datetime
 
 log = logger.Logger()
@@ -60,12 +61,63 @@ def reboot():
 def checkImage():
     '''
     이미지를 역할에 맞는 디렉토리로 이동
-    return: 정리한 이미지 갯수(int)
+    return: [[삭제성공갯수,삭제실패갯수],[더미이동성공갯수,더미이동실패갯수],[필요한 파일이 있는 글번호 리스트]]
     '''
-    # 1. 모든 이미지파일명을 가져와서 리스트로 만든다.
-    # 2. 모든 글을 가져와서 image src 내부 주소를 delete여부를 구분하여 리스트로 만든다.
-    # 3. 두 리스트를 비교하여 현재 글에 쓰이는 이미지와 삭제된 이미지와, dummy 이미지를 구분하여 파일을 이동한다.
-    return 1
+    def moveFiles(fileList, targetDir):
+        cnt = [0,0]
+        for fileName in fileList:
+            src = os.path.join(store.imageUploadDirectory, fileName)
+            dst = os.path.join(targetDir, fileName)
+            try:
+                if os.path.exists(src):
+                    shutil.move(src, dst)
+                    cnt = [cnt[0]+1,cnt[1]]
+            except Exception as e:
+                log.setLog(store.LOG_NAME['관리자'],f'파일 이동 실패: {fileName} - {e}')
+                cnt = [cnt[0],cnt[1]+1]
+        return cnt
+
+    serverFileList = os.listdir(store.imageUploadDirectory)
+    allBoardList = boardDAO.getAllBoardForImage()
+    boardImageList = []
+    for board in allBoardList:
+        contents = board.getContents()
+        # pattern = r'<img[^>]*src=["\']([^"\']+)["\']' # 모든 이미지 태그 주소
+        pattern = r'<img[^>]*src=["\']/static/uploads/([^"\']+)["\']' # 서버에 올라온 이미지 태그 파일명
+        image_sources = re.findall(pattern, contents)
+        if image_sources == []:
+            continue
+        
+        boardImage = {
+            'bno': board.getNo(),
+            'isDelete': board.getIsDelete(),
+            'imgSrc': image_sources
+        }
+        boardImageList.append(boardImage)
+    
+    serverSet = set(serverFileList)
+    neededImages = set()
+    deletedImages = set()
+
+    for board in boardImageList:
+        for src in board['imgSrc']:
+            if board['isDelete'] != 0:
+                deletedImages.add(src)
+            else:
+                neededImages.add(src)
+    forDeleteFileList = list(deletedImages & serverSet)
+    forNeedFileList = list(neededImages - serverSet)
+    forDummyFileList = list(serverSet - neededImages - deletedImages - set(['dummy','deleted']))
+    deleteCnt = moveFiles(forDeleteFileList,store.imageDeleteDirectory)
+    dummyCnt = moveFiles(forDummyFileList,store.imageDummyDirectory)
+    needCnt = []
+    for needFile in forNeedFileList:
+        for board in boardImageList:
+            for imgSrc in board['imgSrc']:
+                if needFile == imgSrc:
+                    needCnt.append(board['bno'])
+                    log.setLog(store.LOG_NAME['관리자'],f'파일 없음: 글번호:{board['bno']}, 파일명:{needFile}')
+    return [deleteCnt,dummyCnt,needCnt]
 
 def deleteDummy():
     '''

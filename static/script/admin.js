@@ -18,8 +18,17 @@ adminCheckImageBtn.addEventListener('click',()=>{
         })
         .then((response) => response.json())
         .then((result) => {
-            alert('현재는 기능이 동작하지 않도록 설정되어 있습니다. 반환값: ' + result)
-            // alert(result + '개의 파일이 정리되었습니다.')
+            msg = '삭제 성공:' + result[0][0] + ', 삭제 실패:' + result[0][1] + ', 더미이동 성공:' + result[1][0] + ', 더미이동 실패:' + result[1][1]
+            if(result[2].length != 0){
+                msg += ', 이미지 없는 글번호: '
+                for(let i=0;i<result[2].length;i++){
+                    msg += result[2][i]
+                    if(i < result[2].length-1){
+                        msg += ', '
+                    }
+                }
+            }
+            alert(msg)
         });
 })
 adminDeleteDummyBtn.addEventListener('click',()=>{

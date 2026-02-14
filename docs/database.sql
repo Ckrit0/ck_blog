@@ -148,6 +148,8 @@ SELECT MAX(c_no) FROM category;
 ----------------
 -- 공지사항 가져오기
 SELECT b_contents from board where b_no = 0;
+-- 전체 글 내용과 삭제여부 목록 가져오기(삭제 포함, 공지 제외)
+SELECT b_no, b_contents, b_isdelete FROM board where b_no != 0;
 -- 전체 글 제목의 목록 가져오기(최신순, 페이지별)
 SELECT
     b.b_no, b.b_title,
