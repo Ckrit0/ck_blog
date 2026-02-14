@@ -116,7 +116,7 @@ def checkImage():
             for imgSrc in board['imgSrc']:
                 if needFile == imgSrc:
                     needCnt.append(board['bno'])
-                    log.setLog(store.LOG_NAME['관리자'],f'파일 없음: 글번호:{board['bno']}, 파일명:{needFile}')
+                    log.setLog(store.LOG_NAME['관리자'],f"파일 없음: 글번호:{board['bno']}, 파일명:{needFile}")
     return [deleteCnt,dummyCnt,needCnt]
 
 def deleteDummy():
