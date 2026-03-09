@@ -128,8 +128,8 @@ SELECT * FROM category WHERE c_upper=1 ORDER BY c_no;
 -- 카테고리별 글 제목의 목록 가져오기(최신순, 페이지별)
 SELECT
     b_no, b_title,
-    (SELECT count(DISTINCT u_no) + count(DISTINCT v_ip) FROM views WHERE b_no=b.b_no),
-    (SELECT count(DISTINCT u_no) + count(DISTINCT l_ip) FROM likes WHERE b_no=b.b_no),
+    (SELECT count(*) FROM views v WHERE v.b_no=b.b_no),
+    (SELECT count(DISTINCT CASE WHEN u_no != 0 THEN u_no END) + count(DISTINCT l_ip) FROM likes l WHERE l.b_no=b.b_no),
     (SELECT count(*) FROM comment WHERE b_no=b.b_no),
     b.b_contents
 FROM board WHERE c_no="c_no" AND b_isdelete=0
